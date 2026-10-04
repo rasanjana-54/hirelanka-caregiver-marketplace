@@ -21,8 +21,8 @@ export const LoginPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const success = await login(email, password);
-      if (success) {
+      const result = await login(email, password);
+      if (result.success) {
         if (email.includes('nadeesha') || email.includes('caregiver')) {
           navigate('/dashboard/caregiver');
         } else if (email.includes('suwasevana') || email.includes('agency')) {
@@ -32,9 +32,11 @@ export const LoginPage: React.FC = () => {
         } else {
           navigate('/caregivers');
         }
+      } else {
+        setError(result.error || 'Invalid credentials. Please verify your email and password.');
       }
     } catch {
-      setError('Invalid credentials. Please verify your email and password.');
+      setError('Connection error. Please try again.');
     } finally {
       setLoading(false);
     }

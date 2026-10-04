@@ -47,14 +47,15 @@ export const RegisterPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const success = await register({
+      const result = await register({
         email,
         fullName,
         phoneNumber,
-        userType
+        userType,
+        password
       });
 
-      if (success) {
+      if (result.success) {
         if (userType === 'individual') {
           navigate('/dashboard/caregiver');
         } else if (userType === 'agency') {
@@ -62,9 +63,11 @@ export const RegisterPage: React.FC = () => {
         } else {
           navigate('/caregivers');
         }
+      } else {
+        setError(result.error || 'Could not complete registration. Please try again.');
       }
     } catch {
-      setError('Could not complete registration. Please try again.');
+      setError('Registration error. Please verify input fields.');
     } finally {
       setLoading(false);
     }

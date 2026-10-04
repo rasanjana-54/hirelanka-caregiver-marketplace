@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useData } from '../context/DataContext';
 import { useLanguage } from '../context/LanguageContext';
 import { StarRating } from '../components/common/StarRating';
+import { CaregiverProfile } from '../types';
 import {
   ShieldAlert,
   ShieldCheck,
@@ -13,7 +14,8 @@ import {
   AlertTriangle,
   MapPin,
   Search,
-  MessageSquare
+  MessageSquare,
+  FileText
 } from 'lucide-react';
 
 export const AdminDashboardPage: React.FC = () => {
@@ -30,6 +32,7 @@ export const AdminDashboardPage: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<'overview' | 'caregivers' | 'hospitals' | 'reviews'>('overview');
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedAuditCg, setSelectedAuditCg] = useState<CaregiverProfile | null>(null);
 
   // New hospital modal state
   const [hospModalOpen, setHospModalOpen] = useState(false);
@@ -73,10 +76,10 @@ export const AdminDashboardPage: React.FC = () => {
             HireLanka Care Administration
           </span>
           <h1 className="text-2xl font-bold text-[#172B25] mt-1">
-            Platform Governance &amp; Verification
+            Platform Governance &amp; Credential Verification
           </h1>
           <p className="text-xs text-[#64746D] mt-0.5">
-            Moderate hospital caregiver listings, audit ID credentials, and manage Sri Lankan hospital records.
+            Audit NIC cards, Police Clearance certificates, and manage Sri Lankan hospital records.
           </p>
         </div>
 
@@ -91,7 +94,7 @@ export const AdminDashboardPage: React.FC = () => {
       <div className="flex items-center gap-1 p-1 bg-white border border-[#E5ECE8] rounded-xl overflow-x-auto text-xs font-semibold">
         {[
           { id: 'overview', label: t('dashboard') },
-          { id: 'caregivers', label: `${t('verifiedBadge')} (${caregivers.length})` },
+          { id: 'caregivers', label: `${t('verifiedBadge')} Queue (${caregivers.length})` },
           { id: 'hospitals', label: `${t('popularHospitals')} (${hospitals.length})` },
           { id: 'reviews', label: `${t('familyReviewsTitle')} (${reviews.length})` }
         ].map(tab => (
@@ -158,11 +161,11 @@ export const AdminDashboardPage: React.FC = () => {
           {/* Quick Security & Moderation Log */}
           <div className="bg-white border border-[#E5ECE8] rounded-2xl p-6 shadow-xs space-y-4">
             <h3 className="text-sm font-bold text-[#172B25]">
-              Verification Checklist &amp; Trust Guidelines
+              Verification Audit &amp; Document Review Guidelines
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-[#64746D]">
               <div className="p-3 bg-[#F8FAF8] rounded-xl border border-[#E5ECE8] space-y-1">
-                <div className="font-bold text-[#172B25]">1. National Identity Card</div>
+                <div className="font-bold text-[#172B25]">1. National Identity Card (NIC)</div>
                 <p>Verify applicant full name, age, and valid Sri Lankan NIC number before marking verified.</p>
               </div>
               <div className="p-3 bg-[#F8FAF8] rounded-xl border border-[#E5ECE8] space-y-1">
@@ -184,10 +187,10 @@ export const AdminDashboardPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h2 className="text-lg font-bold text-[#172B25]">
-                Caregiver Verification Queue
+                Caregiver Verification &amp; Credential Audit Queue
               </h2>
               <p className="text-xs text-[#64746D] mt-0.5">
-                Toggle verification badges on caregiver profiles after reviewing police reports &amp; NIC documents.
+                Review submitted Sri Lankan NIC Cards and Police Clearance Certificates before granting Verified Badges.
               </p>
             </div>
 
@@ -211,9 +214,8 @@ export const AdminDashboardPage: React.FC = () => {
                   <th className="py-3 px-3 font-semibold">Age / Exp</th>
                   <th className="py-3 px-3 font-semibold">Phone (WhatsApp)</th>
                   <th className="py-3 px-3 font-semibold">Daily Rate</th>
-                  <th className="py-3 px-3 font-semibold">Rating</th>
                   <th className="py-3 px-3 font-semibold">Verification Status</th>
-                  <th className="py-3 px-3 font-semibold text-right">Action</th>
+                  <th className="py-3 px-3 font-semibold text-right">Audit Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E5ECE8]">
@@ -232,33 +234,24 @@ export const AdminDashboardPage: React.FC = () => {
                       Rs. {cg.pricePerDay.toLocaleString()}
                     </td>
                     <td className="py-3 px-3">
-                      <div className="flex items-center gap-1">
-                        <span className="font-bold">{cg.rating}</span>
-                        <span className="text-[#64746D]">({cg.reviewCount})</span>
-                      </div>
-                    </td>
-                    <td className="py-3 px-3">
                       {cg.isVerified ? (
-                        <span className="inline-flex items-center gap-1 text-[#27865C] bg-emerald-50 px-2 py-0.5 rounded-full font-semibold">
-                          <CheckCircle2 className="w-3.5 h-3.5" /> Verified
+                        <span className="inline-flex items-center gap-1 text-[#27865C] bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full font-semibold">
+                          <CheckCircle2 className="w-3.5 h-3.5" /> Verified Badge Active
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full font-semibold">
-                          <AlertTriangle className="w-3.5 h-3.5" /> Pending Audit
+                        <span className="inline-flex items-center gap-1 text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full font-semibold">
+                          <AlertTriangle className="w-3.5 h-3.5" /> Pending Document Review
                         </span>
                       )}
                     </td>
                     <td className="py-3 px-3 text-right">
                       <button
                         type="button"
-                        onClick={() => toggleCaregiverVerification(cg.id)}
-                        className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
-                          cg.isVerified
-                            ? 'bg-red-50 text-red-700 hover:bg-red-100 border border-red-200'
-                            : 'bg-[#176B55] text-white hover:bg-[#135946]'
-                        }`}
+                        onClick={() => setSelectedAuditCg(cg)}
+                        className="px-3.5 py-1.5 text-xs font-semibold bg-[#176B55] hover:bg-[#135946] text-white rounded-lg transition-colors cursor-pointer shadow-xs inline-flex items-center gap-1.5"
                       >
-                        {cg.isVerified ? 'Revoke Verified' : 'Grant Verified'}
+                        <FileText className="w-3.5 h-3.5" />
+                        <span>Audit Credentials</span>
                       </button>
                     </td>
                   </tr>
@@ -358,6 +351,121 @@ export const AdminDashboardPage: React.FC = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Document Review Modal */}
+      {selectedAuditCg && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="max-w-xl w-full bg-white rounded-3xl border border-[#E5ECE8] shadow-2xl p-6 space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E5ECE8]">
+              <div>
+                <span className="text-[11px] font-bold text-[#176B55] uppercase tracking-wider">
+                  Credential Audit Workflow
+                </span>
+                <h3 className="text-lg font-bold text-[#172B25]">
+                  Document Audit: {selectedAuditCg.fullName}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedAuditCg(null)}
+                className="text-xs text-[#64746D] hover:text-[#172B25] p-1 font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs">
+              {/* Document 1: NIC Card */}
+              <div className="p-4 bg-[#F8FAF8] rounded-2xl border border-[#E5ECE8] space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="font-bold text-[#172B25] flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-[#176B55]" />
+                    <span>1. National Identity Card (NIC)</span>
+                  </div>
+                  <span className={`px-2 py-0.5 rounded font-bold text-[10px] ${selectedAuditCg.idCardVerified ? 'bg-emerald-100 text-[#176B55]' : 'bg-amber-100 text-amber-800'}`}>
+                    {selectedAuditCg.idCardVerified ? 'NIC Verified' : 'Pending Upload'}
+                  </span>
+                </div>
+                <p className="text-[#64746D]">
+                  Applicant Age: <strong>{selectedAuditCg.age} years</strong> · Sri Lankan NIC Document: 198884102911V
+                </p>
+                <div className="p-2 bg-white rounded-xl border border-dashed border-[#E5ECE8] text-[11px] text-[#64746D] font-mono">
+                  [PDF/Image Attached: nic_front_back_{selectedAuditCg.id}.pdf]
+                </div>
+              </div>
+
+              {/* Document 2: Police Clearance */}
+              <div className="p-4 bg-[#F8FAF8] rounded-2xl border border-[#E5ECE8] space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="font-bold text-[#172B25] flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-[#176B55]" />
+                    <span>2. Police Clearance Certificate (HQ)</span>
+                  </div>
+                  <span className={`px-2 py-0.5 rounded font-bold text-[10px] ${selectedAuditCg.policeReportVerified ? 'bg-emerald-100 text-[#176B55]' : 'bg-amber-100 text-amber-800'}`}>
+                    {selectedAuditCg.policeReportVerified ? 'Police Cleared' : 'Pending Verification'}
+                  </span>
+                </div>
+                <p className="text-[#64746D]">
+                  Sri Lanka Police Headquarters Criminal Record Clearance valid through 2026.
+                </p>
+                <div className="p-2 bg-white rounded-xl border border-dashed border-[#E5ECE8] text-[11px] text-[#64746D] font-mono">
+                  [Document Attached: police_report_{selectedAuditCg.id}.pdf]
+                </div>
+              </div>
+
+              {/* Document 3: Medical / NVQ Training */}
+              <div className="p-4 bg-[#F8FAF8] rounded-2xl border border-[#E5ECE8] space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="font-bold text-[#172B25] flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-[#176B55]" />
+                    <span>3. NVQ / Red Cross Training Certificate</span>
+                  </div>
+                  <span className={`px-2 py-0.5 rounded font-bold text-[10px] ${selectedAuditCg.medicalTrainingVerified ? 'bg-emerald-100 text-[#176B55]' : 'bg-amber-100 text-amber-800'}`}>
+                    {selectedAuditCg.medicalTrainingVerified ? 'Certified Attendant' : 'Uncertified'}
+                  </span>
+                </div>
+                <p className="text-[#64746D]">
+                  Qualifications: {selectedAuditCg.qualifications?.join(', ') || 'NAITA Certified Patient Care'}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-3 border-t border-[#E5ECE8]">
+              <button
+                type="button"
+                onClick={() => setSelectedAuditCg(null)}
+                className="px-4 py-2 text-xs font-semibold text-[#64746D] hover:text-[#172B25]"
+              >
+                Close Audit Window
+              </button>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (selectedAuditCg.isVerified) toggleCaregiverVerification(selectedAuditCg.id);
+                    setSelectedAuditCg(null);
+                  }}
+                  className="px-4 py-2 text-xs font-semibold bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-xl"
+                >
+                  Reject Verification
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!selectedAuditCg.isVerified) toggleCaregiverVerification(selectedAuditCg.id);
+                    setSelectedAuditCg(null);
+                  }}
+                  className="px-5 py-2 text-xs font-semibold bg-[#176B55] hover:bg-[#135946] text-white rounded-xl shadow-xs"
+                >
+                  Approve &amp; Grant Verified Badge
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

@@ -110,7 +110,69 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     ];
   });
 
-  // Save changes to localStorage
+  // Sync with Express Backend server when online
+  useEffect(() => {
+    const fetchBackendData = async () => {
+      try {
+        const [hospRes, cgRes, revRes] = await Promise.all([
+          fetch('http://localhost:5000/api/hospitals'),
+          fetch('http://localhost:5000/api/search'),
+          fetch('http://localhost:5000/api/caregivers/cg-nadeesha/reviews')
+        ]);
+
+        if (hospRes.ok) {
+          const hospData = await hospRes.json();
+          if (hospData.hospitals && hospData.hospitals.length > 0) {
+            setHospitals(hospData.hospitals);
+          }
+        }
+
+        if (cgRes.ok) {
+          const cgData = await cgRes.json();
+          if (cgData.results && cgData.results.length > 0) {
+            // Map snake_case backend fields to camelCase frontend models
+            const mappedCaregivers: CaregiverProfile[] = cgData.results.map((c: any) => ({
+              id: c.id,
+              userId: c.user_id,
+              fullName: c.full_name,
+              age: c.age,
+              gender: c.gender || 'Female',
+              bio: c.bio,
+              primaryHospitalId: c.primary_hospital_id,
+              secondaryHospitalIds: c.secondary_hospitals || [],
+              pricePerHour: c.price_per_hour,
+              pricePerDay: c.price_per_day,
+              pricePerShift: c.price_per_shift,
+              availabilityType: c.availability_type,
+              experienceYears: c.experience_years,
+              qualifications: c.qualifications ? [c.qualifications] : [],
+              specializations: c.specializations || ['General Ward Care'],
+              languages: ['Sinhala', 'English'],
+              contactPhone: c.contact_phone,
+              contactEmail: c.contact_email,
+              contactWhatsapp: c.contact_whatsapp,
+              phoneNumber: c.phone_number,
+              whatsappNumber: c.whatsapp_number,
+              email: c.email,
+              profileImageUrl: c.profile_image_url,
+              isActive: c.is_active,
+              isVerified: c.is_verified,
+              rating: c.rating,
+              reviewCount: c.review_count,
+              createdAt: c.created_at
+            }));
+            setCaregivers(mappedCaregivers);
+          }
+        }
+      } catch {
+        // Express backend offline; fallback to initial / localStorage state
+      }
+    };
+
+    fetchBackendData();
+  }, []);
+
+  // Save changes to localStorage as secondary backup
   useEffect(() => {
     localStorage.setItem('hl_hospitals', JSON.stringify(hospitals));
   }, [hospitals]);

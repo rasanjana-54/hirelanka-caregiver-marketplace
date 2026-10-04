@@ -31,22 +31,37 @@ function ScrollToTop() {
   return null;
 }
 
-// Protected Admin Guard
-function AdminGuard({ children }: { children: React.ReactNode }) {
+// Generic Role Guard
+function RequireRole({ role, children }: { role: 'family' | 'individual' | 'agency' | 'admin'; children: React.ReactNode }) {
   const { currentUser } = useAuth();
-  if (!currentUser || currentUser.userType !== 'admin') {
+  if (!currentUser) {
     return (
       <div className="max-w-md mx-auto my-16 p-6 bg-white border border-[#E5ECE8] rounded-2xl shadow-sm text-center space-y-4">
-        <div className="w-12 h-12 rounded-full bg-red-100 text-red-700 flex items-center justify-center mx-auto text-xl font-bold">
+        <div className="w-12 h-12 rounded-full bg-[#176B55]/10 text-[#176B55] flex items-center justify-center mx-auto text-xl font-bold">
           🔒
         </div>
-        <h2 className="text-lg font-bold text-[#172B25]">Admin Access Restricted</h2>
+        <h2 className="text-lg font-bold text-[#172B25]">Authentication Required</h2>
         <p className="text-xs text-[#64746D]">
-          This portal is reserved for HireLanka Care Administrators. Please log in with admin credentials or switch to the Admin role in the top header.
+          Please log in to your {role} account to access this private dashboard portal.
         </p>
       </div>
     );
   }
+
+  if (currentUser.userType !== role && currentUser.userType !== 'admin') {
+    return (
+      <div className="max-w-md mx-auto my-16 p-6 bg-white border border-[#E5ECE8] rounded-2xl shadow-sm text-center space-y-4">
+        <div className="w-12 h-12 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mx-auto text-xl font-bold">
+          ⚠️
+        </div>
+        <h2 className="text-lg font-bold text-[#172B25]">Access Restricted</h2>
+        <p className="text-xs text-[#64746D]">
+          Your account ({currentUser.userType}) does not have permission to access the {role} dashboard portal.
+        </p>
+      </div>
+    );
+  }
+
   return <>{children}</>;
 }
 
@@ -70,18 +85,11 @@ export default function App() {
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/register" element={<RegisterPage />} />
                   <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                  <Route path="/dashboard" element={<FamilyDashboardPage />} />
-                  <Route path="/dashboard/family" element={<FamilyDashboardPage />} />
-                  <Route path="/dashboard/caregiver" element={<CaregiverDashboardPage />} />
-                  <Route path="/dashboard/agency" element={<AgencyDashboardPage />} />
-                  <Route
-                    path="/admin"
-                    element={
-                      <AdminGuard>
-                        <AdminDashboardPage />
-                      </AdminGuard>
-                    }
-                  />
+                  <Route path="/dashboard" element={<RequireRole role="family"><FamilyDashboardPage /></RequireRole>} />
+                  <Route path="/dashboard/family" element={<RequireRole role="family"><FamilyDashboardPage /></RequireRole>} />
+                  <Route path="/dashboard/caregiver" element={<RequireRole role="individual"><CaregiverDashboardPage /></RequireRole>} />
+                  <Route path="/dashboard/agency" element={<RequireRole role="agency"><AgencyDashboardPage /></RequireRole>} />
+                  <Route path="/admin" element={<RequireRole role="admin"><AdminDashboardPage /></RequireRole>} />
                   <Route path="*" element={<HomePage />} />
                 </Routes>
               </main>
