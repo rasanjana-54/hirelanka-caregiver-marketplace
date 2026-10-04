@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', 'Noto Sans Sinhala', 'Noto Sans Tamil', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  
+  --color-hl-green: #176B55;
+  --color-hl-emerald: #2E8B70;
+  --color-hl-gold: #D9A441;
+  --color-hl-bg: #F8FAF8;
+  --color-hl-surface: #FFFFFF;
+  --color-hl-text: #172B25;
+  --color-hl-muted: #64746D;
+  --color-hl-border: #E5ECE8;
+  --color-hl-success: #27865C;
+  --color-hl-warning: #E5A13A;
+  --color-hl-error: #D9534F;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #F8FAF8;
+  color: #172B25;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom focus ring */
+:focus-visible {
+  outline: 2px solid #2E8B70;
+  outline-offset: 2px;
+}

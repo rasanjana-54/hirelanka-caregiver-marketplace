@@ -1,0 +1,6 @@
+{
+  "name": "HireLanka Care - Sri Lankan Hospital Caregiver Marketplace",
+  "description": "Find trusted hospital and home caregivers across Sri Lanka. Compare availability, hospital proximities, and LKR rates, and contact directly via WhatsApp.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
