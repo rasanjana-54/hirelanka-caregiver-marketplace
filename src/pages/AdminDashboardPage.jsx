@@ -2,73 +2,40 @@ import React, { useState } from 'react';
 import { useData } from '../context/DataContext';
 import { useLanguage } from '../context/LanguageContext';
 import { StarRating } from '../components/common/StarRating';
-import { CaregiverProfile } from '../types';
-import {
-  ShieldAlert,
-  ShieldCheck,
-  Building2,
-  Users,
-  Plus,
-  Trash2,
-  CheckCircle2,
-  AlertTriangle,
-  MapPin,
-  Search,
-  MessageSquare,
-  FileText
-} from 'lucide-react';
-
-export const AdminDashboardPage: React.FC = () => {
-  const { t } = useLanguage();
-  const {
-    caregivers,
-    agencies,
-    hospitals,
-    reviews,
-    inquiries,
-    toggleCaregiverVerification,
-    addHospital
-  } = useData();
-
-  const [activeTab, setActiveTab] = useState<'overview' | 'caregivers' | 'hospitals' | 'reviews'>('overview');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedAuditCg, setSelectedAuditCg] = useState<CaregiverProfile | null>(null);
-
-  // New hospital modal state
-  const [hospModalOpen, setHospModalOpen] = useState(false);
-  const [newHospName, setNewHospName] = useState('');
-  const [newHospDistrict, setNewHospDistrict] = useState('Colombo');
-  const [newHospLocation, setNewHospLocation] = useState('');
-  const [newHospType, setNewHospType] = useState<'government' | 'private'>('government');
-  const [newHospPhone, setNewHospPhone] = useState('+94 11 ');
-
-  const handleCreateHospital = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newHospName || !newHospLocation) return;
-
-    addHospital({
-      name: newHospName,
-      location: newHospLocation,
-      district: newHospDistrict,
-      hospitalType: newHospType,
-      latitude: 6.9271,
-      longitude: 79.8612,
-      phone: newHospPhone
-    });
-
-    setNewHospName('');
-    setNewHospLocation('');
-    setHospModalOpen(false);
-  };
-
-  const filteredCaregivers = caregivers.filter(
-    c =>
-      c.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+import { ShieldCheck, Plus, CheckCircle2, AlertTriangle, MapPin, Search, FileText } from 'lucide-react';
+export const AdminDashboardPage = () => {
+    const { t } = useLanguage();
+    const { caregivers, agencies, hospitals, reviews, inquiries, toggleCaregiverVerification, addHospital } = useData();
+    const [activeTab, setActiveTab] = useState('overview');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedAuditCg, setSelectedAuditCg] = useState(null);
+    // New hospital modal state
+    const [hospModalOpen, setHospModalOpen] = useState(false);
+    const [newHospName, setNewHospName] = useState('');
+    const [newHospDistrict, setNewHospDistrict] = useState('Colombo');
+    const [newHospLocation, setNewHospLocation] = useState('');
+    const [newHospType, setNewHospType] = useState('government');
+    const [newHospPhone, setNewHospPhone] = useState('+94 11 ');
+    const handleCreateHospital = (e) => {
+        e.preventDefault();
+        if (!newHospName || !newHospLocation)
+            return;
+        addHospital({
+            name: newHospName,
+            location: newHospLocation,
+            district: newHospDistrict,
+            hospitalType: newHospType,
+            latitude: 6.9271,
+            longitude: 79.8612,
+            phone: newHospPhone
+        });
+        setNewHospName('');
+        setNewHospLocation('');
+        setHospModalOpen(false);
+    };
+    const filteredCaregivers = caregivers.filter(c => c.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        c.email.toLowerCase().includes(searchTerm.toLowerCase()));
+    return (<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Admin Header */}
       <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -85,7 +52,7 @@ export const AdminDashboardPage: React.FC = () => {
 
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold text-[#27865C] bg-cyan-50 border border-cyan-200 px-3 py-1 rounded-full flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4" /> System Operational
+            <ShieldCheck className="w-4 h-4"/> System Operational
           </span>
         </div>
       </div>
@@ -93,29 +60,19 @@ export const AdminDashboardPage: React.FC = () => {
       {/* Tabs */}
       <div className="flex items-center gap-1 p-1 bg-white border border-[#b1f2ff] rounded-xl overflow-x-auto text-xs font-semibold">
         {[
-          { id: 'overview', label: t('dashboard') },
-          { id: 'caregivers', label: `${t('verifiedBadge')} Queue (${caregivers.length})` },
-          { id: 'hospitals', label: `${t('popularHospitals')} (${hospitals.length})` },
-          { id: 'reviews', label: `${t('familyReviewsTitle')} (${reviews.length})` }
-        ].map(tab => (
-          <button
-            key={tab.id}
-            type="button"
-            onClick={() => setActiveTab(tab.id as typeof activeTab)}
-            className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
-              activeTab === tab.id
+            { id: 'overview', label: t('dashboard') },
+            { id: 'caregivers', label: `${t('verifiedBadge')} Queue (${caregivers.length})` },
+            { id: 'hospitals', label: `${t('popularHospitals')} (${hospitals.length})` },
+            { id: 'reviews', label: `${t('familyReviewsTitle')} (${reviews.length})` }
+        ].map(tab => (<button key={tab.id} type="button" onClick={() => setActiveTab(tab.id)} className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap cursor-pointer ${activeTab === tab.id
                 ? 'bg-[#3dcfff] text-white shadow-xs'
-                : 'text-[#64746D] hover:text-[#172B25] hover:bg-slate-50'
-            }`}
-          >
+                : 'text-[#64746D] hover:text-[#172B25] hover:bg-slate-50'}`}>
             {tab.label}
-          </button>
-        ))}
+          </button>))}
       </div>
 
       {/* Tab 1: Overview */}
-      {activeTab === 'overview' && (
-        <div className="space-y-6">
+      {activeTab === 'overview' && (<div className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-white border border-[#b1f2ff] rounded-2xl p-5 shadow-xs">
               <div className="text-xs text-[#64746D]">Registered Caregivers</div>
@@ -178,12 +135,10 @@ export const AdminDashboardPage: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
-      )}
+        </div>)}
 
       {/* Tab 2: Caregiver Verification */}
-      {activeTab === 'caregivers' && (
-        <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-6">
+      {activeTab === 'caregivers' && (<div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h2 className="text-lg font-bold text-[#172B25]">
@@ -195,14 +150,8 @@ export const AdminDashboardPage: React.FC = () => {
             </div>
 
             <div className="relative w-full sm:w-64">
-              <Search className="w-4 h-4 text-[#64746D] absolute left-3 top-2.5" />
-              <input
-                type="text"
-                placeholder="Search caregiver name..."
-                value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
-                className="w-full pl-9 pr-3 py-1.5 text-xs bg-[#d8f9ff] border border-[#b1f2ff] rounded-xl outline-none"
-              />
+              <Search className="w-4 h-4 text-[#64746D] absolute left-3 top-2.5"/>
+              <input type="text" placeholder="Search caregiver name..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full pl-9 pr-3 py-1.5 text-xs bg-[#d8f9ff] border border-[#b1f2ff] rounded-xl outline-none"/>
             </div>
           </div>
 
@@ -219,8 +168,7 @@ export const AdminDashboardPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#b1f2ff]">
-                {filteredCaregivers.map(cg => (
-                  <tr key={cg.id} className="hover:bg-[#d8f9ff]">
+                {filteredCaregivers.map(cg => (<tr key={cg.id} className="hover:bg-[#d8f9ff]">
                     <td className="py-3 px-3">
                       <div className="font-bold text-[#172B25]">{cg.fullName}</div>
                       <div className="text-[11px] text-[#64746D]">{cg.email}</div>
@@ -234,37 +182,26 @@ export const AdminDashboardPage: React.FC = () => {
                       Rs. {cg.pricePerDay.toLocaleString()}
                     </td>
                     <td className="py-3 px-3">
-                      {cg.isVerified ? (
-                        <span className="inline-flex items-center gap-1 text-[#27865C] bg-cyan-50 border border-cyan-200 px-2.5 py-0.5 rounded-full font-semibold">
-                          <CheckCircle2 className="w-3.5 h-3.5" /> Verified Badge Active
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full font-semibold">
-                          <AlertTriangle className="w-3.5 h-3.5" /> Pending Document Review
-                        </span>
-                      )}
+                      {cg.isVerified ? (<span className="inline-flex items-center gap-1 text-[#27865C] bg-cyan-50 border border-cyan-200 px-2.5 py-0.5 rounded-full font-semibold">
+                          <CheckCircle2 className="w-3.5 h-3.5"/> Verified Badge Active
+                        </span>) : (<span className="inline-flex items-center gap-1 text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full font-semibold">
+                          <AlertTriangle className="w-3.5 h-3.5"/> Pending Document Review
+                        </span>)}
                     </td>
                     <td className="py-3 px-3 text-right">
-                      <button
-                        type="button"
-                        onClick={() => setSelectedAuditCg(cg)}
-                        className="px-3.5 py-1.5 text-xs font-semibold bg-[#3dcfff] hover:bg-[#1eb5df] text-white rounded-lg transition-colors cursor-pointer shadow-xs inline-flex items-center gap-1.5"
-                      >
-                        <FileText className="w-3.5 h-3.5" />
+                      <button type="button" onClick={() => setSelectedAuditCg(cg)} className="px-3.5 py-1.5 text-xs font-semibold bg-[#3dcfff] hover:bg-[#1eb5df] text-white rounded-lg transition-colors cursor-pointer shadow-xs inline-flex items-center gap-1.5">
+                        <FileText className="w-3.5 h-3.5"/>
                         <span>Audit Credentials</span>
                       </button>
                     </td>
-                  </tr>
-                ))}
+                  </tr>))}
               </tbody>
             </table>
           </div>
-        </div>
-      )}
+        </div>)}
 
       {/* Tab 3: Hospital Management */}
-      {activeTab === 'hospitals' && (
-        <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-6">
+      {activeTab === 'hospitals' && (<div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h2 className="text-lg font-bold text-[#172B25]">
@@ -275,51 +212,37 @@ export const AdminDashboardPage: React.FC = () => {
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={() => setHospModalOpen(true)}
-              className="px-4 py-2 text-xs font-semibold bg-[#3dcfff] hover:bg-[#1eb5df] text-white rounded-xl flex items-center gap-1.5 cursor-pointer shadow-xs"
-            >
-              <Plus className="w-4 h-4" />
+            <button type="button" onClick={() => setHospModalOpen(true)} className="px-4 py-2 text-xs font-semibold bg-[#3dcfff] hover:bg-[#1eb5df] text-white rounded-xl flex items-center gap-1.5 cursor-pointer shadow-xs">
+              <Plus className="w-4 h-4"/>
               <span>Add Hospital</span>
             </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {hospitals.map(h => (
-              <div key={h.id} className="p-4 bg-[#d8f9ff] border border-[#b1f2ff] rounded-xl space-y-2">
+            {hospitals.map(h => (<div key={h.id} className="p-4 bg-[#d8f9ff] border border-[#b1f2ff] rounded-xl space-y-2">
                 <div className="flex items-start justify-between gap-2">
                   <div className="font-bold text-sm text-[#172B25]">{h.name}</div>
-                  <span
-                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 uppercase ${
-                      h.hospitalType === 'government'
-                        ? 'bg-cyan-100 text-[#3dcfff]'
-                        : 'bg-blue-100 text-blue-700'
-                    }`}
-                  >
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 uppercase ${h.hospitalType === 'government'
+                    ? 'bg-cyan-100 text-[#3dcfff]'
+                    : 'bg-blue-100 text-blue-700'}`}>
                     {h.hospitalType}
                   </span>
                 </div>
 
                 <div className="flex items-center gap-1.5 text-xs text-[#64746D]">
-                  <MapPin className="w-3.5 h-3.5 text-[#3dcfff]" />
+                  <MapPin className="w-3.5 h-3.5 text-[#3dcfff]"/>
                   <span>{h.location} ({h.district})</span>
                 </div>
 
-                {h.phone && (
-                  <div className="text-[11px] font-mono text-[#64746D]">
+                {h.phone && (<div className="text-[11px] font-mono text-[#64746D]">
                     Ward Desk: {h.phone}
-                  </div>
-                )}
-              </div>
-            ))}
+                  </div>)}
+              </div>))}
           </div>
-        </div>
-      )}
+        </div>)}
 
       {/* Tab 4: Reviews */}
-      {activeTab === 'reviews' && (
-        <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-4">
+      {activeTab === 'reviews' && (<div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-[#b1f2ff]">
             <h2 className="text-lg font-bold text-[#172B25]">
               Family Reviews Moderation Queue ({reviews.length})
@@ -330,11 +253,10 @@ export const AdminDashboardPage: React.FC = () => {
           </div>
 
           <div className="divide-y divide-[#b1f2ff]">
-            {reviews.map(r => (
-              <div key={r.id} className="py-4 first:pt-0 space-y-2">
+            {reviews.map(r => (<div key={r.id} className="py-4 first:pt-0 space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <StarRating rating={r.rating} size="sm" />
+                    <StarRating rating={r.rating} size="sm"/>
                     <span className="text-xs font-bold text-[#172B25]">{r.title}</span>
                   </div>
                   <span className="text-xs text-[#64746D] font-mono">
@@ -349,15 +271,12 @@ export const AdminDashboardPage: React.FC = () => {
                   {r.hospitalName && <span>· Hospital: {r.hospitalName}</span>}
                   <span>· Status: <strong className="text-[#27865C]">Approved</strong></span>
                 </div>
-              </div>
-            ))}
+              </div>))}
           </div>
-        </div>
-      )}
+        </div>)}
 
       {/* Document Review Modal */}
-      {selectedAuditCg && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+      {selectedAuditCg && (<div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
           <div className="max-w-xl w-full bg-white rounded-3xl border border-[#b1f2ff] shadow-2xl p-6 space-y-5">
             <div className="flex items-center justify-between pb-3 border-b border-[#b1f2ff]">
               <div>
@@ -368,11 +287,7 @@ export const AdminDashboardPage: React.FC = () => {
                   Document Audit: {selectedAuditCg.fullName}
                 </h3>
               </div>
-              <button
-                type="button"
-                onClick={() => setSelectedAuditCg(null)}
-                className="text-xs text-[#64746D] hover:text-[#172B25] p-1 font-bold"
-              >
+              <button type="button" onClick={() => setSelectedAuditCg(null)} className="text-xs text-[#64746D] hover:text-[#172B25] p-1 font-bold">
                 ✕
               </button>
             </div>
@@ -382,7 +297,7 @@ export const AdminDashboardPage: React.FC = () => {
               <div className="p-4 bg-[#d8f9ff] rounded-2xl border border-[#b1f2ff] space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="font-bold text-[#172B25] flex items-center gap-1.5">
-                    <ShieldCheck className="w-4 h-4 text-[#3dcfff]" />
+                    <ShieldCheck className="w-4 h-4 text-[#3dcfff]"/>
                     <span>1. National Identity Card (NIC)</span>
                   </div>
                   <span className={`px-2 py-0.5 rounded font-bold text-[10px] ${selectedAuditCg.idCardVerified ? 'bg-cyan-100 text-[#3dcfff]' : 'bg-amber-100 text-amber-800'}`}>
@@ -401,7 +316,7 @@ export const AdminDashboardPage: React.FC = () => {
               <div className="p-4 bg-[#d8f9ff] rounded-2xl border border-[#b1f2ff] space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="font-bold text-[#172B25] flex items-center gap-1.5">
-                    <ShieldCheck className="w-4 h-4 text-[#3dcfff]" />
+                    <ShieldCheck className="w-4 h-4 text-[#3dcfff]"/>
                     <span>2. Police Clearance Certificate (HQ)</span>
                   </div>
                   <span className={`px-2 py-0.5 rounded font-bold text-[10px] ${selectedAuditCg.policeReportVerified ? 'bg-cyan-100 text-[#3dcfff]' : 'bg-amber-100 text-amber-800'}`}>
@@ -420,7 +335,7 @@ export const AdminDashboardPage: React.FC = () => {
               <div className="p-4 bg-[#d8f9ff] rounded-2xl border border-[#b1f2ff] space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="font-bold text-[#172B25] flex items-center gap-1.5">
-                    <ShieldCheck className="w-4 h-4 text-[#3dcfff]" />
+                    <ShieldCheck className="w-4 h-4 text-[#3dcfff]"/>
                     <span>3. NVQ / Red Cross Training Certificate</span>
                   </div>
                   <span className={`px-2 py-0.5 rounded font-bold text-[10px] ${selectedAuditCg.medicalTrainingVerified ? 'bg-cyan-100 text-[#3dcfff]' : 'bg-amber-100 text-amber-800'}`}>
@@ -434,45 +349,33 @@ export const AdminDashboardPage: React.FC = () => {
             </div>
 
             <div className="flex items-center justify-between pt-3 border-t border-[#b1f2ff]">
-              <button
-                type="button"
-                onClick={() => setSelectedAuditCg(null)}
-                className="px-4 py-2 text-xs font-semibold text-[#64746D] hover:text-[#172B25]"
-              >
+              <button type="button" onClick={() => setSelectedAuditCg(null)} className="px-4 py-2 text-xs font-semibold text-[#64746D] hover:text-[#172B25]">
                 Close Audit Window
               </button>
 
               <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (selectedAuditCg.isVerified) toggleCaregiverVerification(selectedAuditCg.id);
-                    setSelectedAuditCg(null);
-                  }}
-                  className="px-4 py-2 text-xs font-semibold bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-xl"
-                >
+                <button type="button" onClick={() => {
+                if (selectedAuditCg.isVerified)
+                    toggleCaregiverVerification(selectedAuditCg.id);
+                setSelectedAuditCg(null);
+            }} className="px-4 py-2 text-xs font-semibold bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-xl">
                   Reject Verification
                 </button>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (!selectedAuditCg.isVerified) toggleCaregiverVerification(selectedAuditCg.id);
-                    setSelectedAuditCg(null);
-                  }}
-                  className="px-5 py-2 text-xs font-semibold bg-[#3dcfff] hover:bg-[#1eb5df] text-white rounded-xl shadow-xs"
-                >
+                <button type="button" onClick={() => {
+                if (!selectedAuditCg.isVerified)
+                    toggleCaregiverVerification(selectedAuditCg.id);
+                setSelectedAuditCg(null);
+            }} className="px-5 py-2 text-xs font-semibold bg-[#3dcfff] hover:bg-[#1eb5df] text-white rounded-xl shadow-xs">
                   Approve &amp; Grant Verified Badge
                 </button>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        </div>)}
 
       {/* Add Hospital Modal */}
-      {hospModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+      {hospModalOpen && (<div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
           <div className="max-w-md w-full bg-white rounded-2xl border border-[#b1f2ff] shadow-2xl p-6 space-y-4">
             <h3 className="text-lg font-bold text-[#172B25]">Add Sri Lankan Hospital</h3>
 
@@ -481,14 +384,7 @@ export const AdminDashboardPage: React.FC = () => {
                 <label className="block text-xs font-semibold text-[#172B25] mb-1">
                   Hospital Name
                 </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Base Hospital Panadura"
-                  value={newHospName}
-                  onChange={e => setNewHospName(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-[#b1f2ff] rounded-xl outline-none"
-                />
+                <input type="text" required placeholder="e.g. Base Hospital Panadura" value={newHospName} onChange={e => setNewHospName(e.target.value)} className="w-full px-3 py-2 text-xs border border-[#b1f2ff] rounded-xl outline-none"/>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -496,11 +392,7 @@ export const AdminDashboardPage: React.FC = () => {
                   <label className="block text-xs font-semibold text-[#172B25] mb-1">
                     District
                   </label>
-                  <select
-                    value={newHospDistrict}
-                    onChange={e => setNewHospDistrict(e.target.value)}
-                    className="w-full px-3 py-2 text-xs border border-[#b1f2ff] rounded-xl outline-none"
-                  >
+                  <select value={newHospDistrict} onChange={e => setNewHospDistrict(e.target.value)} className="w-full px-3 py-2 text-xs border border-[#b1f2ff] rounded-xl outline-none">
                     <option value="Colombo">Colombo</option>
                     <option value="Gampaha">Gampaha</option>
                     <option value="Kalutara">Kalutara</option>
@@ -517,11 +409,7 @@ export const AdminDashboardPage: React.FC = () => {
                   <label className="block text-xs font-semibold text-[#172B25] mb-1">
                     Hospital Type
                   </label>
-                  <select
-                    value={newHospType}
-                    onChange={e => setNewHospType(e.target.value as 'government' | 'private')}
-                    className="w-full px-3 py-2 text-xs border border-[#b1f2ff] rounded-xl outline-none"
-                  >
+                  <select value={newHospType} onChange={e => setNewHospType(e.target.value)} className="w-full px-3 py-2 text-xs border border-[#b1f2ff] rounded-xl outline-none">
                     <option value="government">Government</option>
                     <option value="private">Private</option>
                   </select>
@@ -532,48 +420,26 @@ export const AdminDashboardPage: React.FC = () => {
                 <label className="block text-xs font-semibold text-[#172B25] mb-1">
                   Town / Location
                 </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Panadura Town"
-                  value={newHospLocation}
-                  onChange={e => setNewHospLocation(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-[#b1f2ff] rounded-xl outline-none"
-                />
+                <input type="text" required placeholder="e.g. Panadura Town" value={newHospLocation} onChange={e => setNewHospLocation(e.target.value)} className="w-full px-3 py-2 text-xs border border-[#b1f2ff] rounded-xl outline-none"/>
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-[#172B25] mb-1">
                   Hospital Phone
                 </label>
-                <input
-                  type="tel"
-                  placeholder="+94 38 223 2261"
-                  value={newHospPhone}
-                  onChange={e => setNewHospPhone(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-[#b1f2ff] rounded-xl outline-none font-mono"
-                />
+                <input type="tel" placeholder="+94 38 223 2261" value={newHospPhone} onChange={e => setNewHospPhone(e.target.value)} className="w-full px-3 py-2 text-xs border border-[#b1f2ff] rounded-xl outline-none font-mono"/>
               </div>
 
               <div className="flex items-center justify-end gap-2 pt-3">
-                <button
-                  type="button"
-                  onClick={() => setHospModalOpen(false)}
-                  className="px-4 py-2 text-xs text-[#64746D] hover:text-[#172B25]"
-                >
+                <button type="button" onClick={() => setHospModalOpen(false)} className="px-4 py-2 text-xs text-[#64746D] hover:text-[#172B25]">
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 text-xs font-semibold bg-[#3dcfff] text-white rounded-xl hover:bg-[#1eb5df]"
-                >
+                <button type="submit" className="px-5 py-2 text-xs font-semibold bg-[#3dcfff] text-white rounded-xl hover:bg-[#1eb5df]">
                   Add Hospital
                 </button>
               </div>
             </form>
           </div>
-        </div>
-      )}
-    </div>
-  );
+        </div>)}
+    </div>);
 };

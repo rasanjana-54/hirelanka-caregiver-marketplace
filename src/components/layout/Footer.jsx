@@ -1,17 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { HeartHandshake, PhoneCall, ShieldCheck, Heart } from 'lucide-react';
+import { HeartHandshake, PhoneCall, ShieldCheck } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
-
-export const Footer: React.FC = () => {
-  const { t } = useLanguage();
-
-  return (
-    <footer className="bg-white border-t border-[#b1f2ff] mt-16 text-[#64746D]">
+export const Footer = () => {
+    const { t } = useLanguage();
+    return (<footer className="bg-white border-t border-[#b1f2ff] mt-16 text-[#64746D]">
       {/* Emergency Notice Banner */}
       <div className="bg-[#3dcfff]/5 border-b border-[#b1f2ff] py-3 px-4 text-center">
         <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 text-xs text-[#172B25] flex-wrap">
-          <PhoneCall className="w-3.5 h-3.5 text-[#3dcfff]" />
+          <PhoneCall className="w-3.5 h-3.5 text-[#3dcfff]"/>
           <span className="font-semibold">{t('medicalEmergencySL')}</span>
           <span className="hidden sm:inline">·</span>
           <span className="hidden sm:inline">{t('nhslHotline')}</span>
@@ -24,7 +21,7 @@ export const Footer: React.FC = () => {
           <div className="md:col-span-1">
             <div className="flex items-center gap-2 mb-3">
               <div className="w-8 h-8 rounded-lg bg-[#3dcfff] text-white flex items-center justify-center">
-                <HeartHandshake className="w-4 h-4" />
+                <HeartHandshake className="w-4 h-4"/>
               </div>
               <span className="text-lg font-bold text-[#172B25]">HireLanka Care</span>
             </div>
@@ -111,7 +108,7 @@ export const Footer: React.FC = () => {
             </h4>
             <div className="bg-[#d8f9ff] p-3 rounded-xl border border-[#b1f2ff] text-xs leading-relaxed space-y-2">
               <div className="flex items-center gap-1.5 text-[#3dcfff] font-semibold">
-                <ShieldCheck className="w-4 h-4" />
+                <ShieldCheck className="w-4 h-4"/>
                 <span>{t('zeroCommissionTitle')}</span>
               </div>
               <p className="text-[11px] text-[#64746D]">
@@ -131,6 +128,5 @@ export const Footer: React.FC = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>);
 };

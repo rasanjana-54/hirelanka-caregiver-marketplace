@@ -4,31 +4,17 @@ import { useData } from '../context/DataContext';
 import { useLanguage } from '../context/LanguageContext';
 import { StarRating } from '../components/common/StarRating';
 import { InquiryModal } from '../components/common/InquiryModal';
-import { AgencyProfile } from '../types';
-import {
-  Building2,
-  Users,
-  MapPin,
-  ShieldCheck,
-  MessageCircle,
-  Phone,
-  ArrowRight,
-  Coins
-} from 'lucide-react';
-
-export const AgenciesPage: React.FC = () => {
-  const { agencies, getHospitalById } = useData();
-  const { t } = useLanguage();
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedAgency, setSelectedAgency] = useState<AgencyProfile | null>(null);
-
-  const handleQuickContact = (agency: AgencyProfile) => {
-    setSelectedAgency(agency);
-    setModalOpen(true);
-  };
-
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+import { Users, MapPin, ShieldCheck, MessageCircle, ArrowRight } from 'lucide-react';
+export const AgenciesPage = () => {
+    const { agencies, getHospitalById } = useData();
+    const { t } = useLanguage();
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedAgency, setSelectedAgency] = useState(null);
+    const handleQuickContact = (agency) => {
+        setSelectedAgency(agency);
+        setModalOpen(true);
+    };
+    return (<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Header */}
       <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 sm:p-8 shadow-xs">
         <span className="text-xs font-semibold text-[#3dcfff] uppercase tracking-wider">
@@ -45,37 +31,22 @@ export const AgenciesPage: React.FC = () => {
       {/* Agency Directory List */}
       <div className="space-y-6">
         {agencies.map(agency => {
-          const primaryHospital = getHospitalById(agency.primaryHospitalId);
-
-          return (
-            <div
-              key={agency.id}
-              className="bg-white border border-[#b1f2ff] rounded-2xl p-6 sm:p-8 hover:border-[#3dcfff]/50 hover:shadow-sm transition-all"
-            >
+            const primaryHospital = getHospitalById(agency.primaryHospitalId);
+            return (<div key={agency.id} className="bg-white border border-[#b1f2ff] rounded-2xl p-6 sm:p-8 hover:border-[#3dcfff]/50 hover:shadow-sm transition-all">
               <div className="flex flex-col lg:flex-row items-start justify-between gap-6">
                 <div className="flex items-start gap-5">
                   <div className="w-18 h-18 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border border-[#b1f2ff] shrink-0 bg-slate-100">
-                    <img
-                      src={agency.logoUrl}
-                      alt={agency.agencyName}
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={agency.logoUrl} alt={agency.agencyName} referrerPolicy="no-referrer" className="w-full h-full object-cover"/>
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <Link
-                        to={`/agencies/${agency.id}`}
-                        className="text-xl font-bold text-[#172B25] hover:text-[#3dcfff] transition-colors"
-                      >
+                      <Link to={`/agencies/${agency.id}`} className="text-xl font-bold text-[#172B25] hover:text-[#3dcfff] transition-colors">
                         {agency.agencyName}
                       </Link>
-                      {agency.isVerified && (
-                        <span className="text-xs font-semibold text-[#3dcfff] bg-cyan-50 border border-cyan-200 px-2 py-0.5 rounded-full flex items-center gap-1">
-                          <ShieldCheck className="w-3.5 h-3.5" /> {t('verifiedBadge')}
-                        </span>
-                      )}
+                      {agency.isVerified && (<span className="text-xs font-semibold text-[#3dcfff] bg-cyan-50 border border-cyan-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+                          <ShieldCheck className="w-3.5 h-3.5"/> {t('verifiedBadge')}
+                        </span>)}
                     </div>
 
                     <p className="text-xs text-[#64746D] leading-relaxed max-w-2xl">
@@ -84,12 +55,12 @@ export const AgenciesPage: React.FC = () => {
 
                     <div className="flex items-center gap-4 text-xs text-[#64746D] flex-wrap pt-1">
                       <span className="flex items-center gap-1.5 font-medium text-[#172B25]">
-                        <Users className="w-3.5 h-3.5 text-[#3dcfff]" />
+                        <Users className="w-3.5 h-3.5 text-[#3dcfff]"/>
                         {agency.numCaregivers} {t('activeAttendants')}
                       </span>
                       <span>·</span>
                       <span className="flex items-center gap-1.5">
-                        <MapPin className="w-3.5 h-3.5 text-[#3dcfff]" />
+                        <MapPin className="w-3.5 h-3.5 text-[#3dcfff]"/>
                         {t('primaryHospital')} {primaryHospital ? primaryHospital.name : 'Colombo'}
                       </span>
                       <span>·</span>
@@ -99,7 +70,7 @@ export const AgenciesPage: React.FC = () => {
                     </div>
 
                     <div className="pt-2 flex items-center gap-3">
-                      <StarRating rating={agency.rating} showNumber reviewCount={agency.reviewCount} size="sm" />
+                      <StarRating rating={agency.rating} showNumber reviewCount={agency.reviewCount} size="sm"/>
                     </div>
                   </div>
                 </div>
@@ -115,37 +86,21 @@ export const AgenciesPage: React.FC = () => {
                   </div>
 
                   <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <button
-                      type="button"
-                      onClick={() => handleQuickContact(agency)}
-                      className="flex-1 sm:flex-none px-4 py-2.5 text-xs font-semibold bg-[#27865C] hover:bg-[#1f6d4a] text-white rounded-xl flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-xs whitespace-nowrap"
-                    >
-                      <MessageCircle className="w-3.5 h-3.5" />
+                    <button type="button" onClick={() => handleQuickContact(agency)} className="flex-1 sm:flex-none px-4 py-2.5 text-xs font-semibold bg-[#27865C] hover:bg-[#1f6d4a] text-white rounded-xl flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-xs whitespace-nowrap">
+                      <MessageCircle className="w-3.5 h-3.5"/>
                       <span>{t('contactAgency')}</span>
                     </button>
-                    <Link
-                      to={`/agencies/${agency.id}`}
-                      className="flex-1 sm:flex-none px-4 py-2.5 text-xs font-semibold bg-[#d8f9ff] hover:bg-slate-100 text-[#172B25] border border-[#b1f2ff] rounded-xl flex items-center justify-center gap-1 transition-colors whitespace-nowrap"
-                    >
+                    <Link to={`/agencies/${agency.id}`} className="flex-1 sm:flex-none px-4 py-2.5 text-xs font-semibold bg-[#d8f9ff] hover:bg-slate-100 text-[#172B25] border border-[#b1f2ff] rounded-xl flex items-center justify-center gap-1 transition-colors whitespace-nowrap">
                       <span>{t('viewAgencyProfile')}</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
+                      <ArrowRight className="w-3.5 h-3.5"/>
                     </Link>
                   </div>
                 </div>
               </div>
-            </div>
-          );
+            </div>);
         })}
       </div>
 
-      {selectedAgency && (
-        <InquiryModal
-          isOpen={modalOpen}
-          onClose={() => setModalOpen(false)}
-          target={selectedAgency}
-          targetType="agency"
-        />
-      )}
-    </div>
-  );
+      {selectedAgency && (<InquiryModal isOpen={modalOpen} onClose={() => setModalOpen(false)} target={selectedAgency} targetType="agency"/>)}
+    </div>);
 };

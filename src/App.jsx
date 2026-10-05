@@ -5,7 +5,6 @@ import { DataProvider } from './context/DataContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
-
 // Pages
 import { HomePage } from './pages/HomePage';
 import { FindCaregiversPage } from './pages/FindCaregiversPage';
@@ -20,26 +19,21 @@ import { AgencyDashboardPage } from './pages/AgencyDashboardPage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { HowItWorksPage } from './pages/HowItWorksPage';
 import { FamilyDashboardPage } from './pages/FamilyDashboardPage';
-
 function ScrollToTop() {
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
-  return null;
+    const { pathname } = useLocation();
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+    return null;
 }
-
 // Generic Role Guard
-function RequireRole({ role, children }: { role: 'family' | 'individual' | 'agency' | 'admin'; children: React.ReactNode }) {
-  const { currentUser, isLoading } = useAuth();
-  if (isLoading) {
-    return <div className="max-w-md mx-auto my-16 p-6 text-center text-sm text-[#64746D]">Checking your session...</div>;
-  }
-  if (!currentUser) {
-    return (
-      <div className="max-w-md mx-auto my-16 p-6 bg-white border border-[#b1f2ff] rounded-2xl shadow-sm text-center space-y-4">
+function RequireRole({ role, children }) {
+    const { currentUser, isLoading } = useAuth();
+    if (isLoading) {
+        return <div className="max-w-md mx-auto my-16 p-6 text-center text-sm text-[#64746D]">Checking your session...</div>;
+    }
+    if (!currentUser) {
+        return (<div className="max-w-md mx-auto my-16 p-6 bg-white border border-[#b1f2ff] rounded-2xl shadow-sm text-center space-y-4">
         <div className="w-12 h-12 rounded-full bg-[#3dcfff]/10 text-[#3dcfff] flex items-center justify-center mx-auto text-xl font-bold">
           🔒
         </div>
@@ -47,13 +41,10 @@ function RequireRole({ role, children }: { role: 'family' | 'individual' | 'agen
         <p className="text-xs text-[#64746D]">
           Please log in to your {role} account to access this private dashboard portal.
         </p>
-      </div>
-    );
-  }
-
-  if (currentUser.userType !== role && currentUser.userType !== 'admin') {
-    return (
-      <div className="max-w-md mx-auto my-16 p-6 bg-white border border-[#b1f2ff] rounded-2xl shadow-sm text-center space-y-4">
+      </div>);
+    }
+    if (currentUser.userType !== role && currentUser.userType !== 'admin') {
+        return (<div className="max-w-md mx-auto my-16 p-6 bg-white border border-[#b1f2ff] rounded-2xl shadow-sm text-center space-y-4">
         <div className="w-12 h-12 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mx-auto text-xl font-bold">
           ⚠️
         </div>
@@ -61,16 +52,12 @@ function RequireRole({ role, children }: { role: 'family' | 'individual' | 'agen
         <p className="text-xs text-[#64746D]">
           Your account ({currentUser.userType}) does not have permission to access the {role} dashboard portal.
         </p>
-      </div>
-    );
-  }
-
-  return <>{children}</>;
+      </div>);
+    }
+    return <>{children}</>;
 }
-
 export default function App() {
-  return (
-    <LanguageProvider>
+    return (<LanguageProvider>
       <AuthProvider>
         <DataProvider>
           <BrowserRouter>
@@ -79,21 +66,21 @@ export default function App() {
               <Navbar />
               <main className="flex-1">
                 <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/caregivers" element={<FindCaregiversPage />} />
-                  <Route path="/caregivers/:id" element={<CaregiverProfilePage />} />
-                  <Route path="/agencies" element={<AgenciesPage />} />
-                  <Route path="/agencies/:id" element={<AgencyProfilePage />} />
-                  <Route path="/how-it-works" element={<HowItWorksPage />} />
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route path="/register" element={<RegisterPage />} />
-                  <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                  <Route path="/dashboard" element={<RequireRole role="family"><FamilyDashboardPage /></RequireRole>} />
-                  <Route path="/dashboard/family" element={<RequireRole role="family"><FamilyDashboardPage /></RequireRole>} />
-                  <Route path="/dashboard/caregiver" element={<RequireRole role="individual"><CaregiverDashboardPage /></RequireRole>} />
-                  <Route path="/dashboard/agency" element={<RequireRole role="agency"><AgencyDashboardPage /></RequireRole>} />
-                  <Route path="/admin" element={<RequireRole role="admin"><AdminDashboardPage /></RequireRole>} />
-                  <Route path="*" element={<HomePage />} />
+                  <Route path="/" element={<HomePage />}/>
+                  <Route path="/caregivers" element={<FindCaregiversPage />}/>
+                  <Route path="/caregivers/:id" element={<CaregiverProfilePage />}/>
+                  <Route path="/agencies" element={<AgenciesPage />}/>
+                  <Route path="/agencies/:id" element={<AgencyProfilePage />}/>
+                  <Route path="/how-it-works" element={<HowItWorksPage />}/>
+                  <Route path="/login" element={<LoginPage />}/>
+                  <Route path="/register" element={<RegisterPage />}/>
+                  <Route path="/forgot-password" element={<ForgotPasswordPage />}/>
+                  <Route path="/dashboard" element={<RequireRole role="family"><FamilyDashboardPage /></RequireRole>}/>
+                  <Route path="/dashboard/family" element={<RequireRole role="family"><FamilyDashboardPage /></RequireRole>}/>
+                  <Route path="/dashboard/caregiver" element={<RequireRole role="individual"><CaregiverDashboardPage /></RequireRole>}/>
+                  <Route path="/dashboard/agency" element={<RequireRole role="agency"><AgencyDashboardPage /></RequireRole>}/>
+                  <Route path="/admin" element={<RequireRole role="admin"><AdminDashboardPage /></RequireRole>}/>
+                  <Route path="*" element={<HomePage />}/>
                 </Routes>
               </main>
               <Footer />
@@ -101,6 +88,5 @@ export default function App() {
           </BrowserRouter>
         </DataProvider>
       </AuthProvider>
-    </LanguageProvider>
-  );
+    </LanguageProvider>);
 }

@@ -1,24 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import {
-  HeartHandshake,
-  Search,
-  MessageCircle,
-  Calendar,
-  ShieldCheck,
-  Coins,
-  CheckCircle2,
-  ArrowRight,
-  PhoneCall,
-  Clock
-} from 'lucide-react';
-
-export const HowItWorksPage: React.FC = () => {
-  const { t } = useLanguage();
-
-  return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+import { CheckCircle2, ArrowRight } from 'lucide-react';
+export const HowItWorksPage = () => {
+    const { t } = useLanguage();
+    return (<div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
       {/* Hero */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
         <span className="text-xs font-semibold text-[#3dcfff] uppercase tracking-wider">
@@ -82,12 +68,9 @@ export const HowItWorksPage: React.FC = () => {
         </div>
 
         <div className="pt-4 flex justify-center">
-          <Link
-            to="/caregivers"
-            className="px-6 py-3 text-xs font-semibold text-white bg-[#3dcfff] hover:bg-[#1eb5df] rounded-xl transition-colors shadow-xs flex items-center gap-2"
-          >
+          <Link to="/caregivers" className="px-6 py-3 text-xs font-semibold text-white bg-[#3dcfff] hover:bg-[#1eb5df] rounded-xl transition-colors shadow-xs flex items-center gap-2">
             <span>{t('findCaregivers')}</span>
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4"/>
           </Link>
         </div>
       </div>
@@ -129,23 +112,20 @@ export const HowItWorksPage: React.FC = () => {
           </p>
           <ul className="text-xs text-[#172B25] space-y-2">
             <li className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#3dcfff]" />
+              <CheckCircle2 className="w-4 h-4 text-[#3dcfff]"/>
               <span>{t('policeIdVerified')}</span>
             </li>
             <li className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#3dcfff]" />
+              <CheckCircle2 className="w-4 h-4 text-[#3dcfff]"/>
               <span>{t('directWhatsAppContact')}</span>
             </li>
             <li className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#3dcfff]" />
+              <CheckCircle2 className="w-4 h-4 text-[#3dcfff]"/>
               <span>{t('transparentLkrRates')}</span>
             </li>
           </ul>
           <div className="pt-2">
-            <Link
-              to="/register"
-              className="inline-flex px-4 py-2.5 text-xs font-semibold bg-[#3dcfff] text-white rounded-xl hover:bg-[#1eb5df]"
-            >
+            <Link to="/register" className="inline-flex px-4 py-2.5 text-xs font-semibold bg-[#3dcfff] text-white rounded-xl hover:bg-[#1eb5df]">
               {t('register')}
             </Link>
           </div>
@@ -160,28 +140,24 @@ export const HowItWorksPage: React.FC = () => {
           </p>
           <ul className="text-xs text-[#172B25] space-y-2">
             <li className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#3dcfff]" />
+              <CheckCircle2 className="w-4 h-4 text-[#3dcfff]"/>
               <span>{t('activeAttendants')}</span>
             </li>
             <li className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#3dcfff]" />
+              <CheckCircle2 className="w-4 h-4 text-[#3dcfff]"/>
               <span>{t('hospitalsCovered')}</span>
             </li>
             <li className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#3dcfff]" />
+              <CheckCircle2 className="w-4 h-4 text-[#3dcfff]"/>
               <span>{t('directWhatsAppContact')}</span>
             </li>
           </ul>
           <div className="pt-2">
-            <Link
-              to="/register"
-              className="inline-flex px-4 py-2.5 text-xs font-semibold bg-[#3dcfff] text-white rounded-xl hover:bg-[#1eb5df]"
-            >
+            <Link to="/register" className="inline-flex px-4 py-2.5 text-xs font-semibold bg-[#3dcfff] text-white rounded-xl hover:bg-[#1eb5df]">
               {t('listYourAgency')}
             </Link>
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>);
 };
