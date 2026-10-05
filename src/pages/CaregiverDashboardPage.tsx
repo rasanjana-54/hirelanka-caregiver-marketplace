@@ -104,13 +104,13 @@ export const CaregiverDashboardPage: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Top Welcome Bar */}
-      <div className="bg-white border border-[#E5ECE8] rounded-2xl p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <img
             src={caregiver.profileImageUrl}
             alt={caregiver.fullName}
             referrerPolicy="no-referrer"
-            className="w-16 h-16 rounded-2xl object-cover border border-[#E5ECE8] shadow-xs"
+            className="w-16 h-16 rounded-2xl object-cover border border-[#b1f2ff] shadow-xs"
           />
           <div>
             <div className="flex items-center gap-2">
@@ -118,7 +118,7 @@ export const CaregiverDashboardPage: React.FC = () => {
                 {caregiver.fullName}
               </h1>
               {caregiver.isVerified && (
-                <span className="text-xs font-semibold text-[#176B55] bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+                <span className="text-xs font-semibold text-[#3dcfff] bg-cyan-50 border border-cyan-200 px-2 py-0.5 rounded-full flex items-center gap-1">
                   <ShieldCheck className="w-3.5 h-3.5" /> Verified Caregiver
                 </span>
               )}
@@ -140,7 +140,7 @@ export const CaregiverDashboardPage: React.FC = () => {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="flex items-center gap-1 p-1 bg-white border border-[#E5ECE8] rounded-xl overflow-x-auto text-xs font-semibold">
+      <div className="flex items-center gap-1 p-1 bg-white border border-[#b1f2ff] rounded-xl overflow-x-auto text-xs font-semibold">
         {[
           { id: 'overview', label: t('dashboard') },
           { id: 'availability', label: t('availabilityCalendarTitle') },
@@ -154,7 +154,7 @@ export const CaregiverDashboardPage: React.FC = () => {
             onClick={() => setActiveTab(tab.id as typeof activeTab)}
             className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
               activeTab === tab.id
-                ? 'bg-[#176B55] text-white shadow-xs'
+                ? 'bg-[#3dcfff] text-white shadow-xs'
                 : 'text-[#64746D] hover:text-[#172B25] hover:bg-slate-50'
             }`}
           >
@@ -168,10 +168,10 @@ export const CaregiverDashboardPage: React.FC = () => {
         <div className="space-y-6">
           {/* Metrics Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white border border-[#E5ECE8] rounded-2xl p-5 shadow-xs">
+            <div className="bg-white border border-[#b1f2ff] rounded-2xl p-5 shadow-xs">
               <div className="flex items-center justify-between text-[#64746D] text-xs">
                 <span>Profile Views</span>
-                <Eye className="w-4 h-4 text-[#176B55]" />
+                <Eye className="w-4 h-4 text-[#3dcfff]" />
               </div>
               <div className="text-2xl font-bold text-[#172B25] mt-2 font-mono tabular-nums">
                 348
@@ -181,7 +181,7 @@ export const CaregiverDashboardPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-white border border-[#E5ECE8] rounded-2xl p-5 shadow-xs">
+            <div className="bg-white border border-[#b1f2ff] rounded-2xl p-5 shadow-xs">
               <div className="flex items-center justify-between text-[#64746D] text-xs">
                 <span>WhatsApp &amp; Phone Inquiries</span>
                 <MessageCircle className="w-4 h-4 text-[#27865C]" />
@@ -194,7 +194,7 @@ export const CaregiverDashboardPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-white border border-[#E5ECE8] rounded-2xl p-5 shadow-xs">
+            <div className="bg-white border border-[#b1f2ff] rounded-2xl p-5 shadow-xs">
               <div className="flex items-center justify-between text-[#64746D] text-xs">
                 <span>Average Rating</span>
                 <Star className="w-4 h-4 text-[#D9A441]" />
@@ -207,10 +207,10 @@ export const CaregiverDashboardPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-white border border-[#E5ECE8] rounded-2xl p-5 shadow-xs">
+            <div className="bg-white border border-[#b1f2ff] rounded-2xl p-5 shadow-xs">
               <div className="flex items-center justify-between text-[#64746D] text-xs">
                 <span>Profile Completeness</span>
-                <CheckCircle2 className="w-4 h-4 text-[#176B55]" />
+                <CheckCircle2 className="w-4 h-4 text-[#3dcfff]" />
               </div>
               <div className="text-2xl font-bold text-[#172B25] mt-2 font-mono tabular-nums">
                 95%
@@ -223,7 +223,7 @@ export const CaregiverDashboardPage: React.FC = () => {
 
           {/* Quick Schedule Preview & Recent Inquiries */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white border border-[#E5ECE8] rounded-2xl p-6 shadow-xs space-y-4">
+            <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-bold text-[#172B25]">
                   October 2026 Schedule
@@ -231,7 +231,7 @@ export const CaregiverDashboardPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setActiveTab('availability')}
-                  className="text-xs text-[#176B55] font-semibold hover:underline"
+                  className="text-xs text-[#3dcfff] font-semibold hover:underline"
                 >
                   Manage All Dates →
                 </button>
@@ -239,7 +239,7 @@ export const CaregiverDashboardPage: React.FC = () => {
               <AvailabilityCalendar slots={slots} isEditable onSlotToggle={handleToggleSlot} />
             </div>
 
-            <div className="bg-white border border-[#E5ECE8] rounded-2xl p-6 shadow-xs space-y-4">
+            <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-bold text-[#172B25]">
                   Recent Patient Inquiries
@@ -247,7 +247,7 @@ export const CaregiverDashboardPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setActiveTab('inquiries')}
-                  className="text-xs text-[#176B55] font-semibold hover:underline"
+                  className="text-xs text-[#3dcfff] font-semibold hover:underline"
                 >
                   View All ({inquiries.length}) →
                 </button>
@@ -258,7 +258,7 @@ export const CaregiverDashboardPage: React.FC = () => {
                   No inquiries recorded yet.
                 </div>
               ) : (
-                <div className="divide-y divide-[#E5ECE8]">
+                <div className="divide-y divide-[#b1f2ff]">
                   {inquiries.slice(0, 3).map(inq => (
                     <div key={inq.id} className="py-3 first:pt-0 space-y-1">
                       <div className="flex items-center justify-between text-xs">
@@ -270,7 +270,7 @@ export const CaregiverDashboardPage: React.FC = () => {
                       <div className="text-xs text-[#64746D]">
                         Hospital: <strong>{inq.hospitalName}</strong> · Shift: {inq.shiftNeeded}
                       </div>
-                      <div className="text-xs text-[#176B55] font-mono">
+                      <div className="text-xs text-[#3dcfff] font-mono">
                         Phone: {inq.phone} ({inq.contactMethodUsed})
                       </div>
                     </div>
@@ -284,8 +284,8 @@ export const CaregiverDashboardPage: React.FC = () => {
 
       {/* Tab 2: Availability Calendar Manager */}
       {activeTab === 'availability' && (
-        <div className="bg-white border border-[#E5ECE8] rounded-2xl p-6 shadow-xs space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E5ECE8]">
+        <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#b1f2ff]">
             <div>
               <h2 className="text-lg font-bold text-[#172B25]">
                 Manage Your Hospital Availability
@@ -299,7 +299,7 @@ export const CaregiverDashboardPage: React.FC = () => {
               <select
                 value={bulkSlotType}
                 onChange={e => setBulkSlotType(e.target.value as typeof bulkSlotType)}
-                className="px-3 py-1.5 text-xs border border-[#E5ECE8] rounded-xl bg-[#F8FAF8]"
+                className="px-3 py-1.5 text-xs border border-[#b1f2ff] rounded-xl bg-[#d8f9ff]"
               >
                 <option value="whole_day">Full Day Shift</option>
                 <option value="night">Night Shift</option>
@@ -309,7 +309,7 @@ export const CaregiverDashboardPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleBulkAvailableWeek}
-                className="px-3.5 py-1.5 text-xs font-semibold bg-[#176B55] text-white rounded-xl hover:bg-[#135946] transition-colors cursor-pointer"
+                className="px-3.5 py-1.5 text-xs font-semibold bg-[#3dcfff] text-white rounded-xl hover:bg-[#1eb5df] transition-colors cursor-pointer"
               >
                 + Mark Oct 16-22 Available
               </button>
@@ -326,8 +326,8 @@ export const CaregiverDashboardPage: React.FC = () => {
 
       {/* Tab 3: Edit Profile & Rates */}
       {activeTab === 'profile' && (
-        <div className="bg-white border border-[#E5ECE8] rounded-2xl p-6 sm:p-8 shadow-xs">
-          <div className="flex items-center justify-between pb-6 border-b border-[#E5ECE8] mb-6">
+        <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 sm:p-8 shadow-xs">
+          <div className="flex items-center justify-between pb-6 border-b border-[#b1f2ff] mb-6">
             <div>
               <h2 className="text-lg font-bold text-[#172B25]">
                 Edit Profile &amp; Hospital Rates
@@ -338,7 +338,7 @@ export const CaregiverDashboardPage: React.FC = () => {
             </div>
 
             {savedSuccess && (
-              <div className="px-3 py-1.5 bg-emerald-50 text-[#176B55] border border-emerald-200 text-xs font-bold rounded-xl flex items-center gap-1.5 animate-fade-in">
+              <div className="px-3 py-1.5 bg-cyan-50 text-[#3dcfff] border border-cyan-200 text-xs font-bold rounded-xl flex items-center gap-1.5 animate-fade-in">
                 <CheckCircle2 className="w-4 h-4" />
                 <span>Profile Changes Saved!</span>
               </div>
@@ -356,7 +356,7 @@ export const CaregiverDashboardPage: React.FC = () => {
                   required
                   value={fullName}
                   onChange={e => setFullName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF8] focus:bg-white border border-[#E5ECE8] focus:border-[#176B55] rounded-xl outline-none"
+                  className="w-full px-3.5 py-2.5 text-xs bg-[#d8f9ff] focus:bg-white border border-[#b1f2ff] focus:border-[#3dcfff] rounded-xl outline-none"
                 />
               </div>
 
@@ -371,7 +371,7 @@ export const CaregiverDashboardPage: React.FC = () => {
                   required
                   value={age}
                   onChange={e => setAge(Number(e.target.value))}
-                  className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF8] focus:bg-white border border-[#E5ECE8] focus:border-[#176B55] rounded-xl outline-none"
+                  className="w-full px-3.5 py-2.5 text-xs bg-[#d8f9ff] focus:bg-white border border-[#b1f2ff] focus:border-[#3dcfff] rounded-xl outline-none"
                 />
               </div>
             </div>
@@ -385,11 +385,11 @@ export const CaregiverDashboardPage: React.FC = () => {
                 required
                 value={bio}
                 onChange={e => setBio(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF8] focus:bg-white border border-[#E5ECE8] focus:border-[#176B55] rounded-xl outline-none resize-none"
+                className="w-full px-3.5 py-2.5 text-xs bg-[#d8f9ff] focus:bg-white border border-[#b1f2ff] focus:border-[#3dcfff] rounded-xl outline-none resize-none"
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 bg-[#F8FAF8] border border-[#E5ECE8] rounded-2xl">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 bg-[#d8f9ff] border border-[#b1f2ff] rounded-2xl">
               <div>
                 <label className="block text-xs font-semibold text-[#172B25] mb-1">
                   Price Per Hour (LKR)
@@ -400,7 +400,7 @@ export const CaregiverDashboardPage: React.FC = () => {
                   required
                   value={pricePerHour}
                   onChange={e => setPricePerHour(Number(e.target.value))}
-                  className="w-full px-3.5 py-2 text-xs bg-white border border-[#E5ECE8] focus:border-[#176B55] rounded-xl outline-none font-mono"
+                  className="w-full px-3.5 py-2 text-xs bg-white border border-[#b1f2ff] focus:border-[#3dcfff] rounded-xl outline-none font-mono"
                 />
               </div>
 
@@ -414,7 +414,7 @@ export const CaregiverDashboardPage: React.FC = () => {
                   required
                   value={pricePerDay}
                   onChange={e => setPricePerDay(Number(e.target.value))}
-                  className="w-full px-3.5 py-2 text-xs bg-white border border-[#E5ECE8] focus:border-[#176B55] rounded-xl outline-none font-mono font-bold text-[#176B55]"
+                  className="w-full px-3.5 py-2 text-xs bg-white border border-[#b1f2ff] focus:border-[#3dcfff] rounded-xl outline-none font-mono font-bold text-[#3dcfff]"
                 />
               </div>
 
@@ -428,7 +428,7 @@ export const CaregiverDashboardPage: React.FC = () => {
                   required
                   value={pricePerShift}
                   onChange={e => setPricePerShift(Number(e.target.value))}
-                  className="w-full px-3.5 py-2 text-xs bg-white border border-[#E5ECE8] focus:border-[#176B55] rounded-xl outline-none font-mono"
+                  className="w-full px-3.5 py-2 text-xs bg-white border border-[#b1f2ff] focus:border-[#3dcfff] rounded-xl outline-none font-mono"
                 />
               </div>
             </div>
@@ -441,7 +441,7 @@ export const CaregiverDashboardPage: React.FC = () => {
                 <select
                   value={primaryHospitalId}
                   onChange={e => setPrimaryHospitalId(e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF8] focus:bg-white border border-[#E5ECE8] focus:border-[#176B55] rounded-xl outline-none"
+                  className="w-full px-3.5 py-2.5 text-xs bg-[#d8f9ff] focus:bg-white border border-[#b1f2ff] focus:border-[#3dcfff] rounded-xl outline-none"
                 >
                   {hospitals.map(h => (
                     <option key={h.id} value={h.id}>
@@ -460,7 +460,7 @@ export const CaregiverDashboardPage: React.FC = () => {
                   required
                   value={whatsappNumber}
                   onChange={e => setWhatsappNumber(e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF8] focus:bg-white border border-[#E5ECE8] focus:border-[#176B55] rounded-xl outline-none font-mono"
+                  className="w-full px-3.5 py-2.5 text-xs bg-[#d8f9ff] focus:bg-white border border-[#b1f2ff] focus:border-[#3dcfff] rounded-xl outline-none font-mono"
                 />
               </div>
             </div>
@@ -471,17 +471,17 @@ export const CaregiverDashboardPage: React.FC = () => {
                 id="activeToggle"
                 checked={isActive}
                 onChange={e => setIsActive(e.target.checked)}
-                className="rounded text-[#176B55] focus:ring-[#176B55]"
+                className="rounded text-[#3dcfff] focus:ring-[#3dcfff]"
               />
               <label htmlFor="activeToggle" className="text-xs text-[#172B25] font-semibold cursor-pointer">
                 Profile is Active on HireLanka Care (Uncheck if you are currently on leave or not taking patients)
               </label>
             </div>
 
-            <div className="pt-4 border-t border-[#E5ECE8] flex justify-end">
+            <div className="pt-4 border-t border-[#b1f2ff] flex justify-end">
               <button
                 type="submit"
-                className="px-6 py-2.5 bg-[#176B55] hover:bg-[#135946] text-white text-xs font-semibold rounded-xl flex items-center gap-2 shadow-xs transition-colors cursor-pointer"
+                className="px-6 py-2.5 bg-[#3dcfff] hover:bg-[#1eb5df] text-white text-xs font-semibold rounded-xl flex items-center gap-2 shadow-xs transition-colors cursor-pointer"
               >
                 <Save className="w-4 h-4" />
                 <span>Save Profile Changes</span>
@@ -493,8 +493,8 @@ export const CaregiverDashboardPage: React.FC = () => {
 
       {/* Tab 4: Inquiries */}
       {activeTab === 'inquiries' && (
-        <div className="bg-white border border-[#E5ECE8] rounded-2xl p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-[#E5ECE8]">
+        <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[#b1f2ff]">
             <h2 className="text-lg font-bold text-[#172B25]">
               Family Hiring Inquiries ({inquiries.length})
             </h2>
@@ -508,7 +508,7 @@ export const CaregiverDashboardPage: React.FC = () => {
               No inquiries yet. Keep your availability updated to rank higher in hospital searches!
             </div>
           ) : (
-            <div className="divide-y divide-[#E5ECE8]">
+            <div className="divide-y divide-[#b1f2ff]">
               {inquiries.map(inq => (
                 <div key={inq.id} className="py-4 first:pt-0 space-y-2">
                   <div className="flex items-center justify-between">
@@ -526,12 +526,12 @@ export const CaregiverDashboardPage: React.FC = () => {
                       Shift Needed: <strong className="text-[#172B25]">{inq.shiftNeeded}</strong>
                     </div>
                     <div>
-                      Method: <span className="uppercase text-[#176B55] font-semibold">{inq.contactMethodUsed}</span>
+                      Method: <span className="uppercase text-[#3dcfff] font-semibold">{inq.contactMethodUsed}</span>
                     </div>
                   </div>
 
                   {inq.message && (
-                    <p className="text-xs text-[#172B25] bg-[#F8FAF8] p-3 rounded-xl border border-[#E5ECE8]">
+                    <p className="text-xs text-[#172B25] bg-[#d8f9ff] p-3 rounded-xl border border-[#b1f2ff]">
                       &quot;{inq.message}&quot;
                     </p>
                   )}
@@ -556,8 +556,8 @@ export const CaregiverDashboardPage: React.FC = () => {
 
       {/* Tab 5: Reviews */}
       {activeTab === 'reviews' && (
-        <div className="bg-white border border-[#E5ECE8] rounded-2xl p-6 shadow-xs space-y-6">
-          <div className="flex items-center justify-between pb-4 border-b border-[#E5ECE8]">
+        <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-6">
+          <div className="flex items-center justify-between pb-4 border-b border-[#b1f2ff]">
             <div>
               <h2 className="text-lg font-bold text-[#172B25]">
                 Patient Family Reviews ({reviews.length})
@@ -569,7 +569,7 @@ export const CaregiverDashboardPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="divide-y divide-[#E5ECE8]">
+          <div className="divide-y divide-[#b1f2ff]">
             {reviews.map(rev => (
               <div key={rev.id} className="py-4 first:pt-0 space-y-1.5">
                 <div className="flex items-center justify-between">

@@ -75,12 +75,12 @@ export const RegisterPage: React.FC = () => {
 
   return (
     <div className="min-h-[calc(100vh-16rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl w-full grid grid-cols-1 lg:grid-cols-12 bg-white rounded-3xl border border-[#E5ECE8] shadow-lg overflow-hidden">
+      <div className="max-w-4xl w-full grid grid-cols-1 lg:grid-cols-12 bg-white rounded-3xl border border-[#b1f2ff] shadow-lg overflow-hidden">
         {/* Left Info Panel */}
-        <div className="lg:col-span-5 bg-[#176B55] p-8 text-white flex flex-col justify-between">
+        <div className="lg:col-span-5 bg-[#3dcfff] p-8 text-white flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 rounded-lg bg-white text-[#176B55] flex items-center justify-center font-bold">
+              <div className="w-8 h-8 rounded-lg bg-white text-[#3dcfff] flex items-center justify-center font-bold">
                 <HeartHandshake className="w-5 h-5" />
               </div>
               <span className="text-xl font-bold tracking-tight">HireLanka Care</span>
@@ -120,13 +120,13 @@ export const RegisterPage: React.FC = () => {
           </div>
 
           {/* Account Type Selector */}
-          <div className="grid grid-cols-3 gap-2 p-1.5 bg-[#F8FAF8] border border-[#E5ECE8] rounded-2xl">
+          <div className="grid grid-cols-3 gap-2 p-1.5 bg-[#d8f9ff] border border-[#b1f2ff] rounded-2xl">
             <button
               type="button"
               onClick={() => setUserType('family')}
               className={`p-2.5 rounded-xl text-center transition-all cursor-pointer flex flex-col items-center gap-1 ${
                 userType === 'family'
-                  ? 'bg-white text-[#176B55] shadow-xs font-bold border border-[#E5ECE8]'
+                  ? 'bg-white text-[#3dcfff] shadow-xs font-bold border border-[#b1f2ff]'
                   : 'text-[#64746D] hover:text-[#172B25]'
               }`}
             >
@@ -139,7 +139,7 @@ export const RegisterPage: React.FC = () => {
               onClick={() => setUserType('individual')}
               className={`p-2.5 rounded-xl text-center transition-all cursor-pointer flex flex-col items-center gap-1 ${
                 userType === 'individual'
-                  ? 'bg-white text-[#176B55] shadow-xs font-bold border border-[#E5ECE8]'
+                  ? 'bg-white text-[#3dcfff] shadow-xs font-bold border border-[#b1f2ff]'
                   : 'text-[#64746D] hover:text-[#172B25]'
               }`}
             >
@@ -152,7 +152,7 @@ export const RegisterPage: React.FC = () => {
               onClick={() => setUserType('agency')}
               className={`p-2.5 rounded-xl text-center transition-all cursor-pointer flex flex-col items-center gap-1 ${
                 userType === 'agency'
-                  ? 'bg-white text-[#176B55] shadow-xs font-bold border border-[#E5ECE8]'
+                  ? 'bg-white text-[#3dcfff] shadow-xs font-bold border border-[#b1f2ff]'
                   : 'text-[#64746D] hover:text-[#172B25]'
               }`}
             >
@@ -178,7 +178,7 @@ export const RegisterPage: React.FC = () => {
                 placeholder={userType === 'agency' ? 'e.g. Suwasevana Healthcare Services' : 'e.g. Nadeesha Perera'}
                 value={fullName}
                 onChange={e => setFullName(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF8] focus:bg-white border border-[#E5ECE8] focus:border-[#176B55] rounded-xl outline-none transition-colors text-[#172B25]"
+                className="w-full px-3.5 py-2.5 text-xs bg-[#d8f9ff] focus:bg-white border border-[#b1f2ff] focus:border-[#3dcfff] rounded-xl outline-none transition-colors text-[#172B25]"
               />
             </div>
 
@@ -193,7 +193,7 @@ export const RegisterPage: React.FC = () => {
                   placeholder="name@example.com"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF8] focus:bg-white border border-[#E5ECE8] focus:border-[#176B55] rounded-xl outline-none transition-colors text-[#172B25]"
+                  className="w-full px-3.5 py-2.5 text-xs bg-[#d8f9ff] focus:bg-white border border-[#b1f2ff] focus:border-[#3dcfff] rounded-xl outline-none transition-colors text-[#172B25]"
                 />
               </div>
 
@@ -207,7 +207,7 @@ export const RegisterPage: React.FC = () => {
                   placeholder="+94 77 123 4567"
                   value={phoneNumber}
                   onChange={e => setPhoneNumber(e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF8] focus:bg-white border border-[#E5ECE8] focus:border-[#176B55] rounded-xl outline-none transition-colors text-[#172B25]"
+                  className="w-full px-3.5 py-2.5 text-xs bg-[#d8f9ff] focus:bg-white border border-[#b1f2ff] focus:border-[#3dcfff] rounded-xl outline-none transition-colors text-[#172B25]"
                 />
               </div>
             </div>
@@ -221,10 +221,11 @@ export const RegisterPage: React.FC = () => {
                   <input
                     type={showPassword ? 'text' : 'password'}
                     required
-                    placeholder="Min 6 characters"
+                    placeholder="Min 8 characters"
                     value={password}
+                    minLength={8}
                     onChange={e => setPassword(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF8] focus:bg-white border border-[#E5ECE8] focus:border-[#176B55] rounded-xl outline-none transition-colors text-[#172B25] pr-9"
+                    className="w-full px-3.5 py-2.5 text-xs bg-[#d8f9ff] focus:bg-white border border-[#b1f2ff] focus:border-[#3dcfff] rounded-xl outline-none transition-colors text-[#172B25] pr-9"
                   />
                   <button
                     type="button"
@@ -246,7 +247,7 @@ export const RegisterPage: React.FC = () => {
                   placeholder="Repeat password"
                   value={confirmPassword}
                   onChange={e => setConfirmPassword(e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF8] focus:bg-white border border-[#E5ECE8] focus:border-[#176B55] rounded-xl outline-none transition-colors text-[#172B25]"
+                  className="w-full px-3.5 py-2.5 text-xs bg-[#d8f9ff] focus:bg-white border border-[#b1f2ff] focus:border-[#3dcfff] rounded-xl outline-none transition-colors text-[#172B25]"
                 />
               </div>
             </div>
@@ -257,7 +258,7 @@ export const RegisterPage: React.FC = () => {
                 id="terms"
                 checked={agreeTerms}
                 onChange={e => setAgreeTerms(e.target.checked)}
-                className="mt-0.5 rounded text-[#176B55] focus:ring-[#176B55]"
+                className="mt-0.5 rounded text-[#3dcfff] focus:ring-[#3dcfff]"
               />
               <label htmlFor="terms" className="text-xs text-[#64746D] leading-tight">
                 {t('disclaimer')}
@@ -267,7 +268,7 @@ export const RegisterPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-[#176B55] hover:bg-[#135946] text-white font-semibold text-xs rounded-xl transition-colors shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+              className="w-full py-3 px-4 bg-[#3dcfff] hover:bg-[#1eb5df] text-white font-semibold text-xs rounded-xl transition-colors shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
             >
               <span>{loading ? 'Creating Account...' : t('createAccountBtn')}</span>
               <ArrowRight className="w-4 h-4" />
@@ -276,7 +277,7 @@ export const RegisterPage: React.FC = () => {
 
           <div className="text-center pt-2 text-xs text-[#64746D]">
             Already have an account?{' '}
-            <Link to="/login" className="text-[#176B55] font-semibold hover:underline">
+            <Link to="/login" className="text-[#3dcfff] font-semibold hover:underline">
               {t('login')}
             </Link>
           </div>

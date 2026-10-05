@@ -63,7 +63,7 @@ export const CaregiverCard: React.FC<CaregiverCardProps> = ({
 
   if (viewMode === 'list') {
     return (
-      <div className="bg-white border border-[#E5ECE8] rounded-2xl p-5 hover:border-[#176B55]/40 hover:shadow-sm transition-all duration-200">
+      <div className="bg-white border border-[#b1f2ff] rounded-2xl p-5 hover:border-[#3dcfff]/40 hover:shadow-sm transition-all duration-200">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
           <div className="flex items-start gap-4">
             <div className="relative shrink-0">
@@ -71,7 +71,7 @@ export const CaregiverCard: React.FC<CaregiverCardProps> = ({
                 src={caregiver.profileImageUrl}
                 alt={caregiver.fullName}
                 referrerPolicy="no-referrer"
-                className="w-18 h-18 rounded-xl object-cover border border-[#E5ECE8] bg-slate-100"
+                className="w-18 h-18 rounded-xl object-cover border border-[#b1f2ff] bg-slate-100"
                 onError={e => {
                   (e.target as HTMLImageElement).src =
                     'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=200&q=80';
@@ -79,7 +79,7 @@ export const CaregiverCard: React.FC<CaregiverCardProps> = ({
               />
               {caregiver.isVerified && (
                 <div
-                  className="absolute -bottom-1 -right-1 bg-[#176B55] text-white p-1 rounded-full shadow-sm"
+                  className="absolute -bottom-1 -right-1 bg-[#3dcfff] text-white p-1 rounded-full shadow-sm"
                   title="Police & Credential Verified Caregiver"
                 >
                   <ShieldCheck className="w-3.5 h-3.5" />
@@ -91,12 +91,12 @@ export const CaregiverCard: React.FC<CaregiverCardProps> = ({
               <div className="flex items-center gap-2 flex-wrap">
                 <Link
                   to={`/caregivers/${caregiver.id}`}
-                  className="text-lg font-bold text-[#172B25] hover:text-[#176B55] transition-colors"
+                  className="text-lg font-bold text-[#172B25] hover:text-[#3dcfff] transition-colors"
                 >
                   {caregiver.fullName}
                 </Link>
                 {caregiver.isVerified && (
-                  <span className="text-xs font-semibold text-[#176B55] flex items-center gap-1">
+                  <span className="text-xs font-semibold text-[#3dcfff] flex items-center gap-1">
                     <ShieldCheck className="w-3.5 h-3.5" /> {t('verifiedBadge')}
                   </span>
                 )}
@@ -112,7 +112,7 @@ export const CaregiverCard: React.FC<CaregiverCardProps> = ({
               </div>
 
               <div className="flex items-center gap-1.5 mt-2 text-xs font-medium text-[#172B25]">
-                <MapPin className="w-3.5 h-3.5 text-[#176B55] shrink-0" />
+                <MapPin className="w-3.5 h-3.5 text-[#3dcfff] shrink-0" />
                 <span className="truncate">{primaryHospital ? primaryHospital.name : 'Colombo Hospital'}</span>
                 {primaryHospital && (
                   <span className="text-[#64746D]">({primaryHospital.district})</span>
@@ -122,16 +122,16 @@ export const CaregiverCard: React.FC<CaregiverCardProps> = ({
               <div className="mt-2.5 flex items-center gap-3">
                 <StarRating rating={caregiver.rating} showNumber reviewCount={caregiver.reviewCount} size="sm" />
                 <span className="text-xs text-[#64746D] flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-[#2E8B70]" />
+                  <Clock className="w-3 h-3 text-[#63e5ff]" />
                   {getShiftLabel(caregiver.availabilityType)}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-row md:flex-col md:items-end justify-between items-center gap-3 pt-3 md:pt-0 border-t md:border-t-0 border-[#E5ECE8]">
+          <div className="flex flex-row md:flex-col md:items-end justify-between items-center gap-3 pt-3 md:pt-0 border-t md:border-t-0 border-[#b1f2ff]">
             <div className="text-left md:text-right">
-              <div className="text-xl font-bold text-[#176B55] tabular-nums">
+              <div className="text-xl font-bold text-[#3dcfff] tabular-nums">
                 Rs. {caregiver.pricePerDay.toLocaleString()}
               </div>
               <div className="text-xs text-[#64746D]">
@@ -150,7 +150,7 @@ export const CaregiverCard: React.FC<CaregiverCardProps> = ({
               </button>
               <Link
                 to={`/caregivers/${caregiver.id}`}
-                className="px-3.5 py-2 text-xs font-semibold bg-[#F8FAF8] hover:bg-[#E5ECE8] text-[#172B25] border border-[#E5ECE8] rounded-xl transition-colors whitespace-nowrap"
+                className="px-3.5 py-2 text-xs font-semibold bg-[#d8f9ff] hover:bg-[#b1f2ff] text-[#172B25] border border-[#b1f2ff] rounded-xl transition-colors whitespace-nowrap"
               >
                 {t('viewProfile')}
               </Link>
@@ -163,7 +163,7 @@ export const CaregiverCard: React.FC<CaregiverCardProps> = ({
 
   // Default Grid Card
   return (
-    <div className="bg-white border border-[#E5ECE8] rounded-2xl overflow-hidden hover:border-[#176B55]/50 hover:shadow-md transition-all duration-200 flex flex-col justify-between group">
+    <div className="bg-white border border-[#b1f2ff] rounded-2xl overflow-hidden hover:border-[#3dcfff]/50 hover:shadow-md transition-all duration-200 flex flex-col justify-between group">
       <div>
         {/* Card Header & Photo */}
         <div className="p-5 pb-3">
@@ -173,7 +173,7 @@ export const CaregiverCard: React.FC<CaregiverCardProps> = ({
                 src={caregiver.profileImageUrl}
                 alt={caregiver.fullName}
                 referrerPolicy="no-referrer"
-                className="w-16 h-16 rounded-xl object-cover border border-[#E5ECE8] bg-slate-100 group-hover:scale-[1.02] transition-transform"
+                className="w-16 h-16 rounded-xl object-cover border border-[#b1f2ff] bg-slate-100 group-hover:scale-[1.02] transition-transform"
                 onError={e => {
                   (e.target as HTMLImageElement).src =
                     'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=200&q=80';
@@ -181,7 +181,7 @@ export const CaregiverCard: React.FC<CaregiverCardProps> = ({
               />
               {caregiver.isVerified && (
                 <div
-                  className="absolute -bottom-1 -right-1 bg-[#176B55] text-white p-1 rounded-full shadow-sm"
+                  className="absolute -bottom-1 -right-1 bg-[#3dcfff] text-white p-1 rounded-full shadow-sm"
                   title="Verified Caregiver"
                 >
                   <ShieldCheck className="w-3.5 h-3.5" />
@@ -190,7 +190,7 @@ export const CaregiverCard: React.FC<CaregiverCardProps> = ({
             </div>
 
             <div className="text-right">
-              <div className="text-lg font-bold text-[#176B55] tabular-nums">
+              <div className="text-lg font-bold text-[#3dcfff] tabular-nums">
                 Rs. {caregiver.pricePerDay.toLocaleString()}
               </div>
               <div className="text-xs text-[#64746D] tabular-nums">
@@ -203,7 +203,7 @@ export const CaregiverCard: React.FC<CaregiverCardProps> = ({
           <div className="mt-3">
             <Link
               to={`/caregivers/${caregiver.id}`}
-              className="text-base font-bold text-[#172B25] hover:text-[#176B55] transition-colors block truncate"
+              className="text-base font-bold text-[#172B25] hover:text-[#3dcfff] transition-colors block truncate"
             >
               {caregiver.fullName}
             </Link>
@@ -220,7 +220,7 @@ export const CaregiverCard: React.FC<CaregiverCardProps> = ({
 
           {/* Hospital indicator */}
           <div className="flex items-start gap-1.5 mt-3 text-xs text-[#172B25] font-medium min-h-[32px]">
-            <MapPin className="w-3.5 h-3.5 text-[#176B55] mt-0.5 shrink-0" />
+            <MapPin className="w-3.5 h-3.5 text-[#3dcfff] mt-0.5 shrink-0" />
             <span className="line-clamp-2">
               {primaryHospital ? primaryHospital.name : 'Hospital in Sri Lanka'}
             </span>
@@ -229,14 +229,14 @@ export const CaregiverCard: React.FC<CaregiverCardProps> = ({
           {/* Rating */}
           <div className="mt-2.5 flex items-center justify-between">
             <StarRating rating={caregiver.rating} showNumber reviewCount={caregiver.reviewCount} size="sm" />
-            <span className="text-xs text-[#2E8B70] font-medium">
+            <span className="text-xs text-[#63e5ff] font-medium">
               {getShiftLabel(caregiver.availabilityType)}
             </span>
           </div>
 
           {/* Specializations snippet */}
           {caregiver.specializations.length > 0 && (
-            <div className="mt-3 pt-3 border-t border-[#E5ECE8] text-xs text-[#64746D] line-clamp-1">
+            <div className="mt-3 pt-3 border-t border-[#b1f2ff] text-xs text-[#64746D] line-clamp-1">
               <span className="font-medium text-[#172B25]">Focus: </span>
               {caregiver.specializations.slice(0, 2).join(', ')}
             </div>
@@ -246,7 +246,7 @@ export const CaregiverCard: React.FC<CaregiverCardProps> = ({
 
       {/* Card Footer Actions */}
       <div className="p-4 pt-0">
-        <div className="grid grid-cols-2 gap-2 pt-3 border-t border-[#E5ECE8]">
+        <div className="grid grid-cols-2 gap-2 pt-3 border-t border-[#b1f2ff]">
           <button
             type="button"
             onClick={handleWhatsAppClick}
@@ -257,7 +257,7 @@ export const CaregiverCard: React.FC<CaregiverCardProps> = ({
           </button>
           <Link
             to={`/caregivers/${caregiver.id}`}
-            className="w-full py-2.5 px-3 text-xs font-semibold bg-[#F8FAF8] hover:bg-[#E5ECE8] text-[#172B25] border border-[#E5ECE8] rounded-xl flex items-center justify-center transition-colors whitespace-nowrap"
+            className="w-full py-2.5 px-3 text-xs font-semibold bg-[#d8f9ff] hover:bg-[#b1f2ff] text-[#172B25] border border-[#b1f2ff] rounded-xl flex items-center justify-center transition-colors whitespace-nowrap"
           >
             {t('viewProfile')}
           </Link>

@@ -33,11 +33,14 @@ function ScrollToTop() {
 
 // Generic Role Guard
 function RequireRole({ role, children }: { role: 'family' | 'individual' | 'agency' | 'admin'; children: React.ReactNode }) {
-  const { currentUser } = useAuth();
+  const { currentUser, isLoading } = useAuth();
+  if (isLoading) {
+    return <div className="max-w-md mx-auto my-16 p-6 text-center text-sm text-[#64746D]">Checking your session...</div>;
+  }
   if (!currentUser) {
     return (
-      <div className="max-w-md mx-auto my-16 p-6 bg-white border border-[#E5ECE8] rounded-2xl shadow-sm text-center space-y-4">
-        <div className="w-12 h-12 rounded-full bg-[#176B55]/10 text-[#176B55] flex items-center justify-center mx-auto text-xl font-bold">
+      <div className="max-w-md mx-auto my-16 p-6 bg-white border border-[#b1f2ff] rounded-2xl shadow-sm text-center space-y-4">
+        <div className="w-12 h-12 rounded-full bg-[#3dcfff]/10 text-[#3dcfff] flex items-center justify-center mx-auto text-xl font-bold">
           🔒
         </div>
         <h2 className="text-lg font-bold text-[#172B25]">Authentication Required</h2>
@@ -50,7 +53,7 @@ function RequireRole({ role, children }: { role: 'family' | 'individual' | 'agen
 
   if (currentUser.userType !== role && currentUser.userType !== 'admin') {
     return (
-      <div className="max-w-md mx-auto my-16 p-6 bg-white border border-[#E5ECE8] rounded-2xl shadow-sm text-center space-y-4">
+      <div className="max-w-md mx-auto my-16 p-6 bg-white border border-[#b1f2ff] rounded-2xl shadow-sm text-center space-y-4">
         <div className="w-12 h-12 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mx-auto text-xl font-bold">
           ⚠️
         </div>
@@ -68,11 +71,11 @@ function RequireRole({ role, children }: { role: 'family' | 'individual' | 'agen
 export default function App() {
   return (
     <LanguageProvider>
-      <DataProvider>
-        <AuthProvider>
+      <AuthProvider>
+        <DataProvider>
           <BrowserRouter>
             <ScrollToTop />
-            <div className="min-h-screen flex flex-col bg-[#F8FAF8] text-[#172B25]">
+            <div className="min-h-screen flex flex-col bg-[#d8f9ff] text-[#172B25]">
               <Navbar />
               <main className="flex-1">
                 <Routes>
@@ -96,8 +99,8 @@ export default function App() {
               <Footer />
             </div>
           </BrowserRouter>
-        </AuthProvider>
-      </DataProvider>
+        </DataProvider>
+      </AuthProvider>
     </LanguageProvider>
   );
 }

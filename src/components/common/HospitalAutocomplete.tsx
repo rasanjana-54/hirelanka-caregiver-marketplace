@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Hospital } from '../../types';
 import { useData } from '../../context/DataContext';
+import { apiRequest } from '../../lib/api';
 import { Search, MapPin, Building2, X } from 'lucide-react';
 
 interface HospitalAutocompleteProps {
@@ -17,6 +18,7 @@ export const HospitalAutocomplete: React.FC<HospitalAutocompleteProps> = ({
   className = ''
 }) => {
   const { hospitals } = useData();
+  const [apiHospitals, setApiHospitals] = useState<Hospital[] | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -32,6 +34,21 @@ export const HospitalAutocomplete: React.FC<HospitalAutocompleteProps> = ({
   }, [value, selectedHospital]);
 
   useEffect(() => {
+    const term = query.trim();
+    if (!term) {
+      setApiHospitals(null);
+      return;
+    }
+    const controller = new AbortController();
+    apiRequest<{ hospitals: Hospital[] }>(`/hospitals/search?query=${encodeURIComponent(term)}`, { signal: controller.signal })
+      .then(result => setApiHospitals(result.hospitals))
+      .catch(error => {
+        if (error.name !== 'AbortError') setApiHospitals(null);
+      });
+    return () => controller.abort();
+  }, [query]);
+
+  useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
         setIsOpen(false);
@@ -41,7 +58,7 @@ export const HospitalAutocomplete: React.FC<HospitalAutocompleteProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const filteredHospitals = query.trim()
+  const localFilteredHospitals = query.trim()
     ? hospitals.filter(
         h =>
           h.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -49,6 +66,7 @@ export const HospitalAutocomplete: React.FC<HospitalAutocompleteProps> = ({
           h.location.toLowerCase().includes(query.toLowerCase())
       )
     : hospitals;
+  const filteredHospitals = apiHospitals ?? localFilteredHospitals;
 
   const handleSelect = (hospitalId: string) => {
     onChange(hospitalId);
@@ -78,7 +96,7 @@ export const HospitalAutocomplete: React.FC<HospitalAutocompleteProps> = ({
           }}
           onFocus={() => setIsOpen(true)}
           placeholder={placeholder}
-          className="w-full pl-10 pr-9 py-2.5 text-sm bg-white border border-[#E5ECE8] rounded-xl text-[#172B25] placeholder:text-[#64746D] focus:border-[#176B55] focus:ring-1 focus:ring-[#176B55] outline-none transition-colors"
+          className="w-full pl-10 pr-9 py-2.5 text-sm bg-white border border-[#b1f2ff] rounded-xl text-[#172B25] placeholder:text-[#64746D] focus:border-[#3dcfff] focus:ring-1 focus:ring-[#3dcfff] outline-none transition-colors"
         />
         {query && (
           <button
@@ -93,14 +111,14 @@ export const HospitalAutocomplete: React.FC<HospitalAutocompleteProps> = ({
       </div>
 
       {isOpen && (
-        <div className="absolute z-50 left-0 right-0 mt-1.5 max-h-72 overflow-y-auto bg-white border border-[#E5ECE8] rounded-xl shadow-lg divide-y divide-[#E5ECE8]">
-          <div className="p-2 text-xs font-semibold text-[#64746D] bg-[#F8FAF8] flex items-center justify-between">
+        <div className="absolute z-50 left-0 right-0 mt-1.5 max-h-72 overflow-y-auto bg-white border border-[#b1f2ff] rounded-xl shadow-lg divide-y divide-[#b1f2ff]">
+          <div className="p-2 text-xs font-semibold text-[#64746D] bg-[#d8f9ff] flex items-center justify-between">
             <span>Sri Lankan Hospitals ({filteredHospitals.length})</span>
             {value && (
               <button
                 type="button"
                 onClick={handleClear}
-                className="text-[#176B55] hover:underline"
+                className="text-[#3dcfff] hover:underline"
               >
                 Clear Selection
               </button>
@@ -116,11 +134,11 @@ export const HospitalAutocomplete: React.FC<HospitalAutocompleteProps> = ({
                 key={h.id}
                 type="button"
                 onClick={() => handleSelect(h.id)}
-                className={`w-full text-left p-3 hover:bg-[#F8FAF8] transition-colors flex items-start gap-2.5 ${
-                  h.id === value ? 'bg-emerald-50/70 border-l-4 border-[#176B55]' : ''
+                className={`w-full text-left p-3 hover:bg-[#d8f9ff] transition-colors flex items-start gap-2.5 ${
+                  h.id === value ? 'bg-cyan-50/70 border-l-4 border-[#3dcfff]' : ''
                 }`}
               >
-                <div className="mt-0.5 p-1.5 bg-[#F8FAF8] text-[#176B55] rounded-lg shrink-0">
+                <div className="mt-0.5 p-1.5 bg-[#d8f9ff] text-[#3dcfff] rounded-lg shrink-0">
                   <Building2 className="w-4 h-4" />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -129,13 +147,13 @@ export const HospitalAutocomplete: React.FC<HospitalAutocompleteProps> = ({
                   </div>
                   <div className="flex items-center gap-2 mt-0.5 text-xs text-[#64746D]">
                     <span className="flex items-center gap-1">
-                      <MapPin className="w-3 h-3 text-[#176B55]" />
+                      <MapPin className="w-3 h-3 text-[#3dcfff]" />
                       {h.district}
                     </span>
                     <span>·</span>
                     <span className="truncate">{h.location}</span>
                     <span>·</span>
-                    <span className={h.hospitalType === 'government' ? 'text-[#176B55] font-medium' : 'text-slate-600'}>
+                    <span className={h.hospitalType === 'government' ? 'text-[#3dcfff] font-medium' : 'text-slate-600'}>
                       {h.hospitalType === 'government' ? 'Government' : 'Private'}
                     </span>
                   </div>

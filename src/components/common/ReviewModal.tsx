@@ -35,7 +35,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !comment || !reviewerName) return;
+    if (!currentUser || currentUser.userType !== 'family' || !title || !comment || !reviewerName) return;
 
     const hospitalObj = hospitals.find(h => h.id === hospitalId);
 
@@ -60,7 +60,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-      <div className="relative w-full max-w-lg bg-white rounded-2xl border border-[#E5ECE8] shadow-2xl p-6 overflow-hidden">
+      <div className="relative w-full max-w-lg bg-white rounded-2xl border border-[#b1f2ff] shadow-2xl p-6 overflow-hidden">
         <button
           type="button"
           onClick={onClose}
@@ -71,7 +71,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
 
         {submitted ? (
           <div className="text-center py-8">
-            <div className="w-14 h-14 bg-emerald-100 text-[#176B55] rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-14 h-14 bg-cyan-100 text-[#3dcfff] rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle2 className="w-8 h-8" />
             </div>
             <h3 className="text-xl font-bold text-[#172B25]">{t('reviewSubmittedSuccess')}</h3>
@@ -95,7 +95,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                 <label className="block text-xs font-semibold text-[#172B25] mb-1.5">
                   {t('ratingLabel')} <span className="text-red-500">*</span>
                 </label>
-                <div className="flex items-center gap-3 bg-[#F8FAF8] p-3 rounded-xl border border-[#E5ECE8]">
+                <div className="flex items-center gap-3 bg-[#d8f9ff] p-3 rounded-xl border border-[#b1f2ff]">
                   <StarRating
                     rating={rating}
                     size="lg"
@@ -118,7 +118,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                   placeholder="e.g. Dilshan Mendis"
                   value={reviewerName}
                   onChange={e => setReviewerName(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-[#E5ECE8] rounded-xl bg-[#F8FAF8] focus:bg-white focus:border-[#176B55] outline-none transition-colors"
+                  className="w-full px-3 py-2 text-sm border border-[#b1f2ff] rounded-xl bg-[#d8f9ff] focus:bg-white focus:border-[#3dcfff] outline-none transition-colors"
                 />
               </div>
 
@@ -129,7 +129,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                 <select
                   value={hospitalId}
                   onChange={e => setHospitalId(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-[#E5ECE8] rounded-xl bg-[#F8FAF8] focus:bg-white focus:border-[#176B55] outline-none transition-colors"
+                  className="w-full px-3 py-2 text-sm border border-[#b1f2ff] rounded-xl bg-[#d8f9ff] focus:bg-white focus:border-[#3dcfff] outline-none transition-colors"
                 >
                   <option value="">Select hospital (optional)</option>
                   {hospitals.map(h => (
@@ -150,7 +150,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                   placeholder="e.g. Exceptional care during mother's recovery"
                   value={title}
                   onChange={e => setTitle(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-[#E5ECE8] rounded-xl bg-[#F8FAF8] focus:bg-white focus:border-[#176B55] outline-none transition-colors"
+                  className="w-full px-3 py-2 text-sm border border-[#b1f2ff] rounded-xl bg-[#d8f9ff] focus:bg-white focus:border-[#3dcfff] outline-none transition-colors"
                 />
               </div>
 
@@ -164,11 +164,18 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                   placeholder={t('reviewPlaceholder')}
                   value={comment}
                   onChange={e => setComment(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-[#E5ECE8] rounded-xl bg-[#F8FAF8] focus:bg-white focus:border-[#176B55] outline-none transition-colors resize-none"
+                  className="w-full px-3 py-2 text-sm border border-[#b1f2ff] rounded-xl bg-[#d8f9ff] focus:bg-white focus:border-[#3dcfff] outline-none transition-colors resize-none"
                 />
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-2">
+                {(!currentUser || currentUser.userType !== 'family' || !currentUser.isVerified) && (
+                  <p className="mr-auto text-xs text-[#64746D]">
+                    {!currentUser ? 'Sign in with a family account to submit a review.' :
+                      currentUser.userType !== 'family' ? 'Reviews are available to family accounts.' :
+                        'Your family account must be verified before reviewing.'}
+                  </p>
+                )}
                 <button
                   type="button"
                   onClick={onClose}
@@ -178,7 +185,8 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 bg-[#176B55] hover:bg-[#135946] text-white text-xs font-semibold rounded-xl transition-colors shadow-sm cursor-pointer"
+                  disabled={!currentUser || currentUser.userType !== 'family' || !currentUser.isVerified}
+                  className="px-5 py-2.5 bg-[#3dcfff] hover:bg-[#1eb5df] text-white text-xs font-semibold rounded-xl transition-colors shadow-sm cursor-pointer"
                 >
                   {t('submitReviewBtn')}
                 </button>

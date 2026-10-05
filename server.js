@@ -1,10 +1,56 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { pool, query } from './db.js';
+import { createMarketplaceRouter } from './routes/marketplace.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const JWT_SECRET = process.env.JWT_SECRET;
+const allowedOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:3000')
+  .split(',')
+  .map(origin => origin.trim());
 
-app.use(express.json());
+if (process.env.NODE_ENV === 'production') app.set('trust proxy', 1);
+app.use(helmet());
+app.use(cors({ origin: allowedOrigins }));
+app.use(express.json({ limit: '1mb' }));
+app.use('/api', rateLimit({ windowMs: 60 * 1000, limit: 100, standardHeaders: 'draft-7', legacyHeaders: false }));
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === 'production' && req.get('x-forwarded-proto') !== 'https') {
+    return res.redirect(308, `https://${req.get('host')}${req.originalUrl}`);
+  }
+  return next();
+});
+
+const createToken = user => {
+  if (!JWT_SECRET) throw new Error('JWT_SECRET is not configured');
+  return jwt.sign(
+    { userType: user.user_type },
+    JWT_SECRET,
+    { subject: user.id, expiresIn: process.env.JWT_EXPIRES_IN || '1d' }
+  );
+};
+
+const requireAuth = (req, res, next) => {
+  const authorization = req.get('authorization') || '';
+  const token = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
+  if (!token || !JWT_SECRET) {
+    return createErrorResponse(res, 401, 'UNAUTHORIZED', 'A valid bearer token is required');
+  }
+
+  try {
+    const claims = jwt.verify(token, JWT_SECRET);
+    req.user = { id: claims.sub, userType: claims.userType };
+    return next();
+  } catch {
+    return createErrorResponse(res, 401, 'UNAUTHORIZED', 'The access token is invalid or expired');
+  }
+};
 
 // In-Memory Database (Pre-populated matching Sri Lankan dataset & Technical Spec schema)
 const db = {
@@ -215,67 +261,127 @@ const createErrorResponse = (res, statusCode, code, message, details = null) => 
 };
 
 // Health Check
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', service: 'HireLanka Care Express REST API', timestamp: new Date() });
+app.get('/api/health', async (req, res) => {
+  try {
+    await query('SELECT 1');
+    res.json({ status: 'ok', database: 'connected', service: 'HireLanka Care Express REST API', timestamp: new Date() });
+  } catch {
+    res.status(503).json({ status: 'error', database: 'unavailable', service: 'HireLanka Care Express REST API' });
+  }
 });
 
 // -------------------------------------------------------------
 // 3.1 AUTHENTICATION ENDPOINTS
 // -------------------------------------------------------------
-app.post('/api/auth/register', (req, res) => {
-  const { email, password, user_type, phone_number } = req.body;
-  if (!email || !password || !user_type) {
-    return createErrorResponse(res, 400, 'VALIDATION_ERROR', 'Email, password, and user_type are required');
+app.post('/api/auth/register', async (req, res) => {
+  const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
+  const password = req.body.password;
+  const userType = req.body.user_type;
+  const fullName = typeof req.body.full_name === 'string' ? req.body.full_name.trim() : '';
+  const phoneNumber = typeof req.body.phone_number === 'string' ? req.body.phone_number.trim() : '';
+
+  if (!/^\S+@\S+\.\S+$/.test(email) || typeof password !== 'string' || password.length < 8 || !fullName) {
+    return createErrorResponse(res, 400, 'VALIDATION_ERROR', 'Valid email, full name, and password of at least 8 characters are required');
   }
-
-  const existing = db.users.find(u => u.email === email);
-  if (existing) {
-    return createErrorResponse(res, 409, 'DUPLICATE_ENTRY', 'User with this email already exists');
+  if (!['family', 'individual', 'agency'].includes(userType)) {
+    return createErrorResponse(res, 400, 'VALIDATION_ERROR', 'user_type must be family, individual, or agency');
   }
+  if (!JWT_SECRET) return createErrorResponse(res, 500, 'SERVER_ERROR', 'Authentication is not configured');
 
-  const newUser = {
-    id: `usr-${Date.now()}`,
-    email,
-    password_hash: `$2b$10$fakehash_${Date.now()}`,
-    phone_number: phone_number || '',
-    user_type,
-    is_verified: false,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  };
-
-  db.users.push(newUser);
-
-  res.status(201).json({
-    success: true,
-    user_id: newUser.id,
-    user_type: newUser.user_type,
-    token: `mock_jwt_token_${newUser.id}_${Date.now()}`
-  });
+  let client;
+  let transactionStarted = false;
+  try {
+    client = await pool.connect();
+    const passwordHash = await bcrypt.hash(password, 10);
+    await client.query('BEGIN');
+    transactionStarted = true;
+    const { rows: [user] } = await client.query(
+      `INSERT INTO users (email, password_hash, phone_number, full_name, user_type)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING id, email, phone_number, full_name, user_type, is_verified, created_at`,
+      [email, passwordHash, phoneNumber, fullName, userType]
+    );
+    const token = createToken(user);
+    if (userType === 'individual' || userType === 'agency') {
+      const { rows: [hospital] } = await client.query('SELECT id FROM hospitals ORDER BY name LIMIT 1');
+      if (!hospital) throw new Error('Hospitals have not been seeded');
+      if (userType === 'individual') {
+        await client.query(
+          `INSERT INTO caregiver_profiles
+            (user_id, full_name, age, bio, primary_hospital_id, price_per_hour, price_per_day,
+             price_per_shift, availability_type, phone_number, whatsapp_number, email)
+           VALUES ($1, $2, 30, 'Complete your caregiver profile details.', $3, 0, 0, 0, 'whole_day', $4, $4, $5)`,
+          [user.id, fullName, hospital.id, phoneNumber, email]
+        );
+      } else {
+        await client.query(
+          `INSERT INTO agency_profiles (user_id, agency_name, primary_hospital_id, contact_phone, contact_email, contact_whatsapp)
+           VALUES ($1, $2, $3, $4, $5, $4)`,
+          [user.id, fullName, hospital.id, phoneNumber, email]
+        );
+      }
+    }
+    await client.query('COMMIT');
+    transactionStarted = false;
+    res.status(201).json({ success: true, user_id: user.id, user_type: user.user_type, token, user });
+  } catch (error) {
+    if (client && transactionStarted) await client.query('ROLLBACK');
+    if (error.code === '23505') {
+      return createErrorResponse(res, 409, 'DUPLICATE_ENTRY', 'An account with this email already exists');
+    }
+    return createErrorResponse(res, 500, 'SERVER_ERROR', 'Could not create account');
+  } finally {
+    client?.release();
+  }
 });
 
-app.post('/api/auth/login', (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
+app.post('/api/auth/login', async (req, res) => {
+  const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
+  const password = req.body.password;
+  if (!email || typeof password !== 'string' || !password) {
     return createErrorResponse(res, 400, 'VALIDATION_ERROR', 'Email and password are required');
   }
 
-  const user = db.users.find(u => u.email === email);
-  if (!user) {
-    return createErrorResponse(res, 401, 'UNAUTHORIZED', 'Invalid email or password');
-  }
+  try {
+    const { rows: [user] } = await query(
+      `SELECT id, email, password_hash, phone_number, full_name, user_type, is_verified, created_at
+       FROM users WHERE email = $1`,
+      [email]
+    );
+    if (!user || !(await bcrypt.compare(password, user.password_hash))) {
+      return createErrorResponse(res, 401, 'UNAUTHORIZED', 'Invalid email or password');
+    }
 
-  res.json({
-    success: true,
-    token: `mock_jwt_token_${user.id}_${Date.now()}`,
-    user_id: user.id,
-    user_type: user.user_type
-  });
+    const token = createToken(user);
+    const { password_hash: passwordHash, ...publicUser } = user;
+    res.json({ success: true, token, user_id: user.id, user_type: user.user_type, user: publicUser });
+  } catch (error) {
+    if (error.message === 'JWT_SECRET is not configured') {
+      return createErrorResponse(res, 500, 'SERVER_ERROR', 'Authentication is not configured');
+    }
+    return createErrorResponse(res, 500, 'SERVER_ERROR', 'Could not authenticate account');
+  }
 });
 
-app.post('/api/auth/logout', (req, res) => {
+app.get('/api/auth/me', requireAuth, async (req, res) => {
+  try {
+    const { rows: [user] } = await query(
+      `SELECT id, email, phone_number, full_name, user_type, is_verified, created_at
+       FROM users WHERE id = $1`,
+      [req.user.id]
+    );
+    if (!user) return createErrorResponse(res, 401, 'UNAUTHORIZED', 'Account no longer exists');
+    res.json({ success: true, user });
+  } catch {
+    res.status(500).json({ success: false, error: { code: 'SERVER_ERROR', message: 'Could not load account', details: null } });
+  }
+});
+
+app.post('/api/auth/logout', requireAuth, (req, res) => {
   res.json({ success: true, message: 'Logged out successfully' });
 });
+
+app.use('/api', createMarketplaceRouter({ query, pool, requireAuth, createErrorResponse }));
 
 // -------------------------------------------------------------
 // 3.2 CAREGIVER PROFILE MANAGEMENT
@@ -531,6 +637,10 @@ app.get('/api/hospitals/search', (req, res) => {
   res.json({ success: true, hospitals: matched });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 HireLanka Care Express REST API server running on port ${PORT}`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 HireLanka Care Express REST API server running on port ${PORT}`);
+  });
+}
+
+export default app;

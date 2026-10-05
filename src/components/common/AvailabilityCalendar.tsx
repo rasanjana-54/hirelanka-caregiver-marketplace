@@ -75,9 +75,9 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
   };
 
   return (
-    <div className="bg-white border border-[#E5ECE8] rounded-2xl p-5 shadow-sm">
+    <div className="bg-white border border-[#b1f2ff] rounded-2xl p-5 shadow-sm">
       {/* Calendar Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-[#E5ECE8]">
+      <div className="flex items-center justify-between pb-4 border-b border-[#b1f2ff]">
         <div>
           <h3 className="text-base font-bold text-[#172B25]">
             {monthNames[currentMonth]} {currentYear}
@@ -93,7 +93,7 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
           <button
             type="button"
             onClick={handlePrevMonth}
-            className="p-2 text-[#172B25] hover:bg-[#F8FAF8] border border-[#E5ECE8] rounded-lg transition-colors"
+            className="p-2 text-[#172B25] hover:bg-[#d8f9ff] border border-[#b1f2ff] rounded-lg transition-colors"
             title="Previous Month"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -101,7 +101,7 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
           <button
             type="button"
             onClick={handleNextMonth}
-            className="p-2 text-[#172B25] hover:bg-[#F8FAF8] border border-[#E5ECE8] rounded-lg transition-colors"
+            className="p-2 text-[#172B25] hover:bg-[#d8f9ff] border border-[#b1f2ff] rounded-lg transition-colors"
             title="Next Month"
           >
             <ChevronRight className="w-4 h-4" />
@@ -139,11 +139,11 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
               onClick={() => handleDayClick(day)}
               className={`h-14 p-1.5 rounded-xl border flex flex-col justify-between text-left transition-all ${
                 isAvailable
-                  ? 'bg-emerald-50/70 border-emerald-300 hover:bg-emerald-100/70'
+                  ? 'bg-cyan-50/70 border-emerald-300 hover:bg-cyan-100/70'
                   : isDefined
                   ? 'bg-red-50/50 border-red-200 text-slate-500'
-                  : 'bg-white border-[#E5ECE8] hover:bg-slate-50 text-[#172B25]'
-              } ${isEditable ? 'cursor-pointer hover:border-[#176B55]' : 'cursor-pointer'}`}
+                  : 'bg-white border-[#b1f2ff] hover:bg-slate-50 text-[#172B25]'
+              } ${isEditable ? 'cursor-pointer hover:border-[#3dcfff]' : 'cursor-pointer'}`}
             >
               <div className="flex items-center justify-between w-full">
                 <span className="text-xs font-bold tabular-nums">{day}</span>
@@ -156,7 +156,7 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
 
               <div className="text-[10px] truncate leading-tight">
                 {isAvailable ? (
-                  <span className="text-[#176B55] font-semibold">Available</span>
+                  <span className="text-[#3dcfff] font-semibold">Available</span>
                 ) : isDefined ? (
                   <span className="text-[#D9534F]">Booked</span>
                 ) : (
@@ -169,7 +169,7 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
       </div>
 
       {/* Legend */}
-      <div className="flex items-center gap-4 mt-5 pt-3 border-t border-[#E5ECE8] text-xs text-[#64746D] flex-wrap">
+      <div className="flex items-center gap-4 mt-5 pt-3 border-t border-[#b1f2ff] text-xs text-[#64746D] flex-wrap">
         <div className="flex items-center gap-1.5">
           <span className="w-3 h-3 rounded-full bg-[#27865C]" />
           <span>Available for hire</span>
@@ -185,7 +185,7 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
       </div>
 
       {selectedSlot && (
-        <div className="mt-4 p-3 bg-[#F8FAF8] border border-[#E5ECE8] rounded-xl text-xs flex items-center justify-between">
+        <div className="mt-4 p-3 bg-[#d8f9ff] border border-[#b1f2ff] rounded-xl text-xs flex items-center justify-between">
           <div>
             <span className="font-semibold text-[#172B25]">Date: {selectedSlot.date}</span>
             <span className="mx-2 text-[#64746D]">·</span>
@@ -199,7 +199,7 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
           <button
             type="button"
             onClick={() => setSelectedSlot(null)}
-            className="text-xs text-[#176B55] font-medium hover:underline"
+            className="text-xs text-[#3dcfff] font-medium hover:underline"
           >
             Close
           </button>

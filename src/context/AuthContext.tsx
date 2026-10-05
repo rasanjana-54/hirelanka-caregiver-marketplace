@@ -1,15 +1,28 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, UserType } from '../types';
+import { apiRequest } from '../lib/api';
 
-interface StoredAccount extends User {
-  passwordHash: string;
+interface ApiUser {
+  id: string;
+  email: string;
+  phone_number: string;
+  full_name: string;
+  user_type: UserType;
+  is_verified: boolean;
+  created_at: string;
+}
+
+interface AuthResponse {
+  token: string;
+  user: ApiUser;
 }
 
 interface AuthContextType {
   currentUser: User | null;
   authToken: string | null;
   isAuthenticated: boolean;
-  login: (email: string, password?: string) => Promise<{ success: boolean; error?: string }>;
+  isLoading: boolean;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; user?: User }>;
   register: (userData: {
     email: string;
     fullName: string;
@@ -18,192 +31,96 @@ interface AuthContextType {
     password: string;
   }) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
-  switchDemoRole: (role: UserType) => void;
 }
-
-const DEFAULT_USERS: StoredAccount[] = [
-  {
-    id: 'user-ravi',
-    email: 'ravi.jayawardena@gmail.com',
-    phoneNumber: '+94 77 123 4567',
-    userType: 'family',
-    fullName: 'Ravi Jayawardena',
-    isVerified: true,
-    createdAt: '2025-08-01T10:00:00Z',
-    passwordHash: 'Pass123!',
-    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80'
-  },
-  {
-    id: 'user-nadeesha',
-    email: 'nadeesha.perera@hirelanka.care',
-    phoneNumber: '+94 77 341 8920',
-    userType: 'individual',
-    fullName: 'Nadeesha Perera',
-    isVerified: true,
-    createdAt: '2025-08-14T08:00:00Z',
-    passwordHash: 'Pass123!',
-    avatarUrl: '/src/assets/images/avatar_nadeesha_1791048994074.jpg'
-  },
-  {
-    id: 'user-agency-suwasevana',
-    email: 'admin@suwasevana.lk',
-    phoneNumber: '+94 11 250 8912',
-    userType: 'agency',
-    fullName: 'Suwasevana Healthcare Admin',
-    isVerified: true,
-    createdAt: '2025-01-05T08:00:00Z',
-    passwordHash: 'Pass123!',
-    avatarUrl: '/src/assets/images/agency_suwasevana_1791049030798.jpg'
-  },
-  {
-    id: 'user-admin',
-    email: 'admin@hirelanka.care',
-    phoneNumber: '+94 11 777 9000',
-    userType: 'admin',
-    fullName: 'HireLanka Care Administrator',
-    isVerified: true,
-    createdAt: '2025-01-01T00:00:00Z',
-    passwordHash: 'Admin2026!',
-    avatarUrl: ''
-  }
-];
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [accounts, setAccounts] = useState<StoredAccount[]>(() => {
-    const saved = localStorage.getItem('hl_registered_accounts');
-    return saved ? JSON.parse(saved) : DEFAULT_USERS;
-  });
+const mapUser = (user: ApiUser): User => ({
+  id: user.id,
+  email: user.email,
+  phoneNumber: user.phone_number,
+  fullName: user.full_name,
+  userType: user.user_type,
+  isVerified: user.is_verified,
+  createdAt: user.created_at
+});
 
-  const [currentUser, setCurrentUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem('hl_auth_user');
-    return saved ? JSON.parse(saved) : null;
-  });
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   const [authToken, setAuthToken] = useState<string | null>(() => {
-    return localStorage.getItem('hl_auth_token') || null;
+    return typeof window === 'undefined' ? null : localStorage.getItem('hl_auth_token');
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    localStorage.setItem('hl_registered_accounts', JSON.stringify(accounts));
-  }, [accounts]);
-
-  useEffect(() => {
-    if (currentUser) {
-      localStorage.setItem('hl_auth_user', JSON.stringify(currentUser));
-    } else {
-      localStorage.removeItem('hl_auth_user');
-    }
-  }, [currentUser]);
-
-  useEffect(() => {
-    if (authToken) {
-      localStorage.setItem('hl_auth_token', authToken);
-    } else {
-      localStorage.removeItem('hl_auth_token');
-    }
-  }, [authToken]);
-
-  const login = async (email: string, password?: string): Promise<{ success: boolean; error?: string }> => {
-    const cleanEmail = email.trim().toLowerCase();
-    const account = accounts.find(a => a.email.toLowerCase() === cleanEmail);
-
-    if (!account) {
-      return { success: false, error: 'No account found with this email address.' };
+    let active = true;
+    if (!authToken) {
+      setIsLoading(false);
+      return () => { active = false; };
     }
 
-    if (password && account.passwordHash && account.passwordHash !== password) {
-      return { success: false, error: 'Invalid password. Please check your credentials.' };
-    }
-
-    // Try backend API auth endpoint
-    try {
-      const res = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: cleanEmail, password })
+    apiRequest<{ user: ApiUser }>('/auth/me')
+      .then(({ user }) => {
+        if (active) setCurrentUser(mapUser(user));
+      })
+      .catch(() => {
+        if (active) {
+          localStorage.removeItem('hl_auth_token');
+          setAuthToken(null);
+        }
+      })
+      .finally(() => {
+        if (active) setIsLoading(false);
       });
-      if (res.ok) {
-        const data = await res.json();
-        setAuthToken(data.token);
-      }
-    } catch {
-      // Server offline fallback
-      setAuthToken(`token_${Date.now()}_${account.id}`);
-    }
 
-    const { passwordHash, ...userObj } = account;
-    setCurrentUser(userObj);
-    return { success: true };
+    return () => { active = false; };
+  }, []);
+
+  const saveSession = (response: AuthResponse) => {
+    localStorage.setItem('hl_auth_token', response.token);
+    setAuthToken(response.token);
+    const user = mapUser(response.user);
+    setCurrentUser(user);
+    return user;
   };
 
-  const register = async (userData: {
-    email: string;
-    fullName: string;
-    phoneNumber: string;
-    userType: UserType;
-    password: string;
-  }): Promise<{ success: boolean; error?: string }> => {
-    const cleanEmail = userData.email.trim().toLowerCase();
-
-    if (accounts.some(a => a.email.toLowerCase() === cleanEmail)) {
-      return { success: false, error: 'An account with this email address already exists.' };
-    }
-
-    if (!userData.password || userData.password.length < 6) {
-      return { success: false, error: 'Password must be at least 6 characters long.' };
-    }
-
-    const newAccount: StoredAccount = {
-      id: `user-${Date.now()}`,
-      email: cleanEmail,
-      fullName: userData.fullName,
-      phoneNumber: userData.phoneNumber,
-      userType: userData.userType,
-      isVerified: false,
-      createdAt: new Date().toISOString(),
-      passwordHash: userData.password
-    };
-
-    // Sync with Express backend
+  const login: AuthContextType['login'] = async (email, password) => {
     try {
-      const res = await fetch('http://localhost:5000/api/auth/register', {
+      const response = await apiRequest<AuthResponse>('/auth/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      return { success: true, user: saveSession(response) };
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error.message : 'Unable to sign in.' };
+    }
+  };
+
+  const register: AuthContextType['register'] = async userData => {
+    try {
+      const response = await apiRequest<AuthResponse>('/auth/register', {
+        method: 'POST',
         body: JSON.stringify({
-          email: cleanEmail,
-          password: userData.password,
+          email: userData.email,
+          full_name: userData.fullName,
+          phone_number: userData.phoneNumber,
           user_type: userData.userType,
-          phone_number: userData.phoneNumber
+          password: userData.password
         })
       });
-      if (res.ok) {
-        const data = await res.json();
-        setAuthToken(data.token);
-      }
-    } catch {
-      setAuthToken(`token_${Date.now()}_${newAccount.id}`);
+      saveSession(response);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error.message : 'Unable to create account.' };
     }
-
-    setAccounts(prev => [...prev, newAccount]);
-    const { passwordHash, ...userObj } = newAccount;
-    setCurrentUser(userObj);
-    return { success: true };
   };
 
   const logout = () => {
+    void apiRequest('/auth/logout', { method: 'POST' }).catch(() => undefined);
+    localStorage.removeItem('hl_auth_token');
     setCurrentUser(null);
     setAuthToken(null);
-  };
-
-  const switchDemoRole = (role: UserType) => {
-    const demoAcc = accounts.find(a => a.userType === role) || DEFAULT_USERS.find(a => a.userType === role);
-    if (demoAcc) {
-      const { passwordHash, ...userObj } = demoAcc;
-      setCurrentUser(userObj);
-      setAuthToken(`demo_token_${role}`);
-    }
   };
 
   return (
@@ -211,11 +128,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       value={{
         currentUser,
         authToken,
-        isAuthenticated: !!currentUser,
+        isAuthenticated: !!currentUser && !!authToken,
+        isLoading,
         login,
         register,
-        logout,
-        switchDemoRole
+        logout
       }}
     >
       {children}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CaregiverProfile, AgencyProfile } from '../../types';
 import { useData } from '../../context/DataContext';
+import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { X, MessageCircle, Phone, Mail, CheckCircle2, ShieldAlert } from 'lucide-react';
 
@@ -18,6 +19,7 @@ export const InquiryModal: React.FC<InquiryModalProps> = ({
   targetType
 }) => {
   const { recordInquiry } = useData();
+  const { currentUser } = useAuth();
   const { t } = useLanguage();
   const [familyName, setFamilyName] = useState('');
   const [phone, setPhone] = useState('');
@@ -49,7 +51,7 @@ export const InquiryModal: React.FC<InquiryModalProps> = ({
     e.preventDefault();
     if (!familyName || !phone) return;
 
-    recordInquiry({
+    if (currentUser?.userType === 'family') recordInquiry({
       caregiverId: isCaregiver ? target.id : undefined,
       agencyId: !isCaregiver ? target.id : undefined,
       familyName,
@@ -73,7 +75,7 @@ export const InquiryModal: React.FC<InquiryModalProps> = ({
   };
 
   const handleDirectCall = () => {
-    recordInquiry({
+    if (currentUser?.userType === 'family') recordInquiry({
       caregiverId: isCaregiver ? target.id : undefined,
       agencyId: !isCaregiver ? target.id : undefined,
       familyName: familyName || 'Phone Caller',
@@ -88,7 +90,7 @@ export const InquiryModal: React.FC<InquiryModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-      <div className="relative w-full max-w-lg bg-white rounded-2xl border border-[#E5ECE8] shadow-2xl p-6 overflow-hidden max-h-[90vh] overflow-y-auto">
+      <div className="relative w-full max-w-lg bg-white rounded-2xl border border-[#b1f2ff] shadow-2xl p-6 overflow-hidden max-h-[90vh] overflow-y-auto">
         <button
           type="button"
           onClick={onClose}
@@ -99,7 +101,7 @@ export const InquiryModal: React.FC<InquiryModalProps> = ({
 
         {submitted ? (
           <div className="text-center py-6">
-            <div className="w-14 h-14 bg-emerald-100 text-[#176B55] rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-14 h-14 bg-cyan-100 text-[#3dcfff] rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle2 className="w-8 h-8" />
             </div>
             <h3 className="text-xl font-bold text-[#172B25]">{t('contactCaregiverDirectly')}</h3>
@@ -110,7 +112,7 @@ export const InquiryModal: React.FC<InquiryModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-5 py-2.5 text-sm font-semibold bg-[#176B55] text-white rounded-xl hover:bg-[#135946] transition-colors cursor-pointer"
+                className="px-5 py-2.5 text-sm font-semibold bg-[#3dcfff] text-white rounded-xl hover:bg-[#1eb5df] transition-colors cursor-pointer"
               >
                 {t('closeBtn')}
               </button>
@@ -132,22 +134,22 @@ export const InquiryModal: React.FC<InquiryModalProps> = ({
               <button
                 type="button"
                 onClick={handleDirectCall}
-                className="p-3 bg-[#F8FAF8] hover:bg-emerald-50/60 border border-[#E5ECE8] rounded-xl flex items-center gap-2.5 transition-colors cursor-pointer text-left"
+                className="p-3 bg-[#d8f9ff] hover:bg-cyan-50/60 border border-[#b1f2ff] rounded-xl flex items-center gap-2.5 transition-colors cursor-pointer text-left"
               >
-                <div className="p-2 bg-emerald-100 text-[#176B55] rounded-lg">
+                <div className="p-2 bg-cyan-100 text-[#3dcfff] rounded-lg">
                   <Phone className="w-4 h-4" />
                 </div>
                 <div>
                   <div className="text-xs font-semibold text-[#172B25]">{t('directCall')}</div>
-                  <div className="text-xs text-[#176B55] font-mono tabular-nums">{rawPhone}</div>
+                  <div className="text-xs text-[#3dcfff] font-mono tabular-nums">{rawPhone}</div>
                 </div>
               </button>
 
               <a
                 href={`mailto:${rawEmail}`}
-                className="p-3 bg-[#F8FAF8] hover:bg-emerald-50/60 border border-[#E5ECE8] rounded-xl flex items-center gap-2.5 transition-colors text-left"
+                className="p-3 bg-[#d8f9ff] hover:bg-cyan-50/60 border border-[#b1f2ff] rounded-xl flex items-center gap-2.5 transition-colors text-left"
               >
-                <div className="p-2 bg-emerald-100 text-[#176B55] rounded-lg">
+                <div className="p-2 bg-cyan-100 text-[#3dcfff] rounded-lg">
                   <Mail className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
@@ -173,7 +175,7 @@ export const InquiryModal: React.FC<InquiryModalProps> = ({
                   placeholder="e.g. Ravi Jayawardena"
                   value={familyName}
                   onChange={e => setFamilyName(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-[#E5ECE8] rounded-xl bg-[#F8FAF8] focus:bg-white focus:border-[#176B55] outline-none transition-colors"
+                  className="w-full px-3 py-2 text-sm border border-[#b1f2ff] rounded-xl bg-[#d8f9ff] focus:bg-white focus:border-[#3dcfff] outline-none transition-colors"
                 />
               </div>
 
@@ -187,7 +189,7 @@ export const InquiryModal: React.FC<InquiryModalProps> = ({
                   placeholder="+94 77 123 4567"
                   value={phone}
                   onChange={e => setPhone(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-[#E5ECE8] rounded-xl bg-[#F8FAF8] focus:bg-white focus:border-[#176B55] outline-none transition-colors"
+                  className="w-full px-3 py-2 text-sm border border-[#b1f2ff] rounded-xl bg-[#d8f9ff] focus:bg-white focus:border-[#3dcfff] outline-none transition-colors"
                 />
               </div>
 
@@ -201,7 +203,7 @@ export const InquiryModal: React.FC<InquiryModalProps> = ({
                     placeholder="e.g. NHSL Colombo Ward 14"
                     value={hospitalName}
                     onChange={e => setHospitalName(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-[#E5ECE8] rounded-xl bg-[#F8FAF8] focus:bg-white focus:border-[#176B55] outline-none transition-colors"
+                    className="w-full px-3 py-2 text-sm border border-[#b1f2ff] rounded-xl bg-[#d8f9ff] focus:bg-white focus:border-[#3dcfff] outline-none transition-colors"
                   />
                 </div>
                 <div>
@@ -211,7 +213,7 @@ export const InquiryModal: React.FC<InquiryModalProps> = ({
                   <select
                     value={shiftNeeded}
                     onChange={e => setShiftNeeded(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-[#E5ECE8] rounded-xl bg-[#F8FAF8] focus:bg-white focus:border-[#176B55] outline-none transition-colors"
+                    className="w-full px-3 py-2 text-sm border border-[#b1f2ff] rounded-xl bg-[#d8f9ff] focus:bg-white focus:border-[#3dcfff] outline-none transition-colors"
                   >
                     <option value="whole_day">{t('whole_day')}</option>
                     <option value="nights">{t('nights')}</option>
@@ -230,7 +232,7 @@ export const InquiryModal: React.FC<InquiryModalProps> = ({
                   placeholder="e.g. Elderly father recovering from surgery, needs help standing and bathing..."
                   value={message}
                   onChange={e => setMessage(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-[#E5ECE8] rounded-xl bg-[#F8FAF8] focus:bg-white focus:border-[#176B55] outline-none transition-colors resize-none"
+                  className="w-full px-3 py-2 text-sm border border-[#b1f2ff] rounded-xl bg-[#d8f9ff] focus:bg-white focus:border-[#3dcfff] outline-none transition-colors resize-none"
                 />
               </div>
 

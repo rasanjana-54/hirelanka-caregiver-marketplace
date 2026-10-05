@@ -7,11 +7,11 @@ export const Footer: React.FC = () => {
   const { t } = useLanguage();
 
   return (
-    <footer className="bg-white border-t border-[#E5ECE8] mt-16 text-[#64746D]">
+    <footer className="bg-white border-t border-[#b1f2ff] mt-16 text-[#64746D]">
       {/* Emergency Notice Banner */}
-      <div className="bg-[#176B55]/5 border-b border-[#E5ECE8] py-3 px-4 text-center">
+      <div className="bg-[#3dcfff]/5 border-b border-[#b1f2ff] py-3 px-4 text-center">
         <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 text-xs text-[#172B25] flex-wrap">
-          <PhoneCall className="w-3.5 h-3.5 text-[#176B55]" />
+          <PhoneCall className="w-3.5 h-3.5 text-[#3dcfff]" />
           <span className="font-semibold">{t('medicalEmergencySL')}</span>
           <span className="hidden sm:inline">·</span>
           <span className="hidden sm:inline">{t('nhslHotline')}</span>
@@ -23,7 +23,7 @@ export const Footer: React.FC = () => {
           {/* Col 1: Brand & Mission */}
           <div className="md:col-span-1">
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 rounded-lg bg-[#176B55] text-white flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-[#3dcfff] text-white flex items-center justify-center">
                 <HeartHandshake className="w-4 h-4" />
               </div>
               <span className="text-lg font-bold text-[#172B25]">HireLanka Care</span>
@@ -43,27 +43,27 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <Link to="/caregivers" className="hover:text-[#176B55] transition-colors">
+                <Link to="/caregivers" className="hover:text-[#3dcfff] transition-colors">
                   {t('findCaregivers')}
                 </Link>
               </li>
               <li>
-                <Link to="/agencies" className="hover:text-[#176B55] transition-colors">
+                <Link to="/agencies" className="hover:text-[#3dcfff] transition-colors">
                   {t('agenciesDirectory')}
                 </Link>
               </li>
               <li>
-                <Link to="/how-it-works" className="hover:text-[#176B55] transition-colors">
+                <Link to="/how-it-works" className="hover:text-[#3dcfff] transition-colors">
                   {t('howItWorks')}
                 </Link>
               </li>
               <li>
-                <Link to="/register" className="hover:text-[#176B55] transition-colors">
+                <Link to="/register" className="hover:text-[#3dcfff] transition-colors">
                   {t('caregiverOption')}
                 </Link>
               </li>
               <li>
-                <Link to="/register" className="hover:text-[#176B55] transition-colors">
+                <Link to="/register" className="hover:text-[#3dcfff] transition-colors">
                   {t('agencyOption')}
                 </Link>
               </li>
@@ -77,27 +77,27 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <Link to="/caregivers?hospital=hosp-nhsl" className="hover:text-[#176B55] transition-colors">
+                <Link to="/caregivers?hospital=hosp-nhsl" className="hover:text-[#3dcfff] transition-colors">
                   National Hospital of Sri Lanka (NHSL)
                 </Link>
               </li>
               <li>
-                <Link to="/caregivers?hospital=hosp-kalubowila" className="hover:text-[#176B55] transition-colors">
+                <Link to="/caregivers?hospital=hosp-kalubowila" className="hover:text-[#3dcfff] transition-colors">
                   Colombo South Hospital (Kalubowila)
                 </Link>
               </li>
               <li>
-                <Link to="/caregivers?hospital=hosp-ragama" className="hover:text-[#176B55] transition-colors">
+                <Link to="/caregivers?hospital=hosp-ragama" className="hover:text-[#3dcfff] transition-colors">
                   Colombo North Hospital (Ragama)
                 </Link>
               </li>
               <li>
-                <Link to="/caregivers?hospital=hosp-kandy" className="hover:text-[#176B55] transition-colors">
+                <Link to="/caregivers?hospital=hosp-kandy" className="hover:text-[#3dcfff] transition-colors">
                   Teaching Hospital Kandy
                 </Link>
               </li>
               <li>
-                <Link to="/caregivers?hospital=hosp-karapitiya" className="hover:text-[#176B55] transition-colors">
+                <Link to="/caregivers?hospital=hosp-karapitiya" className="hover:text-[#3dcfff] transition-colors">
                   Teaching Hospital Karapitiya (Galle)
                 </Link>
               </li>
@@ -109,8 +109,8 @@ export const Footer: React.FC = () => {
             <h4 className="text-xs font-bold text-[#172B25] uppercase tracking-wider mb-3">
               {t('trustTransparency')}
             </h4>
-            <div className="bg-[#F8FAF8] p-3 rounded-xl border border-[#E5ECE8] text-xs leading-relaxed space-y-2">
-              <div className="flex items-center gap-1.5 text-[#176B55] font-semibold">
+            <div className="bg-[#d8f9ff] p-3 rounded-xl border border-[#b1f2ff] text-xs leading-relaxed space-y-2">
+              <div className="flex items-center gap-1.5 text-[#3dcfff] font-semibold">
                 <ShieldCheck className="w-4 h-4" />
                 <span>{t('zeroCommissionTitle')}</span>
               </div>
@@ -122,7 +122,7 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Legal Disclaimer & Copyright */}
-        <div className="pt-8 border-t border-[#E5ECE8] flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#64746D]">
+        <div className="pt-8 border-t border-[#b1f2ff] flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#64746D]">
           <p className="max-w-2xl text-[11px] leading-relaxed">
             {t('disclaimer')}
           </p>

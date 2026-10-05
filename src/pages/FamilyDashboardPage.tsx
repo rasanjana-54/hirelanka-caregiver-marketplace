@@ -28,7 +28,7 @@ import {
 } from 'lucide-react';
 
 export const FamilyDashboardPage: React.FC = () => {
-  const { currentUser, logout, switchDemoRole } = useAuth();
+  const { currentUser, logout } = useAuth();
   const { caregivers, hospitals, inquiries } = useData();
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -88,11 +88,11 @@ export const FamilyDashboardPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#F4F6F5] flex">
       {/* LEFT SIDEBAR (HealthAI style - Image 1) */}
-      <aside className="w-64 bg-white border-r border-[#E5ECE8] hidden md:flex flex-col justify-between p-6 shrink-0">
+      <aside className="w-64 bg-white border-r border-[#b1f2ff] hidden md:flex flex-col justify-between p-6 shrink-0">
         <div className="space-y-8">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#176B55] text-white flex items-center justify-center font-bold">
+            <div className="w-8 h-8 rounded-xl bg-[#3dcfff] text-white flex items-center justify-center font-bold">
               +
             </div>
             <span className="text-lg font-bold tracking-tight text-[#172B25]">
@@ -107,7 +107,7 @@ export const FamilyDashboardPage: React.FC = () => {
               onClick={() => setActiveNav('dashboard')}
               className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl transition-colors cursor-pointer ${
                 activeNav === 'dashboard'
-                  ? 'bg-[#2E8B70] text-white shadow-xs'
+                  ? 'bg-[#63e5ff] text-white shadow-xs'
                   : 'text-[#64746D] hover:text-[#172B25] hover:bg-slate-50'
               }`}
             >
@@ -120,7 +120,7 @@ export const FamilyDashboardPage: React.FC = () => {
               onClick={() => setActiveNav('calendar')}
               className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl transition-colors cursor-pointer ${
                 activeNav === 'calendar'
-                  ? 'bg-[#2E8B70] text-white shadow-xs'
+                  ? 'bg-[#63e5ff] text-white shadow-xs'
                   : 'text-[#64746D] hover:text-[#172B25] hover:bg-slate-50'
               }`}
             >
@@ -165,7 +165,7 @@ export const FamilyDashboardPage: React.FC = () => {
           </div>
           <Link
             to="/caregivers"
-            className="w-full py-2 px-3 text-[11px] font-bold text-[#172B25] bg-[#2E8B70] hover:bg-emerald-400 text-white rounded-xl block text-center transition-colors cursor-pointer"
+            className="w-full py-2 px-3 text-[11px] font-bold text-[#172B25] bg-[#63e5ff] hover:bg-cyan-400 text-white rounded-xl block text-center transition-colors cursor-pointer"
           >
             {t('findCaregivers')}
           </Link>
@@ -188,7 +188,7 @@ export const FamilyDashboardPage: React.FC = () => {
 
           {/* Search bar + Profile */}
           <div className="flex items-center gap-3 flex-wrap">
-            <form onSubmit={handleSearchSubmit} className="flex items-center bg-white border border-[#E5ECE8] rounded-xl px-2 py-1 shadow-2xs">
+            <form onSubmit={handleSearchSubmit} className="flex items-center bg-white border border-[#b1f2ff] rounded-xl px-2 py-1 shadow-2xs">
               <div className="flex items-center gap-2 px-2 text-xs text-[#64746D]">
                 <Search className="w-3.5 h-3.5" />
                 <input
@@ -199,9 +199,9 @@ export const FamilyDashboardPage: React.FC = () => {
                   className="w-32 sm:w-40 text-xs outline-none bg-transparent text-[#172B25]"
                 />
               </div>
-              <div className="h-4 w-px bg-[#E5ECE8]" />
+              <div className="h-4 w-px bg-[#b1f2ff]" />
               <div className="flex items-center gap-1.5 px-2 text-xs text-[#64746D]">
-                <MapPin className="w-3.5 h-3.5 text-[#176B55]" />
+                <MapPin className="w-3.5 h-3.5 text-[#3dcfff]" />
                 <input
                   type="text"
                   value={searchLocation}
@@ -211,7 +211,7 @@ export const FamilyDashboardPage: React.FC = () => {
               </div>
               <button
                 type="submit"
-                className="px-3 py-1.5 bg-[#2E8B70] hover:bg-[#25735c] text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+                className="px-3 py-1.5 bg-[#63e5ff] hover:bg-[#25735c] text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer"
               >
                 {t('searchBtn')}
               </button>
@@ -222,7 +222,7 @@ export const FamilyDashboardPage: React.FC = () => {
               <img
                 src={currentUser?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80'}
                 alt="Profile"
-                className="w-8 h-8 rounded-full object-cover border border-[#E5ECE8]"
+                className="w-8 h-8 rounded-full object-cover border border-[#b1f2ff]"
               />
               <span className="text-xs font-semibold text-[#172B25] hidden sm:inline">
                 {currentUser?.fullName || 'Ravi Jayawardena'}
@@ -235,7 +235,7 @@ export const FamilyDashboardPage: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
           {/* Left Announcement Banner (Image 1 style) */}
-          <div className="lg:col-span-7 bg-[#2E8B70] rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden shadow-sm min-h-[260px] flex flex-col justify-between">
+          <div className="lg:col-span-7 bg-[#63e5ff] rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden shadow-sm min-h-[260px] flex flex-col justify-between">
             <div className="relative z-10 max-w-sm space-y-2">
               <h2 className="text-2xl font-bold tracking-tight leading-snug">
                 {t('noStressBanner')}
@@ -275,12 +275,12 @@ export const FamilyDashboardPage: React.FC = () => {
           </div>
 
           {/* Right Upcoming Appointments Card (Image 1 style) */}
-          <div className="lg:col-span-5 bg-white border border-[#E5ECE8] rounded-3xl p-5 shadow-xs space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[#E5ECE8]">
+          <div className="lg:col-span-5 bg-white border border-[#b1f2ff] rounded-3xl p-5 shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#b1f2ff]">
               <h3 className="text-sm font-bold text-[#172B25]">
                 {t('upcomingHospitalShifts')}
               </h3>
-              <Link to="/caregivers" className="text-xs text-[#2E8B70] font-semibold hover:underline">
+              <Link to="/caregivers" className="text-xs text-[#63e5ff] font-semibold hover:underline">
                 View All &gt;
               </Link>
             </div>
@@ -303,10 +303,10 @@ export const FamilyDashboardPage: React.FC = () => {
               {upcomingShifts.map((shift, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between p-3 rounded-2xl bg-[#F8FAF8] border border-[#E5ECE8] hover:border-[#2E8B70] transition-colors"
+                  className="flex items-center justify-between p-3 rounded-2xl bg-[#d8f9ff] border border-[#b1f2ff] hover:border-[#63e5ff] transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 text-[#176B55] flex flex-col items-center justify-center shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-cyan-50 border border-cyan-200 text-[#3dcfff] flex flex-col items-center justify-center shrink-0">
                       <span className="text-[9px] uppercase font-bold">{shift.dateDay}</span>
                       <span className="text-sm font-extrabold font-mono leading-none">{shift.dateNumber}</span>
                     </div>
@@ -318,7 +318,7 @@ export const FamilyDashboardPage: React.FC = () => {
                       <div className="text-[11px] text-[#64746D]">
                         {shift.timeSlot}
                       </div>
-                      <div className="text-[10px] text-[#176B55] font-medium">
+                      <div className="text-[10px] text-[#3dcfff] font-medium">
                         {shift.hospitalWard}
                       </div>
                     </div>
@@ -338,7 +338,7 @@ export const FamilyDashboardPage: React.FC = () => {
             <h3 className="text-sm font-bold text-[#172B25]">
               {t('nearbyHospitals')}
             </h3>
-            <Link to="/caregivers" className="text-xs text-[#2E8B70] font-semibold hover:underline">
+            <Link to="/caregivers" className="text-xs text-[#63e5ff] font-semibold hover:underline">
               View All &gt;
             </Link>
           </div>
@@ -348,9 +348,9 @@ export const FamilyDashboardPage: React.FC = () => {
               <Link
                 key={hosp.id}
                 to={`/caregivers?hospital=${hosp.id}`}
-                className="bg-white border border-[#E5ECE8] rounded-2xl p-4 hover:border-[#2E8B70] hover:shadow-xs transition-all flex items-center gap-3"
+                className="bg-white border border-[#b1f2ff] rounded-2xl p-4 hover:border-[#63e5ff] hover:shadow-xs transition-all flex items-center gap-3"
               >
-                <div className="w-12 h-12 rounded-xl bg-emerald-50 text-[#176B55] flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 rounded-xl bg-cyan-50 text-[#3dcfff] flex items-center justify-center shrink-0">
                   <Building2 className="w-6 h-6" />
                 </div>
                 <div className="min-w-0">
@@ -358,7 +358,7 @@ export const FamilyDashboardPage: React.FC = () => {
                     {hosp.name}
                   </div>
                   <div className="text-[11px] text-[#64746D]">{hosp.district} · {hosp.hospitalType}</div>
-                  <div className="text-[10px] text-[#2E8B70] font-medium mt-0.5">
+                  <div className="text-[10px] text-[#63e5ff] font-medium mt-0.5">
                     {i === 0 ? '1.2 km away' : i === 1 ? '3.5 km away' : '8.1 km away'}
                   </div>
                 </div>
@@ -373,7 +373,7 @@ export const FamilyDashboardPage: React.FC = () => {
             <h3 className="text-sm font-bold text-[#172B25]">
               {t('recommendedCaregivers')}
             </h3>
-            <Link to="/caregivers" className="text-xs text-[#2E8B70] font-semibold hover:underline">
+            <Link to="/caregivers" className="text-xs text-[#63e5ff] font-semibold hover:underline">
               View All &gt;
             </Link>
           </div>
@@ -382,7 +382,7 @@ export const FamilyDashboardPage: React.FC = () => {
             {recommendedCaregivers.map(cg => (
               <div
                 key={cg.id}
-                className="bg-white border border-[#E5ECE8] rounded-3xl p-5 shadow-xs flex flex-col justify-between space-y-4 hover:border-[#2E8B70] transition-colors"
+                className="bg-white border border-[#b1f2ff] rounded-3xl p-5 shadow-xs flex flex-col justify-between space-y-4 hover:border-[#63e5ff] transition-colors"
               >
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
@@ -390,7 +390,7 @@ export const FamilyDashboardPage: React.FC = () => {
                       src={cg.profileImageUrl}
                       alt={cg.fullName}
                       referrerPolicy="no-referrer"
-                      className="w-14 h-14 rounded-2xl object-cover border border-[#E5ECE8]"
+                      className="w-14 h-14 rounded-2xl object-cover border border-[#b1f2ff]"
                     />
                     <div>
                       <h4 className="text-sm font-bold text-[#172B25]">
@@ -399,15 +399,15 @@ export const FamilyDashboardPage: React.FC = () => {
                       <div className="text-xs text-[#64746D]">
                         Specialist | {cg.experienceYears} {t('yearsExperience')}
                       </div>
-                      <span className="inline-block mt-1 text-[10px] font-semibold text-[#176B55] bg-emerald-50 px-2 py-0.5 rounded-full">
+                      <span className="inline-block mt-1 text-[10px] font-semibold text-[#3dcfff] bg-cyan-50 px-2 py-0.5 rounded-full">
                         {cg.availabilityType === 'nights' ? t('nightShiftCare') : t('whole_day')}
                       </span>
                     </div>
                   </div>
 
-                  <div className="pt-2 border-t border-[#E5ECE8] flex items-center justify-between text-xs text-[#64746D]">
+                  <div className="pt-2 border-t border-[#b1f2ff] flex items-center justify-between text-xs text-[#64746D]">
                     <div className="flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5 text-[#2E8B70]" />
+                      <Clock className="w-3.5 h-3.5 text-[#63e5ff]" />
                       <span>Mon - Sat Shifts</span>
                     </div>
                     <div className="text-right">
@@ -422,7 +422,7 @@ export const FamilyDashboardPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => handleOpenContact(cg)}
-                  className="w-full py-2.5 px-3 bg-[#2E8B70] hover:bg-[#25735c] text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer shadow-xs flex items-center justify-center gap-1.5"
+                  className="w-full py-2.5 px-3 bg-[#63e5ff] hover:bg-[#25735c] text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer shadow-xs flex items-center justify-center gap-1.5"
                 >
                   <MessageCircle className="w-3.5 h-3.5" />
                   <span>{t('contactOnWhatsApp')}</span>

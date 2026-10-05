@@ -92,9 +92,9 @@ export const AgencyDashboardPage: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Top Welcome Card */}
-      <div className="bg-white border border-[#E5ECE8] rounded-2xl p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl overflow-hidden border border-[#E5ECE8] shrink-0 bg-slate-100">
+          <div className="w-16 h-16 rounded-2xl overflow-hidden border border-[#b1f2ff] shrink-0 bg-slate-100">
             <img
               src={agency.logoUrl}
               alt={agency.agencyName}
@@ -107,7 +107,7 @@ export const AgencyDashboardPage: React.FC = () => {
               <h1 className="text-xl sm:text-2xl font-bold text-[#172B25]">
                 {agency.agencyName}
               </h1>
-              <span className="text-xs font-semibold text-[#176B55] bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+              <span className="text-xs font-semibold text-[#3dcfff] bg-cyan-50 border border-cyan-200 px-2 py-0.5 rounded-full flex items-center gap-1">
                 <ShieldCheck className="w-3.5 h-3.5" /> Registered Agency
               </span>
             </div>
@@ -123,7 +123,7 @@ export const AgencyDashboardPage: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 p-1 bg-white border border-[#E5ECE8] rounded-xl overflow-x-auto text-xs font-semibold">
+      <div className="flex items-center gap-1 p-1 bg-white border border-[#b1f2ff] rounded-xl overflow-x-auto text-xs font-semibold">
         {[
           { id: 'overview', label: t('dashboard') },
           { id: 'staff', label: `${t('activeAttendants')} (${agency.staff?.length || 0})` },
@@ -136,7 +136,7 @@ export const AgencyDashboardPage: React.FC = () => {
             onClick={() => setActiveTab(tab.id as typeof activeTab)}
             className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
               activeTab === tab.id
-                ? 'bg-[#176B55] text-white shadow-xs'
+                ? 'bg-[#3dcfff] text-white shadow-xs'
                 : 'text-[#64746D] hover:text-[#172B25] hover:bg-slate-50'
             }`}
           >
@@ -149,10 +149,10 @@ export const AgencyDashboardPage: React.FC = () => {
       {activeTab === 'overview' && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white border border-[#E5ECE8] rounded-2xl p-5 shadow-xs">
+            <div className="bg-white border border-[#b1f2ff] rounded-2xl p-5 shadow-xs">
               <div className="flex items-center justify-between text-[#64746D] text-xs">
                 <span>Caregivers on Staff</span>
-                <Users className="w-4 h-4 text-[#176B55]" />
+                <Users className="w-4 h-4 text-[#3dcfff]" />
               </div>
               <div className="text-2xl font-bold text-[#172B25] mt-2 font-mono tabular-nums">
                 {agency.numCaregivers}
@@ -162,7 +162,7 @@ export const AgencyDashboardPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-white border border-[#E5ECE8] rounded-2xl p-5 shadow-xs">
+            <div className="bg-white border border-[#b1f2ff] rounded-2xl p-5 shadow-xs">
               <div className="flex items-center justify-between text-[#64746D] text-xs">
                 <span>Family Inquiries</span>
                 <MessageCircle className="w-4 h-4 text-[#27865C]" />
@@ -175,7 +175,7 @@ export const AgencyDashboardPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-white border border-[#E5ECE8] rounded-2xl p-5 shadow-xs">
+            <div className="bg-white border border-[#b1f2ff] rounded-2xl p-5 shadow-xs">
               <div className="flex items-center justify-between text-[#64746D] text-xs">
                 <span>Average Agency Rating</span>
                 <ShieldCheck className="w-4 h-4 text-[#D9A441]" />
@@ -188,12 +188,12 @@ export const AgencyDashboardPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-white border border-[#E5ECE8] rounded-2xl p-5 shadow-xs">
+            <div className="bg-white border border-[#b1f2ff] rounded-2xl p-5 shadow-xs">
               <div className="flex items-center justify-between text-[#64746D] text-xs">
                 <span>Daily Shift Range</span>
-                <Briefcase className="w-4 h-4 text-[#176B55]" />
+                <Briefcase className="w-4 h-4 text-[#3dcfff]" />
               </div>
-              <div className="text-xl font-bold text-[#176B55] mt-2 font-mono tabular-nums">
+              <div className="text-xl font-bold text-[#3dcfff] mt-2 font-mono tabular-nums">
                 Rs. {agency.priceRangeMin.toLocaleString()} - {agency.priceRangeMax.toLocaleString()}
               </div>
               <div className="text-[11px] text-[#64746D] mt-1">
@@ -202,7 +202,7 @@ export const AgencyDashboardPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white border border-[#E5ECE8] rounded-2xl p-6 shadow-xs space-y-4">
+          <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-4">
             <h3 className="text-sm font-bold text-[#172B25]">
               Quick Staff Roster Summary
             </h3>
@@ -215,7 +215,7 @@ export const AgencyDashboardPage: React.FC = () => {
             <button
               type="button"
               onClick={() => toggleStaffVisibility(agency.id)}
-              className="px-4 py-2 text-xs font-semibold bg-[#F8FAF8] hover:bg-slate-100 text-[#172B25] border border-[#E5ECE8] rounded-xl flex items-center gap-1.5 cursor-pointer"
+              className="px-4 py-2 text-xs font-semibold bg-[#d8f9ff] hover:bg-slate-100 text-[#172B25] border border-[#b1f2ff] rounded-xl flex items-center gap-1.5 cursor-pointer"
             >
               {agency.showStaffProfiles ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
               <span>Toggle Public Staff Visibility</span>
@@ -226,8 +226,8 @@ export const AgencyDashboardPage: React.FC = () => {
 
       {/* Tab 2: Staff Roster Management */}
       {activeTab === 'staff' && (
-        <div className="bg-white border border-[#E5ECE8] rounded-2xl p-6 shadow-xs space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E5ECE8]">
+        <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#b1f2ff]">
             <div>
               <h2 className="text-lg font-bold text-[#172B25]">
                 Agency Staff Roster ({agency.staff?.length || 0})
@@ -240,14 +240,14 @@ export const AgencyDashboardPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setStaffModalOpen(true)}
-              className="px-4 py-2 text-xs font-semibold bg-[#176B55] hover:bg-[#135946] text-white rounded-xl flex items-center gap-1.5 cursor-pointer shadow-xs"
+              className="px-4 py-2 text-xs font-semibold bg-[#3dcfff] hover:bg-[#1eb5df] text-white rounded-xl flex items-center gap-1.5 cursor-pointer shadow-xs"
             >
               <Plus className="w-4 h-4" />
               <span>Add New Caregiver</span>
             </button>
           </div>
 
-          <div className="divide-y divide-[#E5ECE8]">
+          <div className="divide-y divide-[#b1f2ff]">
             {agency.staff && agency.staff.length > 0 ? (
               agency.staff.map(member => (
                 <div key={member.id} className="py-4 first:pt-0 last:pb-0 flex items-start justify-between gap-4">
@@ -264,7 +264,7 @@ export const AgencyDashboardPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <span className="text-xs font-semibold text-[#27865C] bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-lg">
+                  <span className="text-xs font-semibold text-[#27865C] bg-cyan-50 border border-cyan-200 px-2 py-0.5 rounded-lg">
                     Active on Roster
                   </span>
                 </div>
@@ -280,8 +280,8 @@ export const AgencyDashboardPage: React.FC = () => {
 
       {/* Tab 3: Company Profile & Rates */}
       {activeTab === 'profile' && (
-        <div className="bg-white border border-[#E5ECE8] rounded-2xl p-6 sm:p-8 shadow-xs">
-          <div className="flex items-center justify-between pb-4 border-b border-[#E5ECE8] mb-6">
+        <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 sm:p-8 shadow-xs">
+          <div className="flex items-center justify-between pb-4 border-b border-[#b1f2ff] mb-6">
             <div>
               <h2 className="text-lg font-bold text-[#172B25]">
                 Agency Profile &amp; Hospital Settings
@@ -292,7 +292,7 @@ export const AgencyDashboardPage: React.FC = () => {
             </div>
 
             {savedSuccess && (
-              <div className="px-3 py-1.5 bg-emerald-50 text-[#176B55] border border-emerald-200 text-xs font-bold rounded-xl flex items-center gap-1.5 animate-fade-in">
+              <div className="px-3 py-1.5 bg-cyan-50 text-[#3dcfff] border border-cyan-200 text-xs font-bold rounded-xl flex items-center gap-1.5 animate-fade-in">
                 <CheckCircle2 className="w-4 h-4" />
                 <span>Agency Details Updated!</span>
               </div>
@@ -309,7 +309,7 @@ export const AgencyDashboardPage: React.FC = () => {
                 required
                 value={agencyName}
                 onChange={e => setAgencyName(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF8] focus:bg-white border border-[#E5ECE8] focus:border-[#176B55] rounded-xl outline-none"
+                className="w-full px-3.5 py-2.5 text-xs bg-[#d8f9ff] focus:bg-white border border-[#b1f2ff] focus:border-[#3dcfff] rounded-xl outline-none"
               />
             </div>
 
@@ -322,11 +322,11 @@ export const AgencyDashboardPage: React.FC = () => {
                 required
                 value={description}
                 onChange={e => setDescription(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF8] focus:bg-white border border-[#E5ECE8] focus:border-[#176B55] rounded-xl outline-none resize-none"
+                className="w-full px-3.5 py-2.5 text-xs bg-[#d8f9ff] focus:bg-white border border-[#b1f2ff] focus:border-[#3dcfff] rounded-xl outline-none resize-none"
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-[#F8FAF8] border border-[#E5ECE8] rounded-2xl">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-[#d8f9ff] border border-[#b1f2ff] rounded-2xl">
               <div>
                 <label className="block text-xs font-semibold text-[#172B25] mb-1">
                   Minimum Daily Rate (LKR)
@@ -337,7 +337,7 @@ export const AgencyDashboardPage: React.FC = () => {
                   required
                   value={priceMin}
                   onChange={e => setPriceMin(Number(e.target.value))}
-                  className="w-full px-3.5 py-2 text-xs bg-white border border-[#E5ECE8] focus:border-[#176B55] rounded-xl outline-none font-mono"
+                  className="w-full px-3.5 py-2 text-xs bg-white border border-[#b1f2ff] focus:border-[#3dcfff] rounded-xl outline-none font-mono"
                 />
               </div>
 
@@ -351,7 +351,7 @@ export const AgencyDashboardPage: React.FC = () => {
                   required
                   value={priceMax}
                   onChange={e => setPriceMax(Number(e.target.value))}
-                  className="w-full px-3.5 py-2 text-xs bg-white border border-[#E5ECE8] focus:border-[#176B55] rounded-xl outline-none font-mono font-bold text-[#176B55]"
+                  className="w-full px-3.5 py-2 text-xs bg-white border border-[#b1f2ff] focus:border-[#3dcfff] rounded-xl outline-none font-mono font-bold text-[#3dcfff]"
                 />
               </div>
             </div>
@@ -366,7 +366,7 @@ export const AgencyDashboardPage: React.FC = () => {
                   required
                   value={contactPhone}
                   onChange={e => setContactPhone(e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF8] focus:bg-white border border-[#E5ECE8] rounded-xl outline-none font-mono"
+                  className="w-full px-3.5 py-2.5 text-xs bg-[#d8f9ff] focus:bg-white border border-[#b1f2ff] rounded-xl outline-none font-mono"
                 />
               </div>
 
@@ -379,7 +379,7 @@ export const AgencyDashboardPage: React.FC = () => {
                   required
                   value={contactWhatsapp}
                   onChange={e => setContactWhatsapp(e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF8] focus:bg-white border border-[#E5ECE8] rounded-xl outline-none font-mono"
+                  className="w-full px-3.5 py-2.5 text-xs bg-[#d8f9ff] focus:bg-white border border-[#b1f2ff] rounded-xl outline-none font-mono"
                 />
               </div>
 
@@ -392,15 +392,15 @@ export const AgencyDashboardPage: React.FC = () => {
                   required
                   value={contactEmail}
                   onChange={e => setContactEmail(e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF8] focus:bg-white border border-[#E5ECE8] rounded-xl outline-none"
+                  className="w-full px-3.5 py-2.5 text-xs bg-[#d8f9ff] focus:bg-white border border-[#b1f2ff] rounded-xl outline-none"
                 />
               </div>
             </div>
 
-            <div className="pt-4 border-t border-[#E5ECE8] flex justify-end">
+            <div className="pt-4 border-t border-[#b1f2ff] flex justify-end">
               <button
                 type="submit"
-                className="px-6 py-2.5 bg-[#176B55] hover:bg-[#135946] text-white text-xs font-semibold rounded-xl flex items-center gap-2 shadow-xs cursor-pointer"
+                className="px-6 py-2.5 bg-[#3dcfff] hover:bg-[#1eb5df] text-white text-xs font-semibold rounded-xl flex items-center gap-2 shadow-xs cursor-pointer"
               >
                 <Save className="w-4 h-4" />
                 <span>Save Agency Settings</span>
@@ -412,8 +412,8 @@ export const AgencyDashboardPage: React.FC = () => {
 
       {/* Tab 4: Inquiries */}
       {activeTab === 'inquiries' && (
-        <div className="bg-white border border-[#E5ECE8] rounded-2xl p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-[#E5ECE8]">
+        <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[#b1f2ff]">
             <h2 className="text-lg font-bold text-[#172B25]">
               Hospital Placement Inquiries ({inquiries.length})
             </h2>
@@ -427,7 +427,7 @@ export const AgencyDashboardPage: React.FC = () => {
               No inquiries yet for your agency.
             </div>
           ) : (
-            <div className="divide-y divide-[#E5ECE8]">
+            <div className="divide-y divide-[#b1f2ff]">
               {inquiries.map(inq => (
                 <div key={inq.id} className="py-4 first:pt-0 space-y-1.5">
                   <div className="flex items-center justify-between">
@@ -440,7 +440,7 @@ export const AgencyDashboardPage: React.FC = () => {
                     Hospital: <strong className="text-[#172B25]">{inq.hospitalName}</strong> · Shift: {inq.shiftNeeded}
                   </div>
                   {inq.message && (
-                    <p className="text-xs text-[#172B25] bg-[#F8FAF8] p-3 rounded-xl border border-[#E5ECE8]">
+                    <p className="text-xs text-[#172B25] bg-[#d8f9ff] p-3 rounded-xl border border-[#b1f2ff]">
                       &quot;{inq.message}&quot;
                     </p>
                   )}
@@ -463,7 +463,7 @@ export const AgencyDashboardPage: React.FC = () => {
       {/* Add Staff Modal */}
       {staffModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <div className="max-w-md w-full bg-white rounded-2xl border border-[#E5ECE8] shadow-2xl p-6 space-y-4">
+          <div className="max-w-md w-full bg-white rounded-2xl border border-[#b1f2ff] shadow-2xl p-6 space-y-4">
             <h3 className="text-lg font-bold text-[#172B25]">
               Add Caregiver to Agency Roster
             </h3>
@@ -479,7 +479,7 @@ export const AgencyDashboardPage: React.FC = () => {
                   placeholder="e.g. Rohini Samaranayake"
                   value={newStaffName}
                   onChange={e => setNewStaffName(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-[#E5ECE8] rounded-xl outline-none"
+                  className="w-full px-3 py-2 text-xs border border-[#b1f2ff] rounded-xl outline-none"
                 />
               </div>
 
@@ -495,7 +495,7 @@ export const AgencyDashboardPage: React.FC = () => {
                     required
                     value={newStaffAge}
                     onChange={e => setNewStaffAge(Number(e.target.value))}
-                    className="w-full px-3 py-2 text-xs border border-[#E5ECE8] rounded-xl outline-none"
+                    className="w-full px-3 py-2 text-xs border border-[#b1f2ff] rounded-xl outline-none"
                   />
                 </div>
 
@@ -506,7 +506,7 @@ export const AgencyDashboardPage: React.FC = () => {
                   <select
                     value={newStaffGender}
                     onChange={e => setNewStaffGender(e.target.value as 'Female' | 'Male')}
-                    className="w-full px-3 py-2 text-xs border border-[#E5ECE8] rounded-xl outline-none"
+                    className="w-full px-3 py-2 text-xs border border-[#b1f2ff] rounded-xl outline-none"
                   >
                     <option value="Female">Female</option>
                     <option value="Male">Male</option>
@@ -525,7 +525,7 @@ export const AgencyDashboardPage: React.FC = () => {
                   required
                   value={newStaffExp}
                   onChange={e => setNewStaffExp(Number(e.target.value))}
-                  className="w-full px-3 py-2 text-xs border border-[#E5ECE8] rounded-xl outline-none"
+                  className="w-full px-3 py-2 text-xs border border-[#b1f2ff] rounded-xl outline-none"
                 />
               </div>
 
@@ -539,7 +539,7 @@ export const AgencyDashboardPage: React.FC = () => {
                   placeholder="e.g. Geriatric bathing, catheter hygiene, stroke recovery"
                   value={newStaffSpec}
                   onChange={e => setNewStaffSpec(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-[#E5ECE8] rounded-xl outline-none"
+                  className="w-full px-3 py-2 text-xs border border-[#b1f2ff] rounded-xl outline-none"
                 />
               </div>
 
@@ -553,7 +553,7 @@ export const AgencyDashboardPage: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 text-xs font-semibold bg-[#176B55] text-white rounded-xl hover:bg-[#135946]"
+                  className="px-5 py-2 text-xs font-semibold bg-[#3dcfff] text-white rounded-xl hover:bg-[#1eb5df]"
                 >
                   Save to Roster
                 </button>

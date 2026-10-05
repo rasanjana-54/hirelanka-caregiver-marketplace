@@ -36,7 +36,7 @@ export const AgencyProfilePage: React.FC = () => {
         </p>
         <Link
           to="/agencies"
-          className="inline-flex px-5 py-2.5 text-xs font-semibold bg-[#176B55] text-white rounded-xl"
+          className="inline-flex px-5 py-2.5 text-xs font-semibold bg-[#3dcfff] text-white rounded-xl"
         >
           Browse Agencies Directory
         </Link>
@@ -61,9 +61,9 @@ export const AgencyProfilePage: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-xs text-[#64746D]">
-        <Link to="/" className="hover:text-[#176B55]">Home</Link>
+        <Link to="/" className="hover:text-[#3dcfff]">Home</Link>
         <ChevronRight className="w-3.5 h-3.5" />
-        <Link to="/agencies" className="hover:text-[#176B55]">Agencies</Link>
+        <Link to="/agencies" className="hover:text-[#3dcfff]">Agencies</Link>
         <ChevronRight className="w-3.5 h-3.5" />
         <span className="text-[#172B25] font-semibold">{agency.agencyName}</span>
       </nav>
@@ -72,9 +72,9 @@ export const AgencyProfilePage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Column (8 cols) */}
         <div className="lg:col-span-8 space-y-8">
-          <div className="bg-white border border-[#E5ECE8] rounded-2xl p-6 sm:p-8 shadow-xs">
+          <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 sm:p-8 shadow-xs">
             <div className="flex flex-col sm:flex-row items-start gap-6">
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border border-[#E5ECE8] shrink-0 bg-slate-100">
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border border-[#b1f2ff] shrink-0 bg-slate-100">
                 <img
                   src={agency.logoUrl}
                   alt={agency.agencyName}
@@ -89,7 +89,7 @@ export const AgencyProfilePage: React.FC = () => {
                     {agency.agencyName}
                   </h1>
                   {agency.isVerified && (
-                    <span className="text-xs font-semibold text-[#176B55] bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <span className="text-xs font-semibold text-[#3dcfff] bg-cyan-50 border border-cyan-200 px-2.5 py-0.5 rounded-full flex items-center gap-1">
                       <ShieldCheck className="w-3.5 h-3.5" /> Registered
                     </span>
                   )}
@@ -103,13 +103,13 @@ export const AgencyProfilePage: React.FC = () => {
                   <span>Primary: {primaryHospital ? primaryHospital.name : 'Colombo'}</span>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-[#E5ECE8] flex items-center gap-4">
+                <div className="mt-4 pt-4 border-t border-[#b1f2ff] flex items-center gap-4">
                   <StarRating rating={agency.rating} showNumber reviewCount={agency.reviewCount} size="md" />
                 </div>
               </div>
             </div>
 
-            <div className="mt-8 pt-6 border-t border-[#E5ECE8] space-y-3">
+            <div className="mt-8 pt-6 border-t border-[#b1f2ff] space-y-3">
               <h3 className="text-sm font-bold text-[#172B25] uppercase tracking-wider">
                 Agency Overview
               </h3>
@@ -120,14 +120,14 @@ export const AgencyProfilePage: React.FC = () => {
           </div>
 
           {/* Services Provided */}
-          <div className="bg-white border border-[#E5ECE8] rounded-2xl p-6 shadow-xs space-y-4">
+          <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-4">
             <h3 className="text-sm font-bold text-[#172B25] uppercase tracking-wider">
               Caregiver Services Provided
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {agency.services.map((srv, idx) => (
-                <div key={idx} className="flex items-center gap-2.5 p-3 bg-[#F8FAF8] rounded-xl border border-[#E5ECE8] text-xs font-medium text-[#172B25]">
-                  <CheckCircle2 className="w-4 h-4 text-[#176B55] shrink-0" />
+                <div key={idx} className="flex items-center gap-2.5 p-3 bg-[#d8f9ff] rounded-xl border border-[#b1f2ff] text-xs font-medium text-[#172B25]">
+                  <CheckCircle2 className="w-4 h-4 text-[#3dcfff] shrink-0" />
                   <span>{srv}</span>
                 </div>
               ))}
@@ -135,19 +135,19 @@ export const AgencyProfilePage: React.FC = () => {
           </div>
 
           {/* Hospitals Covered */}
-          <div className="bg-white border border-[#E5ECE8] rounded-2xl p-6 shadow-xs space-y-3">
+          <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-3">
             <h3 className="text-sm font-bold text-[#172B25] uppercase tracking-wider">
               Hospital Coverage in Sri Lanka
             </h3>
             <div className="flex items-center gap-2 flex-wrap">
               {primaryHospital && (
-                <span className="px-3 py-1.5 bg-emerald-50 text-[#176B55] border border-emerald-200 rounded-lg text-xs font-medium flex items-center gap-1.5">
+                <span className="px-3 py-1.5 bg-cyan-50 text-[#3dcfff] border border-cyan-200 rounded-lg text-xs font-medium flex items-center gap-1.5">
                   <MapPin className="w-3.5 h-3.5" />
                   <span>{primaryHospital.name} (Primary)</span>
                 </span>
               )}
               {secondaryHospitals.map(sh => (
-                <span key={sh?.id} className="px-3 py-1.5 bg-[#F8FAF8] text-[#172B25] border border-[#E5ECE8] rounded-lg text-xs font-medium flex items-center gap-1.5">
+                <span key={sh?.id} className="px-3 py-1.5 bg-[#d8f9ff] text-[#172B25] border border-[#b1f2ff] rounded-lg text-xs font-medium flex items-center gap-1.5">
                   <MapPin className="w-3.5 h-3.5 text-[#64746D]" />
                   <span>{sh?.name}</span>
                 </span>
@@ -157,7 +157,7 @@ export const AgencyProfilePage: React.FC = () => {
 
           {/* Staff Roster: ONLY shown if agency.showStaffProfiles === true */}
           {agency.showStaffProfiles && agency.staff && agency.staff.length > 0 && (
-            <div className="bg-white border border-[#E5ECE8] rounded-2xl p-6 shadow-xs space-y-4">
+            <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-base font-bold text-[#172B25]">
@@ -167,12 +167,12 @@ export const AgencyProfilePage: React.FC = () => {
                     Direct staff roster managed by {agency.agencyName}
                   </p>
                 </div>
-                <span className="text-xs text-[#176B55] font-semibold">
+                <span className="text-xs text-[#3dcfff] font-semibold">
                   {agency.staff.length} Listed Staff
                 </span>
               </div>
 
-              <div className="divide-y divide-[#E5ECE8]">
+              <div className="divide-y divide-[#b1f2ff]">
                 {agency.staff.map(member => (
                   <div key={member.id} className="py-4 first:pt-0 last:pb-0 flex items-start justify-between gap-4">
                     <div>
@@ -189,7 +189,7 @@ export const AgencyProfilePage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setInquiryModalOpen(true)}
-                      className="px-3 py-1.5 bg-[#F8FAF8] hover:bg-emerald-50 text-xs font-semibold text-[#176B55] border border-[#E5ECE8] rounded-lg transition-colors cursor-pointer shrink-0"
+                      className="px-3 py-1.5 bg-[#d8f9ff] hover:bg-cyan-50 text-xs font-semibold text-[#3dcfff] border border-[#b1f2ff] rounded-lg transition-colors cursor-pointer shrink-0"
                     >
                       Request Attendant
                     </button>
@@ -200,8 +200,8 @@ export const AgencyProfilePage: React.FC = () => {
           )}
 
           {/* Reviews Section */}
-          <div className="bg-white border border-[#E5ECE8] rounded-2xl p-6 shadow-xs space-y-6">
-            <div className="flex items-center justify-between pb-4 border-b border-[#E5ECE8] flex-wrap gap-3">
+          <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#b1f2ff] flex-wrap gap-3">
               <div>
                 <h3 className="text-base font-bold text-[#172B25]">
                   Family Reviews ({reviews.length})
@@ -215,7 +215,7 @@ export const AgencyProfilePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setReviewModalOpen(true)}
-                className="px-4 py-2 text-xs font-semibold bg-[#F8FAF8] hover:bg-slate-100 text-[#172B25] border border-[#E5ECE8] rounded-xl transition-colors cursor-pointer"
+                className="px-4 py-2 text-xs font-semibold bg-[#d8f9ff] hover:bg-slate-100 text-[#172B25] border border-[#b1f2ff] rounded-xl transition-colors cursor-pointer"
               >
                 + Write a Review
               </button>
@@ -226,7 +226,7 @@ export const AgencyProfilePage: React.FC = () => {
                 No reviews yet. Be the first to share your experience with this agency!
               </div>
             ) : (
-              <div className="divide-y divide-[#E5ECE8] space-y-4">
+              <div className="divide-y divide-[#b1f2ff] space-y-4">
                 {reviews.map(rev => (
                   <div key={rev.id} className="pt-4 first:pt-0 space-y-1.5">
                     <div className="flex items-center justify-between">
@@ -256,12 +256,12 @@ export const AgencyProfilePage: React.FC = () => {
 
         {/* Right Sticky Card */}
         <div className="lg:col-span-4">
-          <div className="bg-white border border-[#E5ECE8] rounded-2xl p-6 shadow-md space-y-6 sticky top-24">
+          <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-md space-y-6 sticky top-24">
             <div>
               <span className="text-xs font-bold text-[#64746D] uppercase tracking-wider">
                 Agency Rate Range
               </span>
-              <div className="mt-2 text-3xl font-extrabold text-[#176B55] tabular-nums">
+              <div className="mt-2 text-3xl font-extrabold text-[#3dcfff] tabular-nums">
                 Rs. {agency.priceRangeMin.toLocaleString()} - {agency.priceRangeMax.toLocaleString()}
                 <span className="text-xs font-normal text-[#64746D] ml-1">/ shift</span>
               </div>
@@ -283,22 +283,22 @@ export const AgencyProfilePage: React.FC = () => {
 
               <a
                 href={`tel:${agency.contactPhone.replace(/\s+/g, '')}`}
-                className="w-full py-3 px-4 bg-[#F8FAF8] hover:bg-slate-100 text-[#172B25] font-semibold text-xs border border-[#E5ECE8] rounded-xl flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                className="w-full py-3 px-4 bg-[#d8f9ff] hover:bg-slate-100 text-[#172B25] font-semibold text-xs border border-[#b1f2ff] rounded-xl flex items-center justify-center gap-2 transition-colors cursor-pointer"
               >
-                <Phone className="w-4 h-4 text-[#176B55]" />
+                <Phone className="w-4 h-4 text-[#3dcfff]" />
                 <span>Call Agency: {agency.contactPhone}</span>
               </a>
 
               <a
                 href={`mailto:${agency.contactEmail}`}
-                className="w-full py-2.5 px-4 text-xs font-semibold text-[#176B55] hover:bg-emerald-50 rounded-xl transition-colors flex items-center justify-center gap-1.5"
+                className="w-full py-2.5 px-4 text-xs font-semibold text-[#3dcfff] hover:bg-cyan-50 rounded-xl transition-colors flex items-center justify-center gap-1.5"
               >
                 <Mail className="w-4 h-4" />
                 <span>Email: {agency.contactEmail}</span>
               </a>
             </div>
 
-            <div className="bg-[#F8FAF8] p-4 rounded-xl border border-[#E5ECE8] space-y-2">
+            <div className="bg-[#d8f9ff] p-4 rounded-xl border border-[#b1f2ff] space-y-2">
               <div className="text-xs font-bold text-[#172B25]">
                 Agency Guarantees
               </div>

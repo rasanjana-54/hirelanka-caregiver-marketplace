@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { HeartHandshake, Eye, EyeOff, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
-  const { login, switchDemoRole } = useAuth();
+  const { login } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
 
@@ -23,14 +23,14 @@ export const LoginPage: React.FC = () => {
     try {
       const result = await login(email, password);
       if (result.success) {
-        if (email.includes('nadeesha') || email.includes('caregiver')) {
+        if (result.user?.userType === 'individual') {
           navigate('/dashboard/caregiver');
-        } else if (email.includes('suwasevana') || email.includes('agency')) {
+        } else if (result.user?.userType === 'agency') {
           navigate('/dashboard/agency');
-        } else if (email.includes('admin')) {
+        } else if (result.user?.userType === 'admin') {
           navigate('/admin');
         } else {
-          navigate('/caregivers');
+          navigate('/dashboard/family');
         }
       } else {
         setError(result.error || 'Invalid credentials. Please verify your email and password.');
@@ -42,22 +42,14 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-  const handleQuickDemoLogin = (role: 'family' | 'individual' | 'agency' | 'admin') => {
-    switchDemoRole(role);
-    if (role === 'individual') navigate('/dashboard/caregiver');
-    else if (role === 'agency') navigate('/dashboard/agency');
-    else if (role === 'admin') navigate('/admin');
-    else navigate('/caregivers');
-  };
-
   return (
     <div className="min-h-[calc(100vh-16rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl w-full grid grid-cols-1 lg:grid-cols-12 bg-white rounded-3xl border border-[#E5ECE8] shadow-lg overflow-hidden">
+      <div className="max-w-4xl w-full grid grid-cols-1 lg:grid-cols-12 bg-white rounded-3xl border border-[#b1f2ff] shadow-lg overflow-hidden">
         {/* Left Branding Column */}
-        <div className="lg:col-span-5 bg-[#176B55] p-8 text-white flex flex-col justify-between">
+        <div className="lg:col-span-5 bg-[#3dcfff] p-8 text-white flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 rounded-lg bg-white text-[#176B55] flex items-center justify-center font-bold">
+              <div className="w-8 h-8 rounded-lg bg-white text-[#3dcfff] flex items-center justify-center font-bold">
                 <HeartHandshake className="w-5 h-5" />
               </div>
               <span className="text-xl font-bold tracking-tight">HireLanka Care</span>
@@ -96,43 +88,6 @@ export const LoginPage: React.FC = () => {
             </p>
           </div>
 
-          {/* Quick Demo Switcher */}
-          <div className="p-3 bg-[#F8FAF8] border border-[#E5ECE8] rounded-2xl space-y-2">
-            <span className="text-[11px] font-bold text-[#64746D] uppercase tracking-wider block">
-              {t('demoPortals')} (1-Click)
-            </span>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <button
-                type="button"
-                onClick={() => handleQuickDemoLogin('family')}
-                className="p-2 bg-white hover:bg-emerald-50 border border-[#E5ECE8] rounded-xl text-left font-medium text-[#172B25] transition-colors cursor-pointer"
-              >
-                {t('familyClient')}
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickDemoLogin('individual')}
-                className="p-2 bg-white hover:bg-emerald-50 border border-[#E5ECE8] rounded-xl text-left font-medium text-[#172B25] transition-colors cursor-pointer"
-              >
-                {t('caregiverNadeesha')}
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickDemoLogin('agency')}
-                className="p-2 bg-white hover:bg-emerald-50 border border-[#E5ECE8] rounded-xl text-left font-medium text-[#172B25] transition-colors cursor-pointer"
-              >
-                {t('agencySuwasevana')}
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickDemoLogin('admin')}
-                className="p-2 bg-white hover:bg-emerald-50 border border-[#E5ECE8] rounded-xl text-left font-medium text-[#172B25] transition-colors cursor-pointer"
-              >
-                {t('hireLankaAdmin')}
-              </button>
-            </div>
-          </div>
-
           {error && (
             <div className="p-3 text-xs text-red-600 bg-red-50 border border-red-200 rounded-xl">
               {error}
@@ -150,7 +105,7 @@ export const LoginPage: React.FC = () => {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="name@example.com"
-                className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF8] border border-[#E5ECE8] rounded-xl text-[#172B25] focus:bg-white focus:border-[#176B55] outline-none transition-colors"
+                className="w-full px-3.5 py-2.5 text-xs bg-[#d8f9ff] border border-[#b1f2ff] rounded-xl text-[#172B25] focus:bg-white focus:border-[#3dcfff] outline-none transition-colors"
               />
             </div>
 
@@ -161,7 +116,7 @@ export const LoginPage: React.FC = () => {
                 </label>
                 <Link
                   to="/forgot-password"
-                  className="text-xs text-[#176B55] hover:underline"
+                  className="text-xs text-[#3dcfff] hover:underline"
                 >
                   {t('forgotPassword')}
                 </Link>
@@ -173,7 +128,7 @@ export const LoginPage: React.FC = () => {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF8] border border-[#E5ECE8] rounded-xl text-[#172B25] focus:bg-white focus:border-[#176B55] outline-none transition-colors"
+                  className="w-full px-3.5 py-2.5 text-xs bg-[#d8f9ff] border border-[#b1f2ff] rounded-xl text-[#172B25] focus:bg-white focus:border-[#3dcfff] outline-none transition-colors"
                 />
                 <button
                   type="button"
@@ -188,7 +143,7 @@ export const LoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 text-xs font-bold text-white bg-[#176B55] hover:bg-[#135946] rounded-xl transition-colors shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="w-full py-3 px-4 text-xs font-bold text-white bg-[#3dcfff] hover:bg-[#1eb5df] rounded-xl transition-colors shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               <span>{loading ? 'Signing in...' : t('signInBtn')}</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -197,7 +152,7 @@ export const LoginPage: React.FC = () => {
 
           <div className="text-center text-xs text-[#64746D] pt-2">
             <span>{t('dontHaveAccount')} </span>
-            <Link to="/register" className="text-[#176B55] font-semibold hover:underline">
+            <Link to="/register" className="text-[#3dcfff] font-semibold hover:underline">
               {t('registerHere')}
             </Link>
           </div>
