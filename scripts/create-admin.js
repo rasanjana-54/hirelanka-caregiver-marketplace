@@ -21,7 +21,16 @@ if (!process.env.DATABASE_URL || !email || !password || !fullName || password.le
       [email, passwordHash, phoneNumber, fullName]
     );
     if (rows.length) console.log(`Administrator account created: ${email}`);
-    else console.log(`An account already exists for ${email}; no changes made.`);
+    else {
+      const { rows: [existingUser] } = await query(
+        'SELECT user_type FROM users WHERE email = $1',
+        [email]
+      );
+      if (existingUser?.user_type !== 'admin') {
+        throw new Error('An account with this email already exists and is not an administrator. Choose another email.');
+      }
+      console.log(`An administrator account already exists for ${email}; no changes made.`);
+    }
   } catch (error) {
     console.error('Could not create administrator:', error.message);
     process.exitCode = 1;

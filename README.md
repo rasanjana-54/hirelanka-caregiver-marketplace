@@ -21,7 +21,7 @@ This contains everything you need to run your app locally.
 
 ## PostgreSQL and Express API
 
-1. Install PostgreSQL locally or create an AWS RDS PostgreSQL instance. Copy `.env.example` to `.env` and set `DATABASE_URL`, a long random `JWT_SECRET`, and the frontend origin. Keep `.env` out of source control.
+1. Install PostgreSQL locally or create an AWS RDS PostgreSQL instance. Copy `.env.example` to `.env` and set `DATABASE_URL` and a long random `JWT_SECRET`. `CLIENT_ORIGIN` accepts comma-separated origins for Vite on ports 3000 and 3001. Keep `.env` out of source control.
 2. Enable the Google Maps Geocoding API and set `GOOGLE_MAPS_API_KEY` in `.env`. The key is used by Express and must not use a `VITE_` prefix.
 3. Create the database named in `DATABASE_URL`, then run:
 
