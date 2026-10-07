@@ -14,29 +14,40 @@ export const ReviewModal = ({ isOpen, onClose, revieweeId, revieweeName, reviewe
     const [reviewerName, setReviewerName] = useState(currentUser ? currentUser.fullName : '');
     const [hospitalId, setHospitalId] = useState('');
     const [submitted, setSubmitted] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState('');
     if (!isOpen)
         return null;
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!currentUser || currentUser.userType !== 'family' || !title || !comment || !reviewerName)
             return;
         const hospitalObj = hospitals.find(h => h.id === hospitalId);
-        addReview({
-            reviewerId: currentUser ? currentUser.id : `user-${Date.now()}`,
-            reviewerName,
-            revieweeId,
-            revieweeType,
-            rating,
-            title,
-            comment,
-            hospitalName: hospitalObj ? hospitalObj.name : 'Hospital Care Sri Lanka',
-            isVerified: true
+      setSubmitting(true);
+      setError('');
+      try {
+        await addReview({
+          reviewerId: currentUser.id,
+          reviewerName,
+          revieweeId,
+          revieweeType,
+          rating,
+          title,
+          comment,
+          hospitalName: hospitalObj ? hospitalObj.name : 'Hospital Care Sri Lanka'
         });
         setSubmitted(true);
         setTimeout(() => {
-            setSubmitted(false);
-            onClose();
+          setSubmitted(false);
+          onClose();
         }, 1800);
+      }
+      catch (submitError) {
+        setError(submitError instanceof Error ? submitError.message : 'Could not submit your review. Please try again.');
+      }
+      finally {
+        setSubmitting(false);
+      }
     };
     return (<div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
       <div className="relative w-full max-w-lg bg-white rounded-2xl border border-[#b1f2ff] shadow-2xl p-6 overflow-hidden">
@@ -50,7 +61,7 @@ export const ReviewModal = ({ isOpen, onClose, revieweeId, revieweeName, reviewe
             </div>
             <h3 className="text-xl font-bold text-[#172B25]">{t('reviewSubmittedSuccess')}</h3>
             <p className="text-sm text-[#64746D] mt-2">
-              Thank you for helping other Sri Lankan families find trustworthy care.
+              Your review is awaiting admin approval before it appears on the profile.
             </p>
           </div>) : (<div>
             <div className="mb-4">
@@ -63,6 +74,7 @@ export const ReviewModal = ({ isOpen, onClose, revieweeId, revieweeName, reviewe
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              {error && <p role="alert" className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{error}</p>}
               <div>
                 <label className="block text-xs font-semibold text-[#172B25] mb-1.5">
                   {t('ratingLabel')} <span className="text-red-500">*</span>
@@ -117,8 +129,8 @@ export const ReviewModal = ({ isOpen, onClose, revieweeId, revieweeName, reviewe
                 <button type="button" onClick={onClose} className="px-4 py-2 text-xs font-semibold text-[#64746D] hover:text-[#172B25] transition-colors cursor-pointer">
                   {t('closeBtn')}
                 </button>
-                <button type="submit" disabled={!currentUser || currentUser.userType !== 'family' || !currentUser.isVerified} className="px-5 py-2.5 bg-[#3dcfff] hover:bg-[#1eb5df] text-white text-xs font-semibold rounded-xl transition-colors shadow-sm cursor-pointer">
-                  {t('submitReviewBtn')}
+                <button type="submit" disabled={submitting || !currentUser || currentUser.userType !== 'family' || !currentUser.isVerified} className="px-5 py-2.5 bg-[#3dcfff] hover:bg-[#1eb5df] text-white text-xs font-semibold rounded-xl transition-colors shadow-sm cursor-pointer disabled:opacity-50">
+                  {submitting ? 'Submitting...' : t('submitReviewBtn')}
                 </button>
               </div>
             </form>

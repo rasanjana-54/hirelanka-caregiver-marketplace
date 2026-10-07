@@ -1,14 +1,87 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useData } from '../context/DataContext';
 import { useLanguage } from '../context/LanguageContext';
 import { StarRating } from '../components/common/StarRating';
+import { apiRequest } from '../lib/api';
 import { ShieldCheck, Plus, CheckCircle2, AlertTriangle, MapPin, Search, FileText } from 'lucide-react';
 export const AdminDashboardPage = () => {
     const { t } = useLanguage();
-    const { caregivers, agencies, hospitals, reviews, inquiries, toggleCaregiverVerification, addHospital } = useData();
+  const { hospitals, addHospital } = useData();
+  const [dashboard, setDashboard] = useState(null);
+  const [dashboardError, setDashboardError] = useState('');
+  const [actionError, setActionError] = useState('');
+  const [savingAction, setSavingAction] = useState(false);
+      const [dashboardRetry, setDashboardRetry] = useState(0);
     const [activeTab, setActiveTab] = useState('overview');
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedAuditCg, setSelectedAuditCg] = useState(null);
+  const summary = dashboard?.summary;
+  const caregivers = dashboard?.caregivers || [];
+  const reviews = dashboard?.reviews || [];
+  useEffect(() => {
+    let active = true;
+    setDashboardError('');
+    apiRequest('/admin/dashboard')
+      .then(data => {
+      if (active)
+        setDashboard(data);
+    })
+      .catch(error => {
+      if (active)
+        setDashboardError(error instanceof Error ? error.message : 'Could not load administrator data.');
+    });
+    return () => { active = false; };
+  }, [dashboardRetry]);
+  const handleCaregiverVerification = async (caregiver, isVerified) => {
+    setSavingAction(true);
+    setActionError('');
+    try {
+      await apiRequest(`/caregivers/${caregiver.id}/verification`, {
+        method: 'PATCH',
+        body: JSON.stringify({ is_verified: isVerified })
+      });
+      setDashboard(previous => ({
+        ...previous,
+        caregivers: previous.caregivers.map(item => item.id === caregiver.id ? { ...item, isVerified } : item),
+        summary: {
+          ...previous.summary,
+          verifiedCaregivers: previous.summary.verifiedCaregivers + (isVerified ? 1 : -1),
+          pendingCaregivers: previous.summary.pendingCaregivers + (isVerified ? -1 : 1)
+        }
+      }));
+      setSelectedAuditCg(null);
+    }
+    catch (error) {
+      setActionError(error instanceof Error ? error.message : 'Could not update caregiver verification.');
+    }
+    finally {
+      setSavingAction(false);
+    }
+  };
+  const handleReviewVerification = async (review, isVerified) => {
+    setSavingAction(true);
+    setActionError('');
+    try {
+      await apiRequest(`/admin/reviews/${review.id}/verification`, {
+        method: 'PATCH',
+        body: JSON.stringify({ is_verified: isVerified })
+      });
+      setDashboard(previous => ({
+        ...previous,
+        reviews: previous.reviews.map(item => item.id === review.id ? { ...item, isVerified } : item),
+        summary: {
+          ...previous.summary,
+          pendingReviews: previous.summary.pendingReviews + (review.isVerified === isVerified ? 0 : isVerified ? -1 : 1)
+        }
+      }));
+    }
+    catch (error) {
+      setActionError(error instanceof Error ? error.message : 'Could not update review visibility.');
+    }
+    finally {
+      setSavingAction(false);
+    }
+  };
     // New hospital modal state
     const [hospModalOpen, setHospModalOpen] = useState(false);
     const [newHospName, setNewHospName] = useState('');
@@ -33,8 +106,8 @@ export const AdminDashboardPage = () => {
         setNewHospLocation('');
         setHospModalOpen(false);
     };
-    const filteredCaregivers = caregivers.filter(c => c.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        c.email.toLowerCase().includes(searchTerm.toLowerCase()));
+    const filteredCaregivers = caregivers.filter(c => (c.fullName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (c.email || '').toLowerCase().includes(searchTerm.toLowerCase()));
     return (<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Admin Header */}
       <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -43,27 +116,34 @@ export const AdminDashboardPage = () => {
             HireLanka Care Administration
           </span>
           <h1 className="text-2xl font-bold text-[#172B25] mt-1">
-            Platform Governance &amp; Credential Verification
+            Admin Overview &amp; Moderation
           </h1>
           <p className="text-xs text-[#64746D] mt-0.5">
-            Audit NIC cards, Police Clearance certificates, and manage Sri Lankan hospital records.
+            Review caregiver profiles, moderate family reviews, and manage hospital records.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold text-[#27865C] bg-cyan-50 border border-cyan-200 px-3 py-1 rounded-full flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4"/> System Operational
+            <ShieldCheck className="w-4 h-4"/> Admin workspace
           </span>
         </div>
       </div>
 
       {/* Tabs */}
+            {dashboardError ? (<div role="alert" className="flex items-center justify-between gap-4 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-xs text-red-800">
+                <span>{dashboardError}</span>
+                <button type="button" onClick={() => setDashboardRetry(value => value + 1)} className="font-bold underline">Retry</button>
+              </div>) : !dashboard && (<p aria-live="polite" className="text-xs text-[#64746D]">Loading admin data...</p>)}
+            {actionError && <p role="alert" className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-xs text-red-800">{actionError}</p>}
+
+            {/* Tabs */}
       <div className="flex items-center gap-1 p-1 bg-white border border-[#b1f2ff] rounded-xl overflow-x-auto text-xs font-semibold">
         {[
             { id: 'overview', label: t('dashboard') },
-            { id: 'caregivers', label: `${t('verifiedBadge')} Queue (${caregivers.length})` },
+            { id: 'caregivers', label: `Caregivers (${summary?.pendingCaregivers ?? '—'} pending)` },
             { id: 'hospitals', label: `${t('popularHospitals')} (${hospitals.length})` },
-            { id: 'reviews', label: `${t('familyReviewsTitle')} (${reviews.length})` }
+            { id: 'reviews', label: `Reviews (${summary?.pendingReviews ?? '—'} pending)` }
         ].map(tab => (<button key={tab.id} type="button" onClick={() => setActiveTab(tab.id)} className={`px-4 py-2 rounded-lg transition-colors whitespace-nowrap cursor-pointer ${activeTab === tab.id
                 ? 'bg-[#3dcfff] text-white shadow-xs'
                 : 'text-[#64746D] hover:text-[#172B25] hover:bg-slate-50'}`}>
@@ -77,7 +157,7 @@ export const AdminDashboardPage = () => {
             <div className="bg-white border border-[#b1f2ff] rounded-2xl p-5 shadow-xs">
               <div className="text-xs text-[#64746D]">Registered Caregivers</div>
               <div className="text-3xl font-extrabold text-[#172B25] mt-2 font-mono tabular-nums">
-                {caregivers.length}
+                 {summary?.totalCaregivers ?? '—'}
               </div>
               <div className="text-[11px] text-[#27865C] mt-1 font-medium">
                 {caregivers.filter(c => c.isVerified).length} Verified by Admin
@@ -87,10 +167,10 @@ export const AdminDashboardPage = () => {
             <div className="bg-white border border-[#b1f2ff] rounded-2xl p-5 shadow-xs">
               <div className="text-xs text-[#64746D]">Care Agencies</div>
               <div className="text-3xl font-extrabold text-[#172B25] mt-2 font-mono tabular-nums">
-                {agencies.length}
+                 {summary?.totalAgencies ?? '—'}
               </div>
               <div className="text-[11px] text-[#64746D] mt-1">
-                Suwasevana, Lanka Angels, Ceylon
+                Registered agencies
               </div>
             </div>
 
@@ -107,10 +187,10 @@ export const AdminDashboardPage = () => {
             <div className="bg-white border border-[#b1f2ff] rounded-2xl p-5 shadow-xs">
               <div className="text-xs text-[#64746D]">Total Family Inquiries</div>
               <div className="text-3xl font-extrabold text-[#3dcfff] mt-2 font-mono tabular-nums">
-                {inquiries.length + 86}
+                 {summary?.totalInquiries ?? '—'}
               </div>
               <div className="text-[11px] text-[#27865C] mt-1 font-medium">
-                Islandwide WhatsApp/Phone hires
+                All recorded family inquiries
               </div>
             </div>
           </div>
@@ -118,20 +198,20 @@ export const AdminDashboardPage = () => {
           {/* Quick Security & Moderation Log */}
           <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-4">
             <h3 className="text-sm font-bold text-[#172B25]">
-              Verification Audit &amp; Document Review Guidelines
+              Caregiver Review Scope
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-[#64746D]">
               <div className="p-3 bg-[#d8f9ff] rounded-xl border border-[#b1f2ff] space-y-1">
-                <div className="font-bold text-[#172B25]">1. National Identity Card (NIC)</div>
-                <p>Verify applicant full name, age, and valid Sri Lankan NIC number before marking verified.</p>
+                <div className="font-bold text-[#172B25]">Profile approval</div>
+                  <p>Verification records an admin decision on the caregiver profile.</p>
               </div>
               <div className="p-3 bg-[#d8f9ff] rounded-xl border border-[#b1f2ff] space-y-1">
-                <div className="font-bold text-[#172B25]">2. Police Clearance Certificate</div>
-                <p>Ensure criminal record clearance from Sri Lanka Police Headquarters within the past 12 months.</p>
+                <div className="font-bold text-[#172B25]">Document storage</div>
+                <p>Document uploads are not currently stored in this system.</p>
               </div>
               <div className="p-3 bg-[#d8f9ff] rounded-xl border border-[#b1f2ff] space-y-1">
-                <div className="font-bold text-[#172B25]">3. Clinical Experience &amp; NVQ</div>
-                <p>Confirm patient handling training or past hospital ward attendant references.</p>
+                <div className="font-bold text-[#172B25]">Current data</div>
+                <p>Review only the profile information shown in the caregiver queue.</p>
               </div>
             </div>
           </div>
@@ -145,7 +225,7 @@ export const AdminDashboardPage = () => {
                 Caregiver Verification &amp; Credential Audit Queue
               </h2>
               <p className="text-xs text-[#64746D] mt-0.5">
-                Review submitted Sri Lankan NIC Cards and Police Clearance Certificates before granting Verified Badges.
+                Review caregiver profile details before granting a verified badge.
               </p>
             </div>
 
@@ -185,13 +265,13 @@ export const AdminDashboardPage = () => {
                       {cg.isVerified ? (<span className="inline-flex items-center gap-1 text-[#27865C] bg-cyan-50 border border-cyan-200 px-2.5 py-0.5 rounded-full font-semibold">
                           <CheckCircle2 className="w-3.5 h-3.5"/> Verified Badge Active
                         </span>) : (<span className="inline-flex items-center gap-1 text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full font-semibold">
-                          <AlertTriangle className="w-3.5 h-3.5"/> Pending Document Review
+                          <AlertTriangle className="w-3.5 h-3.5"/> Pending Admin Review
                         </span>)}
                     </td>
                     <td className="py-3 px-3 text-right">
                       <button type="button" onClick={() => setSelectedAuditCg(cg)} className="px-3.5 py-1.5 text-xs font-semibold bg-[#3dcfff] hover:bg-[#1eb5df] text-white rounded-lg transition-colors cursor-pointer shadow-xs inline-flex items-center gap-1.5">
                         <FileText className="w-3.5 h-3.5"/>
-                        <span>Audit Credentials</span>
+                        <span>Review Profile</span>
                       </button>
                     </td>
                   </tr>))}
@@ -205,7 +285,7 @@ export const AdminDashboardPage = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h2 className="text-lg font-bold text-[#172B25]">
-                Sri Lankan Hospital Database ({hospitals.length})
+                Sri Lankan Hospital Database ({summary?.totalHospitals ?? hospitals.length})
               </h2>
               <p className="text-xs text-[#64746D] mt-0.5">
                 Manage government teaching hospitals and private healthcare facilities indexed for search.
@@ -245,10 +325,10 @@ export const AdminDashboardPage = () => {
       {activeTab === 'reviews' && (<div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-[#b1f2ff]">
             <h2 className="text-lg font-bold text-[#172B25]">
-              Family Reviews Moderation Queue ({reviews.length})
+              Family Reviews ({reviews.length})
             </h2>
             <span className="text-xs text-[#64746D]">
-              All reviews must represent real hospital experiences
+              Approved reviews are visible on caregiver and agency profiles.
             </span>
           </div>
 
@@ -268,23 +348,27 @@ export const AdminDashboardPage = () => {
                 </p>
                 <div className="text-[11px] text-[#64746D] flex items-center gap-2">
                   <span>Reviewer: <strong>{r.reviewerName}</strong></span>
+                  <span>· Profile: <strong>{r.revieweeName}</strong></span>
                   {r.hospitalName && <span>· Hospital: {r.hospitalName}</span>}
-                  <span>· Status: <strong className="text-[#27865C]">Approved</strong></span>
+                  <span>· Status: <strong className={r.isVerified ? 'text-[#27865C]' : 'text-amber-700'}>{r.isVerified ? 'Approved' : 'Pending'}</strong></span>
+                  <button type="button" disabled={savingAction} onClick={() => void handleReviewVerification(r, !r.isVerified)} className="ml-auto px-3 py-1 text-xs font-semibold border border-[#b1f2ff] rounded-lg hover:bg-[#d8f9ff] disabled:opacity-50">
+                    {savingAction ? 'Saving...' : r.isVerified ? 'Hide review' : 'Approve review'}
+                  </button>
                 </div>
               </div>))}
           </div>
         </div>)}
 
-      {/* Document Review Modal */}
+      {/* Caregiver Profile Review Modal */}
       {selectedAuditCg && (<div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
           <div className="max-w-xl w-full bg-white rounded-3xl border border-[#b1f2ff] shadow-2xl p-6 space-y-5">
             <div className="flex items-center justify-between pb-3 border-b border-[#b1f2ff]">
               <div>
                 <span className="text-[11px] font-bold text-[#3dcfff] uppercase tracking-wider">
-                  Credential Audit Workflow
+                  Caregiver Profile Review
                 </span>
                 <h3 className="text-lg font-bold text-[#172B25]">
-                  Document Audit: {selectedAuditCg.fullName}
+                  Review: {selectedAuditCg.fullName}
                 </h3>
               </div>
               <button type="button" onClick={() => setSelectedAuditCg(null)} className="text-xs text-[#64746D] hover:text-[#172B25] p-1 font-bold">
@@ -293,81 +377,69 @@ export const AdminDashboardPage = () => {
             </div>
 
             <div className="space-y-4 text-xs">
-              {/* Document 1: NIC Card */}
+              {/* Profile details */}
               <div className="p-4 bg-[#d8f9ff] rounded-2xl border border-[#b1f2ff] space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="font-bold text-[#172B25] flex items-center gap-1.5">
                     <ShieldCheck className="w-4 h-4 text-[#3dcfff]"/>
-                    <span>1. National Identity Card (NIC)</span>
+                    <span>Caregiver Profile</span>
                   </div>
-                  <span className={`px-2 py-0.5 rounded font-bold text-[10px] ${selectedAuditCg.idCardVerified ? 'bg-cyan-100 text-[#3dcfff]' : 'bg-amber-100 text-amber-800'}`}>
-                    {selectedAuditCg.idCardVerified ? 'NIC Verified' : 'Pending Upload'}
+                  <span className={`px-2 py-0.5 rounded font-bold text-[10px] ${selectedAuditCg.isVerified ? 'bg-cyan-100 text-[#3dcfff]' : 'bg-amber-100 text-amber-800'}`}>
+                    {selectedAuditCg.isVerified ? 'Verified' : 'Pending admin review'}
                   </span>
                 </div>
                 <p className="text-[#64746D]">
-                  Applicant Age: <strong>{selectedAuditCg.age} years</strong> · Sri Lankan NIC Document: 198884102911V
+                  Age: <strong>{selectedAuditCg.age} years</strong> · Experience: <strong>{selectedAuditCg.experienceYears} years</strong>
                 </p>
                 <div className="p-2 bg-white rounded-xl border border-dashed border-[#b1f2ff] text-[11px] text-[#64746D] font-mono">
-                  [PDF/Image Attached: nic_front_back_{selectedAuditCg.id}.pdf]
+                  Qualifications: {Array.isArray(selectedAuditCg.qualifications) ? selectedAuditCg.qualifications.join(', ') || 'Not provided' : selectedAuditCg.qualifications || 'Not provided'}
                 </div>
               </div>
 
-              {/* Document 2: Police Clearance */}
+              {/* Contact information */}
               <div className="p-4 bg-[#d8f9ff] rounded-2xl border border-[#b1f2ff] space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="font-bold text-[#172B25] flex items-center gap-1.5">
                     <ShieldCheck className="w-4 h-4 text-[#3dcfff]"/>
-                    <span>2. Police Clearance Certificate (HQ)</span>
+                    <span>Contact Details</span>
                   </div>
-                  <span className={`px-2 py-0.5 rounded font-bold text-[10px] ${selectedAuditCg.policeReportVerified ? 'bg-cyan-100 text-[#3dcfff]' : 'bg-amber-100 text-amber-800'}`}>
-                    {selectedAuditCg.policeReportVerified ? 'Police Cleared' : 'Pending Verification'}
+                  <span className={`px-2 py-0.5 rounded font-bold text-[10px] ${selectedAuditCg.phoneNumber ? 'bg-cyan-100 text-[#3dcfff]' : 'bg-amber-100 text-amber-800'}`}>
+                    {selectedAuditCg.phoneNumber ? 'Phone available' : 'Phone not provided'}
                   </span>
                 </div>
                 <p className="text-[#64746D]">
-                  Sri Lanka Police Headquarters Criminal Record Clearance valid through 2026.
+                  Phone: {selectedAuditCg.phoneNumber || 'Not provided'} · Email: {selectedAuditCg.email || 'Not provided'}
                 </p>
                 <div className="p-2 bg-white rounded-xl border border-dashed border-[#b1f2ff] text-[11px] text-[#64746D] font-mono">
-                  [Document Attached: police_report_{selectedAuditCg.id}.pdf]
+                  Primary hospital: {selectedAuditCg.hospitalName || 'Not provided'}
                 </div>
               </div>
 
-              {/* Document 3: Medical / NVQ Training */}
+              {/* Rate details */}
               <div className="p-4 bg-[#d8f9ff] rounded-2xl border border-[#b1f2ff] space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="font-bold text-[#172B25] flex items-center gap-1.5">
                     <ShieldCheck className="w-4 h-4 text-[#3dcfff]"/>
-                    <span>3. NVQ / Red Cross Training Certificate</span>
+                    <span>Daily Rate</span>
                   </div>
-                  <span className={`px-2 py-0.5 rounded font-bold text-[10px] ${selectedAuditCg.medicalTrainingVerified ? 'bg-cyan-100 text-[#3dcfff]' : 'bg-amber-100 text-amber-800'}`}>
-                    {selectedAuditCg.medicalTrainingVerified ? 'Certified Attendant' : 'Uncertified'}
+                  <span className="px-2 py-0.5 rounded font-bold text-[10px] bg-cyan-100 text-[#3dcfff]">
+                    Rs. {Number(selectedAuditCg.pricePerDay || 0).toLocaleString()}
                   </span>
                 </div>
                 <p className="text-[#64746D]">
-                  Qualifications: {selectedAuditCg.qualifications?.join(', ') || 'NAITA Certified Patient Care'}
+                  Review the profile information above before changing verification status.
                 </p>
               </div>
             </div>
 
             <div className="flex items-center justify-between pt-3 border-t border-[#b1f2ff]">
               <button type="button" onClick={() => setSelectedAuditCg(null)} className="px-4 py-2 text-xs font-semibold text-[#64746D] hover:text-[#172B25]">
-                Close Audit Window
+                Close Review
               </button>
 
               <div className="flex items-center gap-2">
-                <button type="button" onClick={() => {
-                if (selectedAuditCg.isVerified)
-                    toggleCaregiverVerification(selectedAuditCg.id);
-                setSelectedAuditCg(null);
-            }} className="px-4 py-2 text-xs font-semibold bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-xl">
-                  Reject Verification
-                </button>
-
-                <button type="button" onClick={() => {
-                if (!selectedAuditCg.isVerified)
-                    toggleCaregiverVerification(selectedAuditCg.id);
-                setSelectedAuditCg(null);
-            }} className="px-5 py-2 text-xs font-semibold bg-[#3dcfff] hover:bg-[#1eb5df] text-white rounded-xl shadow-xs">
-                  Approve &amp; Grant Verified Badge
+                <button type="button" disabled={savingAction} onClick={() => void handleCaregiverVerification(selectedAuditCg, !selectedAuditCg.isVerified)} className="px-5 py-2 text-xs font-semibold bg-[#3dcfff] hover:bg-[#1eb5df] text-white rounded-xl shadow-xs disabled:opacity-50">
+                  {savingAction ? 'Saving...' : selectedAuditCg.isVerified ? 'Remove Verified Badge' : 'Approve &amp; Grant Verified Badge'}
                 </button>
               </div>
             </div>

@@ -271,15 +271,14 @@ export const DataProvider = ({ children }) => {
         });
     };
     const getReviewsForProfile = (profileId) => {
-        return reviews.filter(r => r.revieweeId === profileId);
+        return reviews.filter(r => r.revieweeId === profileId && r.isVerified !== false);
     };
-    const addReview = (reviewData) => {
+    const addReview = async (reviewData) => {
         const newRev = {
             ...reviewData,
-            id: `rev-${Date.now()}`,
-            createdAt: new Date().toISOString()
+            isVerified: false
         };
-        void apiRequest('/reviews', {
+        const response = await apiRequest('/reviews', {
             method: 'POST',
             body: JSON.stringify({
                 reviewee_id: reviewData.revieweeId,
@@ -289,39 +288,11 @@ export const DataProvider = ({ children }) => {
                 comment: reviewData.comment,
                 hospital_name: reviewData.hospitalName
             })
-        }).catch(error => console.error('Review save failed:', error));
+        });
+        newRev.id = response.review_id;
+        newRev.createdAt = new Date().toISOString();
         setReviews(prev => [newRev, ...prev]);
-        // Recalculate average rating on caregiver or agency
-        if (reviewData.revieweeType === 'individual') {
-            setCaregivers(prev => prev.map(c => {
-                if (c.id === reviewData.revieweeId) {
-                    const allCgReviews = [...reviews.filter(r => r.revieweeId === c.id), newRev];
-                    const sum = allCgReviews.reduce((acc, curr) => acc + curr.rating, 0);
-                    const avg = Number((sum / allCgReviews.length).toFixed(1));
-                    return {
-                        ...c,
-                        rating: avg,
-                        reviewCount: allCgReviews.length
-                    };
-                }
-                return c;
-            }));
-        }
-        else {
-            setAgencies(prev => prev.map(a => {
-                if (a.id === reviewData.revieweeId) {
-                    const allAgReviews = [...reviews.filter(r => r.revieweeId === a.id), newRev];
-                    const sum = allAgReviews.reduce((acc, curr) => acc + curr.rating, 0);
-                    const avg = Number((sum / allAgReviews.length).toFixed(1));
-                    return {
-                        ...a,
-                        rating: avg,
-                        reviewCount: allAgReviews.length
-                    };
-                }
-                return a;
-            }));
-        }
+        return newRev;
     };
     const recordInquiry = (inquiryData) => {
         const newInquiry = {
