@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { useLanguage } from '../context/LanguageContext';
 import { Users, CheckCircle2, Plus, Eye, EyeOff, Save, MessageCircle, ShieldCheck, Briefcase } from 'lucide-react';
+import { agencyFallbackImage, handleImageFallback } from '../lib/imageFallbacks';
 export const AgencyDashboardPage = () => {
     const { currentUser } = useAuth();
     const { t } = useLanguage();
@@ -63,7 +64,7 @@ export const AgencyDashboardPage = () => {
       <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-2xl overflow-hidden border border-[#b1f2ff] shrink-0 bg-slate-100">
-            <img src={agency.logoUrl} alt={agency.agencyName} referrerPolicy="no-referrer" className="w-full h-full object-cover"/>
+            <img src={agency.logoUrl || agencyFallbackImage} alt={agency.agencyName} referrerPolicy="no-referrer" className="w-full h-full object-cover" onError={e => handleImageFallback(e, agencyFallbackImage)}/>
           </div>
           <div>
             <div className="flex items-center gap-2">

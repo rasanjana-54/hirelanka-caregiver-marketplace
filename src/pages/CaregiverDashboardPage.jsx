@@ -5,6 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { AvailabilityCalendar } from '../components/common/AvailabilityCalendar';
 import { StarRating } from '../components/common/StarRating';
 import { Eye, MessageCircle, Star, CheckCircle2, Save, ShieldCheck } from 'lucide-react';
+import { caregiverFallbackImage, handleImageFallback } from '../lib/imageFallbacks';
 export const CaregiverDashboardPage = () => {
     const { currentUser } = useAuth();
     const { caregivers, hospitals, updateCaregiverProfile, getCaregiverAvailability, updateSlotAvailability, bulkUpdateAvailability, getInquiriesForUser, getReviewsForProfile } = useData();
@@ -70,7 +71,7 @@ export const CaregiverDashboardPage = () => {
       {/* Top Welcome Bar */}
       <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <img src={caregiver.profileImageUrl} alt={caregiver.fullName} referrerPolicy="no-referrer" className="w-16 h-16 rounded-2xl object-cover border border-[#b1f2ff] shadow-xs"/>
+          <img src={caregiver.profileImageUrl || caregiverFallbackImage} alt={caregiver.fullName} referrerPolicy="no-referrer" className="w-16 h-16 rounded-2xl object-cover border border-[#b1f2ff] shadow-xs" onError={e => handleImageFallback(e, caregiverFallbackImage)}/>
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-xl sm:text-2xl font-bold text-[#172B25]">

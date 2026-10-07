@@ -4,6 +4,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { StarRating } from './StarRating';
 import { ShieldCheck, MessageCircle, MapPin, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { caregiverFallbackImage, handleImageFallback } from '../../lib/imageFallbacks';
 export const CaregiverCard = ({ caregiver, onQuickContact, viewMode = 'grid' }) => {
     const { getHospitalById, recordInquiry } = useData();
     const { t } = useLanguage();
@@ -47,10 +48,7 @@ export const CaregiverCard = ({ caregiver, onQuickContact, viewMode = 'grid' }) 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
           <div className="flex items-start gap-4">
             <div className="relative shrink-0">
-              <img src={caregiver.profileImageUrl} alt={caregiver.fullName} referrerPolicy="no-referrer" className="w-18 h-18 rounded-xl object-cover border border-[#b1f2ff] bg-slate-100" onError={e => {
-                e.target.src =
-                    'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=200&q=80';
-            }}/>
+              <img src={caregiver.profileImageUrl || caregiverFallbackImage} alt={caregiver.fullName} referrerPolicy="no-referrer" className="w-18 h-18 rounded-xl object-cover border border-[#b1f2ff] bg-slate-100" onError={e => handleImageFallback(e, caregiverFallbackImage)}/>
               {caregiver.isVerified && (<div className="absolute -bottom-1 -right-1 bg-[#3dcfff] text-white p-1 rounded-full shadow-sm" title="Police & Credential Verified Caregiver">
                   <ShieldCheck className="w-3.5 h-3.5"/>
                 </div>)}
@@ -121,10 +119,7 @@ export const CaregiverCard = ({ caregiver, onQuickContact, viewMode = 'grid' }) 
         <div className="p-5 pb-3">
           <div className="flex items-start justify-between gap-3">
             <div className="relative">
-              <img src={caregiver.profileImageUrl} alt={caregiver.fullName} referrerPolicy="no-referrer" className="w-16 h-16 rounded-xl object-cover border border-[#b1f2ff] bg-slate-100 group-hover:scale-[1.02] transition-transform" onError={e => {
-            e.target.src =
-                'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=200&q=80';
-        }}/>
+              <img src={caregiver.profileImageUrl || caregiverFallbackImage} alt={caregiver.fullName} referrerPolicy="no-referrer" className="w-16 h-16 rounded-xl object-cover border border-[#b1f2ff] bg-slate-100 group-hover:scale-[1.02] transition-transform" onError={e => handleImageFallback(e, caregiverFallbackImage)}/>
               {caregiver.isVerified && (<div className="absolute -bottom-1 -right-1 bg-[#3dcfff] text-white p-1 rounded-full shadow-sm" title="Verified Caregiver">
                   <ShieldCheck className="w-3.5 h-3.5"/>
                 </div>)}

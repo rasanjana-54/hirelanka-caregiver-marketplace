@@ -7,6 +7,7 @@ import { AvailabilityCalendar } from '../components/common/AvailabilityCalendar'
 import { ReviewModal } from '../components/common/ReviewModal';
 import { InquiryModal } from '../components/common/InquiryModal';
 import { ShieldCheck, MapPin, Phone, MessageCircle, Award, CheckCircle2, ChevronRight, Info } from 'lucide-react';
+import { caregiverFallbackImage, handleImageFallback } from '../lib/imageFallbacks';
 export const CaregiverProfilePage = () => {
     const { id } = useParams();
     const { getCaregiverById, getHospitalById, getCaregiverAvailability, getReviewsForProfile } = useData();
@@ -51,10 +52,7 @@ export const CaregiverProfilePage = () => {
           <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 sm:p-8 shadow-xs">
             <div className="flex flex-col sm:flex-row items-start gap-6">
               <div className="relative shrink-0">
-                <img src={caregiver.profileImageUrl} alt={caregiver.fullName} referrerPolicy="no-referrer" className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl object-cover border border-[#b1f2ff] bg-slate-100 shadow-xs" onError={e => {
-            e.target.src =
-                'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=300&q=80';
-        }}/>
+        <img src={caregiver.profileImageUrl || caregiverFallbackImage} alt={caregiver.fullName} referrerPolicy="no-referrer" className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl object-cover border border-[#b1f2ff] bg-slate-100 shadow-xs" onError={e => handleImageFallback(e, caregiverFallbackImage)}/>
                 {caregiver.isVerified && (<div className="absolute -bottom-2 -right-2 bg-[#3dcfff] text-white p-1.5 rounded-full shadow-md" title="Verified Caregiver">
                     <ShieldCheck className="w-5 h-5"/>
                   </div>)}

@@ -39,7 +39,7 @@ export const Navbar = () => {
           </Link>
 
           {/* Zone 2: Clean 4-6 text navigation links */}
-          <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-[#64746D]">
+          <nav className="hidden lg:flex items-center gap-7 text-sm font-medium text-[#64746D]">
             <Link to="/" className={`hover:text-[#3dcfff] transition-colors whitespace-nowrap ${isActive('/') ? 'text-[#3dcfff] font-semibold' : ''}`}>
               {t('home')}
             </Link>
@@ -80,7 +80,7 @@ export const Navbar = () => {
             </div>
 
             {/* Auth Actions */}
-            {isAuthenticated && currentUser ? (<div className="flex items-center gap-2">
+            {isAuthenticated && currentUser ? (<div className="hidden lg:flex items-center gap-2">
                 <Link to={getDashboardLink()} className="px-3.5 py-2 text-xs font-semibold text-white bg-[#3dcfff] hover:bg-[#1eb5df] rounded-xl transition-colors shadow-xs flex items-center gap-1.5 whitespace-nowrap">
                   <UserIcon className="w-3.5 h-3.5"/>
                   <span>{currentUser.userType === 'admin' ? t('adminPanel') : t('dashboard')}</span>
@@ -88,8 +88,8 @@ export const Navbar = () => {
                 <button type="button" onClick={logout} className="p-2 text-[#64746D] hover:text-[#D9534F] hover:bg-red-50 rounded-lg transition-colors cursor-pointer" title={t('logout')}>
                   <LogOut className="w-4 h-4"/>
                 </button>
-              </div>) : (<div className="flex items-center gap-2">
-                <Link to="/login" className="hidden sm:inline-flex px-3 py-2 text-xs font-semibold text-[#172B25] hover:text-[#3dcfff] transition-colors whitespace-nowrap">
+              </div>) : (<div className="hidden lg:flex items-center gap-2">
+                <Link to="/login" className="inline-flex px-3 py-2 text-xs font-semibold text-[#172B25] hover:text-[#3dcfff] transition-colors whitespace-nowrap">
                   {t('login')}
                 </Link>
                 <Link to="/caregivers" className="px-4 py-2 text-xs font-semibold text-white bg-[#3dcfff] hover:bg-[#1eb5df] rounded-xl transition-colors shadow-xs whitespace-nowrap">
@@ -98,7 +98,7 @@ export const Navbar = () => {
               </div>)}
 
             {/* Mobile Hamburger Menu Button */}
-            <button type="button" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 text-[#172B25] hover:bg-[#d8f9ff] rounded-lg transition-colors" aria-label="Toggle navigation menu">
+            <button type="button" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden p-2 text-[#172B25] hover:bg-[#d8f9ff] rounded-lg transition-colors" aria-label="Toggle navigation menu">
               {mobileMenuOpen ? <X className="w-5 h-5"/> : <Menu className="w-5 h-5"/>}
             </button>
           </div>
@@ -106,7 +106,7 @@ export const Navbar = () => {
       </div>
 
       {/* Mobile drawer */}
-      {mobileMenuOpen && (<div className="md:hidden bg-white border-b border-[#b1f2ff] px-4 pt-3 pb-5 space-y-3">
+      {mobileMenuOpen && (<div className="lg:hidden bg-white border-b border-[#b1f2ff] px-4 pt-3 pb-5 space-y-3">
           <Link to="/" onClick={() => setMobileMenuOpen(false)} className="block text-sm font-medium text-[#172B25] py-2">
             {t('home')}
           </Link>

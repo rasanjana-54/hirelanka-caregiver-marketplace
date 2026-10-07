@@ -5,6 +5,7 @@ import { StarRating } from '../components/common/StarRating';
 import { ReviewModal } from '../components/common/ReviewModal';
 import { InquiryModal } from '../components/common/InquiryModal';
 import { MapPin, ShieldCheck, MessageCircle, Phone, Mail, CheckCircle2, ChevronRight, Info } from 'lucide-react';
+import { agencyFallbackImage, handleImageFallback } from '../lib/imageFallbacks';
 export const AgencyProfilePage = () => {
     const { id } = useParams();
     const { getAgencyById, getHospitalById, getReviewsForProfile } = useData();
@@ -46,7 +47,7 @@ export const AgencyProfilePage = () => {
           <div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 sm:p-8 shadow-xs">
             <div className="flex flex-col sm:flex-row items-start gap-6">
               <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border border-[#b1f2ff] shrink-0 bg-slate-100">
-                <img src={agency.logoUrl} alt={agency.agencyName} referrerPolicy="no-referrer" className="w-full h-full object-cover"/>
+                <img src={agency.logoUrl || agencyFallbackImage} alt={agency.agencyName} referrerPolicy="no-referrer" className="w-full h-full object-cover" onError={e => handleImageFallback(e, agencyFallbackImage)}/>
               </div>
 
               <div className="flex-1 min-w-0">

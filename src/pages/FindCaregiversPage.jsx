@@ -7,6 +7,7 @@ import { StarRating } from '../components/common/StarRating';
 import { InquiryModal } from '../components/common/InquiryModal';
 import { SRI_LANKA_DISTRICTS } from '../data/sriLankanData';
 import { apiRequest } from '../lib/api';
+import { caregiverFallbackImage, handleImageFallback } from '../lib/imageFallbacks';
 import { MapPin, ShieldCheck, MessageCircle, Phone, ChevronDown } from 'lucide-react';
 export const FindCaregiversPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -415,22 +416,19 @@ export const FindCaregiversPage = () => {
             return (<div key={cg.id} onClick={() => setSelectedCaregiverId(cg.id)} className={`bg-white border rounded-2xl p-4 sm:p-5 transition-all cursor-pointer relative ${isSelected
                     ? 'border-[#3dcfff] shadow-md ring-1 ring-[#3dcfff]/30'
                     : 'border-[#b1f2ff] hover:border-slate-300 hover:shadow-xs'}`}>
-                  <div className="flex items-start justify-between gap-4">
+                  <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4">
                     {/* Left: Avatar + Details */}
                     <div className="flex items-start gap-3.5">
                       <div className="relative shrink-0">
-                        <img src={cg.profileImageUrl} alt={cg.fullName} referrerPolicy="no-referrer" className="w-16 h-16 rounded-full object-cover border border-[#b1f2ff]" onError={e => {
-                    e.target.src =
-                        'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=200&q=80';
-                }}/>
+                        <img src={cg.profileImageUrl || caregiverFallbackImage} alt={cg.fullName} referrerPolicy="no-referrer" className="w-16 h-16 rounded-full object-cover border border-[#b1f2ff]" onError={e => handleImageFallback(e, caregiverFallbackImage)}/>
                         {cg.isVerified && (<div className="absolute -bottom-0.5 -right-0.5 bg-[#3dcfff] text-white p-0.5 rounded-full border border-white">
                             <ShieldCheck className="w-3.5 h-3.5"/>
                           </div>)}
                       </div>
 
-                      <div className="space-y-1">
+                      <div className="min-w-0 space-y-1">
                         <div className="flex items-center gap-1.5">
-                          <h3 className="text-sm font-bold text-[#172B25] hover:text-[#3dcfff] transition-colors">
+                          <h3 className="break-words text-sm font-bold text-[#172B25] hover:text-[#3dcfff] transition-colors">
                             {cg.fullName}
                           </h3>
                         </div>
@@ -464,7 +462,7 @@ export const FindCaregiversPage = () => {
                     </div>
 
                     {/* Right: Next Available & Fee Starting At */}
-                    <div className="text-right shrink-0 flex flex-col justify-between h-full space-y-3">
+                    <div className="w-full sm:w-auto flex flex-row sm:flex-col justify-between gap-3 sm:gap-0 sm:shrink-0 text-left sm:text-right">
                       <div>
                         <div className="text-[11px] text-[#64746D]">{t('nextAvailable')}</div>
                         <div className="text-xs font-bold text-[#27865C]">
@@ -502,7 +500,7 @@ export const FindCaregiversPage = () => {
           {activeCaregiver ? (<div className="bg-white border border-[#b1f2ff] rounded-2xl p-6 shadow-md space-y-5">
               {/* Header profile */}
               <div className="flex items-start gap-4">
-                <img src={activeCaregiver.profileImageUrl} alt={activeCaregiver.fullName} referrerPolicy="no-referrer" className="w-16 h-16 rounded-2xl object-cover border border-[#b1f2ff] shrink-0"/>
+                <img src={activeCaregiver.profileImageUrl || caregiverFallbackImage} alt={activeCaregiver.fullName} referrerPolicy="no-referrer" className="w-16 h-16 rounded-2xl object-cover border border-[#b1f2ff] shrink-0" onError={e => handleImageFallback(e, caregiverFallbackImage)}/>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5">
                     <h2 className="text-base font-bold text-[#172B25] truncate">

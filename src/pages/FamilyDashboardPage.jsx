@@ -5,6 +5,8 @@ import { useData } from '../context/DataContext';
 import { useLanguage } from '../context/LanguageContext';
 import { InquiryModal } from '../components/common/InquiryModal';
 import { LayoutDashboard, Calendar as CalendarIcon, User, HelpCircle, LogOut, Search, MapPin, ChevronRight, ChevronLeft, Building2, Clock, MessageCircle } from 'lucide-react';
+import healthcareTeamBanner from '../assets/images/healthcare_team_banner_1791087247272.jpg';
+import { caregiverFallbackImage, handleImageFallback } from '../lib/imageFallbacks';
 export const FamilyDashboardPage = () => {
     const { currentUser, logout } = useAuth();
     const { caregivers, hospitals, inquiries } = useData();
@@ -150,7 +152,7 @@ export const FamilyDashboardPage = () => {
 
             {/* User profile avatar */}
             <div className="flex items-center gap-2 pl-2">
-              <img src={currentUser?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80'} alt="Profile" className="w-8 h-8 rounded-full object-cover border border-[#b1f2ff]"/>
+              <img src={currentUser?.avatarUrl || caregiverFallbackImage} alt="Profile" className="w-8 h-8 rounded-full object-cover border border-[#b1f2ff]" onError={e => handleImageFallback(e, caregiverFallbackImage)}/>
               <span className="text-xs font-semibold text-[#172B25] hidden sm:inline">
                 {currentUser?.fullName || 'Ravi Jayawardena'}
               </span>
@@ -177,7 +179,7 @@ export const FamilyDashboardPage = () => {
 
             <div className="relative z-10 flex items-center gap-3 pt-4">
               <div className="flex -space-x-2">
-                {caregivers.slice(0, 3).map(cg => (<img key={cg.id} src={cg.profileImageUrl} alt={cg.fullName} className="w-7 h-7 rounded-full border-2 border-white object-cover"/>))}
+                {caregivers.slice(0, 3).map(cg => (<img key={cg.id} src={cg.profileImageUrl || caregiverFallbackImage} alt={cg.fullName} className="w-7 h-7 rounded-full border-2 border-white object-cover" onError={e => handleImageFallback(e, caregiverFallbackImage)}/>))}
               </div>
               <span className="text-xs text-emerald-100 font-medium">
                 +180 caregivers active in Colombo &amp; Kandy
@@ -186,7 +188,7 @@ export const FamilyDashboardPage = () => {
 
             {/* Right illustration / photo overlay */}
             <div className="absolute right-0 bottom-0 top-0 w-2/5 hidden sm:block opacity-90">
-              <img src="/src/assets/images/healthcare_team_banner_1791087247272.jpg" alt="Sri Lankan healthcare attendants" className="w-full h-full object-cover rounded-r-3xl"/>
+              <img src={healthcareTeamBanner} alt="Sri Lankan healthcare attendants" className="w-full h-full object-cover rounded-r-3xl"/>
             </div>
           </div>
 
@@ -287,7 +289,7 @@ export const FamilyDashboardPage = () => {
             {recommendedCaregivers.map(cg => (<div key={cg.id} className="bg-white border border-[#b1f2ff] rounded-3xl p-5 shadow-xs flex flex-col justify-between space-y-4 hover:border-[#63e5ff] transition-colors">
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
-                    <img src={cg.profileImageUrl} alt={cg.fullName} referrerPolicy="no-referrer" className="w-14 h-14 rounded-2xl object-cover border border-[#b1f2ff]"/>
+                    <img src={cg.profileImageUrl || caregiverFallbackImage} alt={cg.fullName} referrerPolicy="no-referrer" className="w-14 h-14 rounded-2xl object-cover border border-[#b1f2ff]" onError={e => handleImageFallback(e, caregiverFallbackImage)}/>
                     <div>
                       <h4 className="text-sm font-bold text-[#172B25]">
                         {cg.fullName}

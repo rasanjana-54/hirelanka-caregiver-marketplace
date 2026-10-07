@@ -6,6 +6,7 @@ import { HospitalAutocomplete } from '../components/common/HospitalAutocomplete'
 import { CaregiverCard } from '../components/common/CaregiverCard';
 import { InquiryModal } from '../components/common/InquiryModal';
 import { ShieldCheck, Coins, MessageCircle, Building2, ArrowRight, CheckCircle2, Sparkles, PhoneCall } from 'lucide-react';
+import heroCareImage from '../assets/images/elderly_care_warm_1791087234928.jpg';
 export const HomePage = () => {
     const { caregivers, agencies, hospitals } = useData();
     const { t, language } = useLanguage();
@@ -105,7 +106,7 @@ export const HomePage = () => {
 
             {/* Right Photo Column */}
             <div className="lg:col-span-6 h-full min-h-[360px] lg:min-h-[500px] relative">
-              <img src="/src/assets/images/elderly_care_warm_1791087234928.jpg" alt="Smiling elderly grandfather with caring family and gentle healthcare caregiver" referrerPolicy="no-referrer" className="w-full h-full object-cover rounded-b-[2.5rem] lg:rounded-b-none lg:rounded-r-[2.5rem]"/>
+              <img src={heroCareImage} alt="Smiling elderly grandfather with caring family and gentle healthcare caregiver" className="w-full h-full object-cover rounded-b-[2.5rem] lg:rounded-b-none lg:rounded-r-[2.5rem]"/>
               <div className="absolute inset-0 bg-gradient-to-t from-[#0d4c5a]/20 via-transparent to-transparent lg:hidden"/>
             </div>
 
