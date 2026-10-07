@@ -14,7 +14,7 @@ const caregiverSelect = `
          COALESCE(AVG(r.rating), 0)::numeric(3,1) AS rating, COUNT(r.id)::int AS "reviewCount"
   FROM caregiver_profiles c
   JOIN hospitals h ON h.id = c.primary_hospital_id
-  LEFT JOIN reviews r ON r.reviewee_id = c.user_id
+         LEFT JOIN reviews r ON r.reviewee_id = c.user_id AND r.is_verified = true
 `;
 
 const agencySelect = `
@@ -37,7 +37,7 @@ const agencySelect = `
          ) ELSE '[]'::json END AS staff,
          COALESCE(AVG(r.rating), 0)::numeric(3,1) AS rating, COUNT(r.id)::int AS "reviewCount"
   FROM agency_profiles a
-  LEFT JOIN reviews r ON r.reviewee_id = a.user_id
+         LEFT JOIN reviews r ON r.reviewee_id = a.user_id AND r.is_verified = true
 `;
 
 const addFilter = (filters, values, clause, value) => {
@@ -53,6 +53,63 @@ export const createMarketplaceRouter = ({ query, pool, requireAuth, createErrorR
     if (error.code === '23505') return createErrorResponse(res, 409, 'DUPLICATE_ENTRY', 'A conflicting record already exists');
     return createErrorResponse(res, 500, 'SERVER_ERROR', message);
   };
+
+  const requireAdmin = (req, res, next) => {
+    if (req.user.userType !== 'admin') return createErrorResponse(res, 403, 'UNAUTHORIZED', 'Administrator access is required');
+    return next();
+  };
+
+  router.get('/admin/dashboard', requireAuth, requireAdmin, async (req, res) => {
+    try {
+      const [summaryResult, caregiversResult, reviewsResult] = await Promise.all([
+        query(`SELECT
+          (SELECT COUNT(*)::int FROM users WHERE user_type <> 'admin') AS "totalUsers",
+          (SELECT COUNT(*)::int FROM caregiver_profiles) AS "totalCaregivers",
+          (SELECT COUNT(*) FILTER (WHERE is_verified)::int FROM caregiver_profiles) AS "verifiedCaregivers",
+          (SELECT COUNT(*) FILTER (WHERE NOT is_verified)::int FROM caregiver_profiles) AS "pendingCaregivers",
+          (SELECT COUNT(*)::int FROM agency_profiles) AS "totalAgencies",
+          (SELECT COUNT(*)::int FROM hospitals) AS "totalHospitals",
+          (SELECT COUNT(*)::int FROM inquiries) AS "totalInquiries",
+          (SELECT COUNT(*)::int FROM reviews) AS "totalReviews",
+          (SELECT COUNT(*) FILTER (WHERE NOT is_verified)::int FROM reviews) AS "pendingReviews"`),
+        query(`${caregiverSelect} GROUP BY c.id, h.id ORDER BY c.created_at DESC`),
+        query(`SELECT r.id, r.reviewer_id AS "reviewerId", u.full_name AS "reviewerName",
+                      r.reviewee_id AS "revieweeId", r.reviewee_type AS "revieweeType",
+                      COALESCE(c.full_name, a.agency_name, 'Unknown profile') AS "revieweeName",
+                      r.rating, r.title, r.comment, r.hospital_name AS "hospitalName",
+                      r.is_verified AS "isVerified", r.created_at AS "createdAt"
+               FROM reviews r
+               JOIN users u ON u.id = r.reviewer_id
+               LEFT JOIN caregiver_profiles c ON c.user_id = r.reviewee_id
+               LEFT JOIN agency_profiles a ON a.user_id = r.reviewee_id
+               ORDER BY r.created_at DESC`)
+      ]);
+      res.json({
+        success: true,
+        summary: summaryResult.rows[0],
+        caregivers: caregiversResult.rows,
+        reviews: reviewsResult.rows
+      });
+    } catch (error) {
+      handleError(res, error, 'Could not load administrator dashboard');
+    }
+  });
+
+  router.patch('/admin/reviews/:review_id/verification', requireAuth, requireAdmin, async (req, res) => {
+    if (typeof req.body.is_verified !== 'boolean') {
+      return createErrorResponse(res, 400, 'VALIDATION_ERROR', 'is_verified must be a boolean');
+    }
+    try {
+      const { rows } = await query(
+        'UPDATE reviews SET is_verified = $2 WHERE id::text = $1 RETURNING id, is_verified AS "isVerified"',
+        [req.params.review_id, req.body.is_verified]
+      );
+      if (!rows[0]) return createErrorResponse(res, 404, 'NOT_FOUND', 'Review not found');
+      res.json({ success: true, review: rows[0] });
+    } catch (error) {
+      handleError(res, error, 'Could not update review visibility');
+    }
+  });
 
   router.get('/hospitals', async (req, res) => {
     try {
@@ -413,7 +470,7 @@ export const createMarketplaceRouter = ({ query, pool, requireAuth, createErrorR
               r.title, r.comment, r.hospital_name AS "hospitalName", r.is_verified AS "isVerified",
               r.created_at AS "createdAt"
        FROM reviews r JOIN users u ON u.id = r.reviewer_id
-       WHERE r.reviewee_id = $1 AND r.reviewee_type = $2 ORDER BY r.created_at DESC`,
+      WHERE r.reviewee_id = $1 AND r.reviewee_type = $2 AND r.is_verified = true ORDER BY r.created_at DESC`,
       [userId, revieweeType]
     );
     const average = rows.length ? rows.reduce((sum, review) => sum + review.rating, 0) / rows.length : 0;
@@ -444,7 +501,7 @@ export const createMarketplaceRouter = ({ query, pool, requireAuth, createErrorR
       if (!profile.rows[0]) return createErrorResponse(res, 404, 'NOT_FOUND', 'Profile to review was not found');
       const { rows: [review] } = await query(
         `INSERT INTO reviews (reviewer_id, reviewee_id, reviewee_type, rating, title, comment, hospital_name, is_verified)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, true) RETURNING id`,
+         VALUES ($1, $2, $3, $4, $5, $6, $7, false) RETURNING id`,
         [req.user.id, profile.rows[0].user_id, revieweeType, Number(rating), title || '', comment, req.body.hospital_name || null]
       );
       res.status(201).json({ success: true, review_id: review.id });

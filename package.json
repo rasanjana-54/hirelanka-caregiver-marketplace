@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
     "server": "node server.js",
+      "test": "node --test",
     "db:migrate": "node db.js migrate",
     "db:create-admin": "node scripts/create-admin.js",
     "build": "vite build",
