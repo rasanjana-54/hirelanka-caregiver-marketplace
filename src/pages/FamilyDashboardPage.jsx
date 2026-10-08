@@ -265,7 +265,7 @@ export const FamilyDashboardPage = () => {
                   <div className="text-xs font-bold text-[#172B25] truncate">
                     {hosp.name}
                   </div>
-                  <div className="text-[11px] text-[#64746D]">{hosp.district} · {hosp.hospitalType}</div>
+                  <div className="text-[11px] text-[#64746D]">{hosp.district} · {hosp.hospitalType === 'unknown' ? 'Type not listed' : hosp.hospitalType}</div>
                   <div className="text-[10px] text-[#63e5ff] font-medium mt-0.5">
                     {i === 0 ? '1.2 km away' : i === 1 ? '3.5 km away' : '8.1 km away'}
                   </div>

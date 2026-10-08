@@ -83,7 +83,7 @@ export const CaregiverProfilePage = () => {
                   <div>
                     <span className="font-bold">{t('primaryHospital')} </span>
                     <span>{primaryHospital ? primaryHospital.name : 'Colombo Hospital'}</span>
-                    {primaryHospital && (<span className="text-[#64746D] ml-1">({primaryHospital.district} - {primaryHospital.hospitalType === 'government' ? 'Government' : 'Private'})</span>)}
+                    {primaryHospital && (<span className="text-[#64746D] ml-1">({primaryHospital.district} - {primaryHospital.hospitalType === 'government' ? 'Government' : primaryHospital.hospitalType === 'private' ? 'Private' : 'Type not listed'})</span>)}
                   </div>
                 </div>
 

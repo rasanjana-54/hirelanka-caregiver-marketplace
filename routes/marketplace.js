@@ -40,6 +40,15 @@ const agencySelect = `
          LEFT JOIN reviews r ON r.reviewee_id = a.user_id AND r.is_verified = true
 `;
 
+const hospitalAliasesSql = `CASE h.name
+  WHEN 'National Hospital of Sri Lanka (NHSL)' THEN ARRAY['Colombo National Hospital']::text[]
+  WHEN 'Teaching Hospital Kandy' THEN ARRAY['Kandy Teaching Hospital']::text[]
+  WHEN 'Teaching Hospital Karapitiya' THEN ARRAY['Karapitiya General Hospital']::text[]
+  WHEN 'Teaching Hospital Kurunegala' THEN ARRAY['Kurunegala Base Hospital']::text[]
+  WHEN 'Teaching Hospital Jaffna' THEN ARRAY['Jaffna Teaching Hospital']::text[]
+  ELSE ARRAY[]::text[]
+END`;
+
 const addFilter = (filters, values, clause, value) => {
   values.push(value);
   filters.push(clause.replace('?', `$${values.length}`));
@@ -114,9 +123,9 @@ export const createMarketplaceRouter = ({ query, pool, requireAuth, createErrorR
   router.get('/hospitals', async (req, res) => {
     try {
       const { rows } = await query(
-        `SELECT id, name, location, district, latitude, longitude,
-                hospital_type AS "hospitalType", phone
-         FROM hospitals ORDER BY district, name`
+        `SELECT h.id, h.name, ${hospitalAliasesSql} AS aliases, h.location, h.district,
+                h.latitude, h.longitude, h.hospital_type AS "hospitalType", h.phone
+         FROM hospitals h ORDER BY h.district, h.name`
       );
       res.json({ success: true, hospitals: rows });
     } catch (error) {
@@ -128,11 +137,12 @@ export const createMarketplaceRouter = ({ query, pool, requireAuth, createErrorR
     const term = `%${String(req.query.query || '').trim()}%`;
     try {
       const { rows } = await query(
-        `SELECT id, name, location, district, latitude, longitude,
-                hospital_type AS "hospitalType", phone
-         FROM hospitals
-         WHERE name ILIKE $1 OR location ILIKE $1 OR district ILIKE $1
-         ORDER BY CASE WHEN lower(name) = lower($2) THEN 0 ELSE 1 END, name
+        `SELECT h.id, h.name, ${hospitalAliasesSql} AS aliases, h.location, h.district,
+                h.latitude, h.longitude, h.hospital_type AS "hospitalType", h.phone
+         FROM hospitals h
+         WHERE h.name ILIKE $1 OR h.location ILIKE $1 OR h.district ILIKE $1
+            OR EXISTS (SELECT 1 FROM unnest(${hospitalAliasesSql}) AS alias(name) WHERE alias.name ILIKE $1)
+         ORDER BY CASE WHEN lower(h.name) = lower($2) THEN 0 ELSE 1 END, h.name
          LIMIT 20`,
         [term, String(req.query.query || '').trim()]
       );

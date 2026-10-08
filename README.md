@@ -31,6 +31,10 @@ This contains everything you need to run your app locally.
 
    This creates the relational tables/indexes and inserts the Sri Lankan hospital catalog and safe sample profiles. The supplied sample accounts have random, unusable passwords; create accounts through registration.
 
+   The catalog includes hospital labels from the [Kaggle Hospital Records dataset](https://www.kaggle.com/datasets/mrnize/hospital-records/data) as searchable aliases. The dataset describes simulated admissions; patient admission records are not imported. The dataset's "Kurunegala Base Hospital" label is shown as an alias for the catalog's Teaching Hospital Kurunegala entry. Its coordinates are from [OpenStreetMap](https://www.openstreetmap.org/copyright). Rerun `npm run db:migrate` on an existing database to add the hospital.
+
+   The catalog also includes 371 named, geocoded hospital records from `sri_lanka_hospitals.csv`. Districts were assigned using OpenStreetMap-derived Sri Lankan district boundaries distributed by [geoBoundaries](https://www.geoboundaries.org/). Records clearly tagged as pharmacies, laboratories, dental practices, and other non-hospital facilities were excluded; unknown operator types remain marked as unknown. OpenStreetMap data is © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) and available under the Open Database License (ODbL).
+
 4. Create the first admin from a PowerShell terminal session. Use a unique password of at least 12 characters and do not commit or paste it into a tracked file:
 
    ```powershell

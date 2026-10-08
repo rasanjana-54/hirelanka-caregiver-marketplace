@@ -97,3 +97,22 @@ test('review moderation validates status and persists the admin decision', async
   assert.equal(response.status, 200);
   assert.deepEqual(updates, [['review-1', false]]);
 });
+
+test('hospital search includes Kaggle names as searchable aliases', async t => {
+  const hospital = {
+    id: 'hospital-kandy',
+    name: 'Teaching Hospital Kandy',
+    aliases: ['Kandy Teaching Hospital'],
+    district: 'Kandy'
+  };
+  const app = await createTestServer(async (sql, values) => {
+    assert.match(sql, /unnest\(CASE h\.name/);
+    assert.deepEqual(values, ['%Kandy Teaching Hospital%', 'Kandy Teaching Hospital']);
+    return { rows: [hospital] };
+  });
+  t.after(app.close);
+
+  const response = await fetch(`${app.baseUrl}/hospitals/search?query=Kandy%20Teaching%20Hospital`);
+  assert.equal(response.status, 200);
+  assert.deepEqual((await response.json()).hospitals, [hospital]);
+});

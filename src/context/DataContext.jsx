@@ -19,6 +19,7 @@ export const DataProvider = ({ children }) => {
     const [inquiries, setInquiries] = useState([]);
     useEffect(() => {
         let active = true;
+        let hasApiHospitals = false;
         const loadMarketplaceData = async () => {
             try {
                 const [hospitalData, caregiverData, agencyData] = await Promise.all([
@@ -29,6 +30,7 @@ export const DataProvider = ({ children }) => {
                 if (!active)
                     return;
                 setHospitals(normalizeHospitals(hospitalData.hospitals));
+                hasApiHospitals = true;
                 const loadedCaregivers = caregiverData.results.map(caregiver => ({
                     ...caregiver,
                     age: Number(caregiver.age),
@@ -98,7 +100,14 @@ export const DataProvider = ({ children }) => {
                 }
             }
             catch {
-                // Keep initial sample data visible if the API is not configured yet.
+                if (!hasApiHospitals) {
+                    import('../data/openStreetMapHospitals.js')
+                        .then(({ OPENSTREETMAP_HOSPITALS }) => {
+                        if (active)
+                            setHospitals([...INITIAL_HOSPITALS, ...OPENSTREETMAP_HOSPITALS]);
+                    })
+                        .catch(error => console.error('Local hospital catalog could not be loaded:', error));
+                }
             }
         };
         void loadMarketplaceData();

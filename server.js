@@ -78,6 +78,7 @@ const db = {
     {
       id: 'hosp-nhsl',
       name: 'National Hospital of Sri Lanka (NHSL)',
+      aliases: ['Colombo National Hospital'],
       location: 'Regent Street, Colombo 10',
       district: 'Colombo',
       latitude: 6.9195,
@@ -118,6 +119,7 @@ const db = {
     {
       id: 'hosp-kandy',
       name: 'Teaching Hospital Kandy',
+      aliases: ['Kandy Teaching Hospital'],
       location: 'William Gopallawa Mawatha, Kandy',
       district: 'Kandy',
       latitude: 7.2882,
@@ -128,12 +130,24 @@ const db = {
     {
       id: 'hosp-karapitiya',
       name: 'Teaching Hospital Karapitiya',
+      aliases: ['Karapitiya General Hospital'],
       location: 'Karapitiya, Galle',
       district: 'Galle',
       latitude: 6.0658,
       longitude: 80.2294,
       hospital_type: 'government',
       phone: '+94 91 223 2250'
+    },
+    {
+      id: 'hosp-kurunegala',
+      name: 'Teaching Hospital Kurunegala',
+      aliases: ['Kurunegala Base Hospital'],
+      location: 'Jayanthipura Road, Kurunegala',
+      district: 'Kurunegala',
+      latitude: 7.478059,
+      longitude: 80.359973,
+      hospital_type: 'government',
+      phone: null
     },
     {
       id: 'hosp-asiri',
@@ -631,6 +645,7 @@ app.get('/api/hospitals/search', (req, res) => {
   const query = (req.query.query || '').toString().toLowerCase();
   const matched = db.hospitals.filter(h =>
     h.name.toLowerCase().includes(query) ||
+    h.aliases?.some(alias => alias.toLowerCase().includes(query)) ||
     h.location.toLowerCase().includes(query) ||
     h.district.toLowerCase().includes(query)
   );

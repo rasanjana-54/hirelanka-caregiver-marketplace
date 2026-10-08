@@ -304,8 +304,8 @@ export const AdminDashboardPage = () => {
                   <div className="font-bold text-sm text-[#172B25]">{h.name}</div>
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 uppercase ${h.hospitalType === 'government'
                     ? 'bg-cyan-100 text-[#3dcfff]'
-                    : 'bg-blue-100 text-blue-700'}`}>
-                    {h.hospitalType}
+                    : h.hospitalType === 'private' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-600'}`}>
+                    {h.hospitalType === 'unknown' ? 'type not listed' : h.hospitalType}
                   </span>
                 </div>
 

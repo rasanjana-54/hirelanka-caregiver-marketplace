@@ -5,23 +5,37 @@ import agencySuwasevana from '../assets/images/agency_suwasevana_1791049030798.j
 
 export const SRI_LANKA_DISTRICTS = [
     'All Districts',
+    'Ampara',
+    'Anuradhapura',
+    'Badulla',
+    'Batticaloa',
     'Colombo',
+    'Galle',
     'Gampaha',
+    'Hambantota',
+    'Jaffna',
     'Kalutara',
     'Kandy',
-    'Galle',
-    'Matara',
+    'Kegalle',
+    'Kilinochchi',
     'Kurunegala',
-    'Anuradhapura',
-    'Jaffna',
-    'Badulla',
+    'Mannar',
+    'Matale',
+    'Matara',
+    'Monaragala',
+    'Mullaitivu',
+    'Nuwara Eliya',
+    'Polonnaruwa',
+    'Puttalam',
     'Ratnapura',
-    'Batticaloa'
+    'Trincomalee',
+    'Vavuniya'
 ];
 export const INITIAL_HOSPITALS = [
     {
         id: 'hosp-nhsl',
         name: 'National Hospital of Sri Lanka (NHSL)',
+        aliases: ['Colombo National Hospital'],
         location: 'Regent Street, Colombo 10',
         district: 'Colombo',
         latitude: 6.9195,
@@ -62,6 +76,7 @@ export const INITIAL_HOSPITALS = [
     {
         id: 'hosp-kandy',
         name: 'Teaching Hospital Kandy',
+        aliases: ['Kandy Teaching Hospital'],
         location: 'William Gopallawa Mawatha, Kandy',
         district: 'Kandy',
         latitude: 7.2882,
@@ -72,12 +87,24 @@ export const INITIAL_HOSPITALS = [
     {
         id: 'hosp-karapitiya',
         name: 'Teaching Hospital Karapitiya',
+        aliases: ['Karapitiya General Hospital'],
         location: 'Karapitiya, Galle',
         district: 'Galle',
         latitude: 6.0658,
         longitude: 80.2294,
         hospitalType: 'government',
         phone: '+94 91 223 2250'
+    },
+    {
+        id: 'hosp-kurunegala',
+        name: 'Teaching Hospital Kurunegala',
+        aliases: ['Kurunegala Base Hospital'],
+        location: 'Jayanthipura Road, Kurunegala',
+        district: 'Kurunegala',
+        latitude: 7.478059,
+        longitude: 80.359973,
+        hospitalType: 'government',
+        phone: ''
     },
     {
         id: 'hosp-negombo',
@@ -102,6 +129,7 @@ export const INITIAL_HOSPITALS = [
     {
         id: 'hosp-jaffna',
         name: 'Teaching Hospital Jaffna',
+        aliases: ['Jaffna Teaching Hospital'],
         location: 'Hospital Road, Jaffna',
         district: 'Jaffna',
         latitude: 9.6647,

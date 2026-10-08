@@ -43,6 +43,7 @@ export const HospitalAutocomplete = ({ value, onChange, placeholder = 'Search by
     }, []);
     const localFilteredHospitals = query.trim()
         ? hospitals.filter(h => h.name.toLowerCase().includes(query.toLowerCase()) ||
+            h.aliases?.some(alias => alias.toLowerCase().includes(query.toLowerCase())) ||
             h.district.toLowerCase().includes(query.toLowerCase()) ||
             h.location.toLowerCase().includes(query.toLowerCase()))
         : hospitals;
@@ -89,6 +90,9 @@ export const HospitalAutocomplete = ({ value, onChange, placeholder = 'Search by
                   <div className="text-sm font-medium text-[#172B25] truncate">
                     {h.name}
                   </div>
+                  {h.aliases?.map(alias => (<div key={alias} className="mt-0.5 text-xs text-[#64746D]">
+                      Kaggle dataset name: {alias}
+                    </div>))}
                   <div className="flex items-center gap-2 mt-0.5 text-xs text-[#64746D]">
                     <span className="flex items-center gap-1">
                       <MapPin className="w-3 h-3 text-[#3dcfff]"/>
@@ -98,7 +102,7 @@ export const HospitalAutocomplete = ({ value, onChange, placeholder = 'Search by
                     <span className="truncate">{h.location}</span>
                     <span>·</span>
                     <span className={h.hospitalType === 'government' ? 'text-[#3dcfff] font-medium' : 'text-slate-600'}>
-                      {h.hospitalType === 'government' ? 'Government' : 'Private'}
+                      {h.hospitalType === 'government' ? 'Government' : h.hospitalType === 'private' ? 'Private' : 'Type not listed'}
                     </span>
                   </div>
                 </div>

@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import pg from 'pg';
+import { OPENSTREETMAP_HOSPITALS } from './src/data/openStreetMapHospitals.js';
 
 const { Pool } = pg;
 
@@ -19,6 +20,25 @@ export const migrate = async () => {
   const seed = await readFile(seedPath, 'utf8');
   await pool.query(schema);
   await pool.query(seed);
+  await pool.query(
+    `INSERT INTO hospitals (name, location, district, latitude, longitude, hospital_type, phone)
+     SELECT name, location, district, latitude, longitude,
+            hospital_type::hospital_category, phone
+     FROM jsonb_to_recordset($1::jsonb) AS imported(
+       name text, location text, district text, latitude numeric, longitude numeric,
+       hospital_type text, phone text
+     )
+     ON CONFLICT (name) DO NOTHING`,
+    [JSON.stringify(OPENSTREETMAP_HOSPITALS.map(({ name, location, district, latitude, longitude, hospitalType, phone }) => ({
+      name,
+      location,
+      district,
+      latitude,
+      longitude,
+      hospital_type: hospitalType,
+      phone
+    })))]
+  );
 };
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1] && process.argv[2] === 'migrate') {

@@ -6,9 +6,10 @@ EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 
 DO $$ BEGIN
-  CREATE TYPE hospital_category AS ENUM ('government', 'private');
+  CREATE TYPE hospital_category AS ENUM ('government', 'private', 'unknown');
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
+ALTER TYPE hospital_category ADD VALUE IF NOT EXISTS 'unknown';
 
 DO $$ BEGIN
   CREATE TYPE caregiver_availability AS ENUM ('whole_day', 'half_day_morning', 'half_day_afternoon', 'nights');

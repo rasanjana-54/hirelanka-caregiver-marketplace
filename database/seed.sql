@@ -5,6 +5,7 @@ INSERT INTO hospitals (name, location, district, latitude, longitude, hospital_t
   ('Sri Jayewardenepura General Hospital', 'Thalapathpitiya, Nugegoda', 'Colombo', 6.864700, 79.921300, 'government', '+94 11 277 8610'),
   ('Teaching Hospital Kandy', 'William Gopallawa Mawatha, Kandy', 'Kandy', 7.288200, 80.627800, 'government', '+94 81 223 3337'),
   ('Teaching Hospital Karapitiya', 'Karapitiya, Galle', 'Galle', 6.065800, 80.229400, 'government', '+94 91 223 2250'),
+  ('Teaching Hospital Kurunegala', 'Jayanthipura Road, Kurunegala', 'Kurunegala', 7.478059, 80.359973, 'government', NULL),
   ('District General Hospital Negombo', 'Colombo Road, Negombo', 'Gampaha', 7.200800, 79.843600, 'government', '+94 31 222 2261'),
   ('District General Hospital Kalutara (Nagoda)', 'Nagoda, Kalutara', 'Kalutara', 6.585400, 79.960700, 'government', '+94 34 222 2261'),
   ('Teaching Hospital Jaffna', 'Hospital Road, Jaffna', 'Jaffna', 9.664700, 80.016700, 'government', '+94 21 222 2261'),
